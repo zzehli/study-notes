@@ -1,0 +1,220 @@
+//save frequent command line commands as alias
+nvim ~/.profile
+//unicode symbol
+“❯” U+276F Heavy Right-Pointing Angle Quotation Mark Ornament Unicode Character.
+
+** workflow to backup config
+bakcup:
+cd ~
+mkdir git-config
+git init
+git config core.worktree "../../"
+** restore:
+git clone ...
+cd ~/git-config
+git config core.worktree "../../"
+;;specific minor in major mode
+grep 'std::list' * -r
+grep -r --exclude-dir=node_modules 'pattern' /path/to/search
+;;find files by name
+find files with fzf: COMMAND [directory] [pattern] **<TAB>
+find /home/linuxize -type f -name document.pdf
+find /var/log/nginx -type f -name '*.log.gz'
+
+GENERAL
+Ctrl-U delete line to the left of cursor
+Ctrl-K delte line to the right
+
+RSYNC
+rsync -av --dry-run Original/ Backup preview list of files to be sync between two folders
+rsync -zaP zheli3@sp21-cs240-17.cs.illinois.edu:~/cs240/zheli3/mp2/natalia.gif bak
+
+SFTP
+sftp zheli3@sp21-cs240-17.cs.illinois.edu
+get <filename> <local directory>
+
+MAN
+//search for a keyword in man page
+apropos  <word>
+man -k <word>
+//section info
+man <section#> intro
+
+VAGRANT
+vagrant upload
+vagrant scp
+
+VIM
+Ctrl z back to terminal
+fg     back to vim
+
+vimdiff
+do	make the currrent document align with the other document
+dp	make the other document align with current document
+
+emacs commands
+EDIT
+M-f forward one word
+M-b backward one word
+C-v move one screen foward1
+C-/ undo
+C-space select/highlight
+C-x H select all
+C-w   kill region
+M-w   copy region
+C-x s forward search
+C-x r backward search
+M-%   search and replace
+C-M-s regex search
+C-x k kill the rest of the line
+C-w cut the line
+HELP
+C-h t open tutorial
+C-h k help key
+C-h f description
+C-h m current mode
+<prefix> C-h show possible bindings
+BUFFER WINDOWS
+M->   go to end of buffer(need to press shift for >)
+M-<   go to the end of the buffer
+C-x b	    buffer
+C-x k	    kill buffer
+C-x C-b     buffer list
+C-x o	    switch window focus
+C-x 2	    open another vertical window
+C-x 3	    open horizontal window
+BOOKMARK
+C-x r b     go to book mark
+C-x r m     set bookmark
+C-x r l	    list bookmark
+FILE
+C-x d 	    dire mode (directory)
+C-x C-e     evaluate linel
+M-x <command-name> run a command by name
+ORG-MODE
+<-s <tab>	insert code block
+C-c '		edit the code block
+C-c C-c		run the code block
+C-c .		insert timestamp
+C-c !		timestamp without agenda entry
+Shift <left>	change date to the day before
+M-x Org-output-displatch    l-p	   compile to latex
+LATEX
+C-c C-c		tex-shell (compile)
+M-x set-input-method RET Texl
+tinytex/latex debug
+package missing:
+tlmgr search --global --file "/times.sty"
+tlmgr install psnfss
+
+font, unicode support
+List of fonts with good unicode support: symbola, quivira, dejavu-sans
+
+regex
+    * `/n` forward slash is treated along with character to mean a line break
+    * `\+` special character in the search pattern use backslash to mark
+    * `[0-9]` find a character matching any of the characters in the brackets
+    * `\d` any digit, same as `[0-9]`
+    * `\w` any word character/number
+    * `\s` any whitespace (space, tab, newline, etc)
+    * `\W` and `\S` opposites of `\w` and `\s`
+    * `.` any character except newline
+    * `[^]` except the following group
+    * `+` one or more
+    * `*` 0 or more
+    * `?` optional
+    * `^` start with
+    * `$` end with
+    * `()` capture group
+    * `{}` number of repetition, could be range `{2, 4}`
+
+(.+)\.pdf$ 	capture names of the pdf file assume nothing about names of the file
+(\d{3})?    	does three digit (area code) exist
+
+Rust
+* Writing an OS with Rust
+* Lifetime: Jon Gjengset
+
+System programming:
+From tetris to rand
+Kilo.c editor in 1k lines by antirez, redis creator
+Give me 15 min and I'll change your view of GDB
+Debugging with GDB:http://web.mit.edu/gnu/doc/html/gdb_1.html
+Advanced Programming in the UNIX Environment & youtube https://stevens.netmeister.org/631/
+
+C
+https://randomascii.wordpress.com/2013/04/03/stop-using-strncpy-already/
+secure coding in C and C++: Strings and buffers:
+https://www.informit.com/articles/article.aspx?p=2036582&seqNum=5
+undefined behavoir in c by C Lattner
+http://blog.llvm.org/2011/05/what-every-c-programmer-should-know.html
+why no C conference? list of interesting talks
+https://nullprogram.com/blog/2018/11/21/
+MIT ocw: Practical Programming in C, 6.004, 6.033
+
+OS
+MIT course with lab in C 6.828
+Teaching C:
+https://blog.regehr.org/archives/1393
+
+Scripting
+* Missing semester on data wrangling
+* https://mywiki.wooledge.org/BashGuide
+* Awk in 20 minutes
+* Hacker News: Help Message for Shell Scripts
+* Do-nothing scritping: the key to gradual automation
+* Writing Safe Shell Scripts (sipb.mit.edu)
+
+Database
+* Builiding Data Intensive Application
+* ChiDB from Uchicago
+* Database Internals
+
+Network
+* Beej's Guide to Network Programming
+* Destroy All Software on Network
+
+Web
+BeautifulJs for code highlight on html
+Chapter on server from Eloquent Javascript
+Steve Tarzia lecture on Server
+Mozilla docs
+Wade's lecture on server
+
+Functional
+Racket language tutorials
+https://felleisen.org/matthias/teaching.html
+Write you a Haskell (compiler)
+Write yourself a Scheme in 48 Hours by Jonathan Tang
+Purely Functional Data Structures
+
+Programming Lang
+Writing An interpreter in Go
+crafting interpreters
+
+Lisp
+The Little Schemer, on recursion
+ANSI Lisp
+Build with Your Own Lisp (with C)
+
+Linus Admin
+Linuxup Skill Challenge
+
+Projects
+Redbean - Single-file distributable web server
+https://news.ycombinator.com/item?id=26271117
+Raytrace in a Weekend
+Jorendorff-simple search engine in Python
+Internet Archive
+Nix Introduction: https://nixos.org/guides/nix-pills/why-you-should-give-it-a-try.html
+
+Proverbs
+"Premature optimisation is the root of all evil" Don Knuth
+
+Personal projects
+Conway's Game of Life in python
+Beautiful Racket book on programming language
+Personal search system (local)/search engine
+Present Gitlet:
+		host the application on Repl.it
+		Deploy Heroku and Maven to host Gitlet

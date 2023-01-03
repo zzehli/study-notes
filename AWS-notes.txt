@@ -1,0 +1,24 @@
+Amazon EC2: virtual machines
+Elastic Load Balancing: distributes incoming application traffic across multiple targets, such as EC2 instances
+Amazon Simple Queue Service: message queuing service (decouple and scale microservices)
+Amazon Simple Notification Service: publish and subscribe messages (decouple microservice)
+Amazon CloudFront: content delivery network
+Virtual Private Cloud: VPC enables you to provision an isolated section of the AWS Cloud
+AWS Direct Connect, Virtual private gateway, internet gateway
+Network ACLs perform stateless packet filtering, accept all traffic by default
+Security groups perform stateful packet filtering, stateful and denies all inbound traffic and allows all outbound traffic by default
+Amazon Route 53 is a DNS web service
+block storage: instance stores disappear when instance terminates, they are tied to the host computer
+Amazon Elastic Block Store (EBS): persistent virtual hard drive storage
+Amazon Simple Storage Service (S3) is a service that provides object-level storage. Amazon S3 stores data as objects in buckets
+EBS and S3: EBS needs EC2 instance; block storage vs. object storage
+Amazon Elastic File System: file storage is ideal for use cases in which a large number of services and resources need to access the same data at the same time
+Cloud Adoption Framework: Business, People, Governance, Platform, Security, and OperationsThe Well-Architected Framework: Operational excellence, Security, Performance efficiency, Cost optimization, Sustainability
+The six advantages of cloud computing are:
+
+    Trade upfront expense for variable expense.
+    Benefit from massive economies of scale.
+    Stop guessing capacity.
+    Increase speed and agility.
+    Stop spending money running and maintaining data centers.
+    Go global in minutes.
