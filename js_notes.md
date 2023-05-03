@@ -643,6 +643,7 @@ btn.addEventListener('click', greet);
 ```
 setSearchRes(data['Search'].map(elem => ({Title: elem.Title, Year: elem.Year})));
 ```
+* Every module can have two different types of export, named export and default export. You can have multiple named exports per module but only one default export.
 # React
 
 ## React, [Tic-Tac-Toe Game Tutorial](https://reactjs.org/tutorial/tutorial.html)
@@ -738,6 +739,29 @@ React runs the effects after every render
 ```
 setMyArray(oldArray => [...oldArray, newElement]);
 ```
+
+## React State
+* state is some kind of data
+* state is related to finite state machine: xstate
+* in React, there are two kinds of state: client state and server state
+* For client state: state in the client side can be complex to manage
+  * `useState`
+  * to avoid prop drilling: `useContext`, but it doesn't optimize for modifying state, just passing it down
+  * simple use can alterantive, jotai
+* On the server side: we need to fetch data from the server 
+  * this can be done with simple fetch
+  * React Query: modify fetched data and save the modification
+
+## Redux
+* This is the basic idea behind Redux: a single centralized place to contain the global state in your application, and specific patterns to follow when updating that state to make the code predictable. https://redux.js.org/tutorials/essentials/part-1-overview-concepts
+* Redux expects that all state updates are done immutably
+* Action, object with a `type` field, which takes the form of `domain/eventName`. Optionally, it has a `payload` field that contains additional info
+* Reducer, function that takes in state and action and return a new state: `(state, action) => newState`
+  * calculate new value only based on `state` and `action`
+  * make immutable update
+  * no async logic
+
+
 
 # Serverside Javascript
 ## Concepts
