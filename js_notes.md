@@ -757,9 +757,52 @@ setMyArray(oldArray => [...oldArray, newElement]);
 * Redux expects that all state updates are done immutably
 * Action, object with a `type` field, which takes the form of `domain/eventName`. Optionally, it has a `payload` field that contains additional info
 * Reducer, function that takes in state and action and return a new state: `(state, action) => newState`
-  * calculate new value only based on `state` and `action`
-  * make immutable update
+  * calculate new value only based on `state` and `action`, think of it as an event handler
+  * make immutable update; a typical reducer will perform as such:
+  ```
+    * Check to see if the reducer cares about this action
+        If so, make a copy of the state, update the copy with new values, and return it
+    * Otherwise, return the existing state unchanged
+  ```
   * no async logic
+* Store, created by passing in a reducer
+* State in store can be updated by dispatch, which takes in an action object:
+```
+store.dispatch({type: `counter/increment`})
+console.log(store.getState())
+```
+* Selectors: extract specific pieces of information from a store state value
+
+### [Example](https://redux.js.org/tutorials/fundamentals/part-3-state-actions-reducers)
+* Workflow
+  * Design State Value: To do Items (content text, id, color, completed), Filtering behavior(Active, Color)
+  * Design State Structure:
+  ```
+  const todoAppState = {
+    todos: [
+      { id: 0, text: 'Learn React', completed: true },
+      { id: 1, text: 'Learn Redux', completed: false, color: 'purple' },
+      { id: 2, text: 'Build something fun!', completed: false, color: 'blue' }
+    ],
+    filters: {
+      status: 'Active',
+      colors: ['red', 'blue']
+    }
+  }
+  ```
+  * Design Actions
+  ```
+    {type: 'todos/todoAdded', payload: todoText}
+    {type: 'todos/todoToggled', payload: todoId}
+    {type: 'todos/colorSelected', payload: {todoId, color}}
+    {type: 'todos/todoDeleted', payload: todoId}
+    {type: 'todos/allCompleted'}
+    {type: 'todos/completedCleared'}
+    {type: 'filters/statusFilterChanged', payload: filterValue}
+    {type: 'filters/colorFilterChanged', payload: {color, changeType}}
+  ```
+  * 
+  
 
 
 
