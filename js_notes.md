@@ -891,6 +891,10 @@ const rootReducer = combineReducers({
 export default rootReducer
 ```
 
+### Redux Store
+* store holds the current application state, access the state with `store.getState()`, update with `store.dispatch(action)`, register listener callbacks with `store.subscribe(listener)`
+* every store has a single root reducer function: `const store = createStore(rootReducer)
+`, with a optional second argument `preloadedState` as the initial data
   
 
 
