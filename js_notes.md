@@ -896,6 +896,16 @@ export default rootReducer
 * every store has a single root reducer function: `const store = createStore(rootReducer)
 `, with a optional second argument `preloadedState` as the initial data
   
+## React Testing
+### [Testing Implementation Details](https://kentcdodds.com/blog/testing-implementation-details)
+* Testing implementation deails will result in two kinds of errors: false positive (test fails but the components still works, after implementation changes) and false negative (test passes but the component breaks, because it does not test whether the component works from a users perspective)
+* Use React Testing Library to write implementation-free testing files
+* Instead, we test from the perspective of two users: the end user, who will interact with the component and the developer who see the content of the props
+> This is precisely what the React Testing Library test does. We give it our own React element of the Accordion component with our fake props, then we interact with the rendered output by querying the output for the contents that will be displayed to the user (or ensuring that it wont be displayed) and clicking the buttons that are rendered.
+
+> Now consider the enzyme test. With enzyme, we access the state of openIndex. This is not something that either of our users care about directly. They don't know that's what it's called, they don't know whether the open index is stored as a single primitive value, or stored as an array, and frankly they don't care. They also don't know or care about the setOpenIndex method specifically. And yet, our test knows about both of these implementation details.
+
+### [Never Use Shallow Rendering](https://kentcdodds.com/blog/why-i-never-use-shallow-rendering)
 
 
 
