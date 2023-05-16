@@ -893,8 +893,12 @@ export default rootReducer
 
 ### Redux Store
 * store holds the current application state, access the state with `store.getState()`, update with `store.dispatch(action)`, register listener callbacks with `store.subscribe(listener)`
-* every store has a single root reducer function: `const store = createStore(rootReducer)
-`, with a optional second argument `preloadedState` as the initial data
+* every store has a single root reducer function: `const store = createStore(rootReducer)`, with a optional second argument `preloadedState` as the initial data
+* Besides `rootReducer` and `preloadedState`, store can be customized with store enhancer, which allows the user to have customized dispatch, getState or subscribe functions
+* Redux middleware lets you customize the dispatch behaviour. It is built on top of an type of enhancer called `applyMiddleware`
+  * Importantly, middleware is intended to have side effects inside. 
+  * Middleware form a piepline around `dispatch`. When `dispatch` is called, the first middleware is activated.
+  * Things middleware can do: API calls, logging, modify an action, pause/stop an action
   
 ## React Testing
 ### [Testing Implementation Details](https://kentcdodds.com/blog/testing-implementation-details)
@@ -913,3 +917,4 @@ export default rootReducer
 ## Concepts
 * Middleware: Middleware functions are functions that have access to the request object (req), the response object (res), and the next middleware function in the application's request-response cycle. The next middleware function is commonly denoted by a variable named `next`. [https://expressjs.com/en/guide/using-middleware.html]
   * Express is a routing and middleware web framework that has minimal functionality of its own: An Express application is essentially a series of middleware function calls.
+  * > If you've ever used a library like Express or Koa, you might already be familiar with the idea of adding middleware to customize behavior. In these frameworks, middleware is some code you can put between the framework receiving a request, and the framework generating a response. For example, Express or Koa middleware may add CORS headers, logging, compression, and more. The best feature of middleware is that it's composable in a chain. You can use multiple independent third-party middleware in a single project. From Redux Doc [https://redux.js.org/tutorials/fundamentals/part-4-store]
