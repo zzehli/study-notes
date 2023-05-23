@@ -893,13 +893,94 @@ export default rootReducer
 
 ### Redux Store
 * store holds the current application state, access the state with `store.getState()`, update with `store.dispatch(action)`, register listener callbacks with `store.subscribe(listener)`
-* every store has a single root reducer function: `const store = createStore(rootReducer)`, with a optional second argument `preloadedState` as the initial data
+* every store has a single root reducer function: `const store = createStore(rootReducer, preloadedState)`, with a optional second argument `preloadedState` as the initial data
 * Besides `rootReducer` and `preloadedState`, store can be customized with store enhancer, which allows the user to have customized dispatch, getState or subscribe functions
 * Redux middleware lets you customize the dispatch behaviour. It is built on top of an type of enhancer called `applyMiddleware`
   * Importantly, middleware is intended to have side effects inside. 
   * Middleware form a piepline around `dispatch`. When `dispatch` is called, the first middleware is activated.
   * Things middleware can do: API calls, logging, modify an action, pause/stop an action
-  
+```
+//createStore
+let preloadedState
+const persistedTodosString = localStorage.getItem('todos')
+
+if (persistedTodosString) {
+  preloadedState = {
+    todos: JSON.parse(persistedTodosString)
+  }
+}
+```
+```
+//store actions
+import store from './store'
+
+// Log the initial state
+console.log('Initial state: ', store.getState())
+// {todos: [....], filters: {status, colors}}
+
+// Every time the state changes, log it
+// Note that subscribe() returns a function for unregistering the listener
+const unsubscribe = store.subscribe(() =>
+  console.log('State after dispatch: ', store.getState())
+)
+
+// Now, dispatch some actions
+
+store.dispatch({ type: 'todos/todoAdded', payload: 'Learn about actions' })
+
+// Stop listening to state updates
+unsubscribe()
+
+// Dispatch one more action to see what happens
+
+store.dispatch({ type: 'todos/todoAdded', payload: 'Try creating a store' })
+```
+### Redux and UI
+* rendering content from the store with `useSelector`, which select appropriate element from the store AND listens to changes of the component it renders
+```
+const TodoList = () => {
+  const todos = useSelector(selectTodos)
+
+  // since `todos` is an array, we can loop over it
+  const renderedListItems = todos.map(todo => {
+    return <TodoListItem key={todo.id} todo={todo} />
+  })
+
+  return <ul className="todo-list">{renderedListItems}</ul>
+}
+```
+* dispatch actions to change store
+```
+const Header = () => {
+  const [text, setText] = useState('')
+  const dispatch = useDispatch()
+
+  const handleChange = e => setText(e.target.value)
+
+  const handleKeyDown = e => {
+    const trimmedText = e.target.value.trim()
+    // If the user pressed the Enter key:
+    if (e.key === 'Enter' && trimmedText) {
+      // Dispatch the "todo added" action with this text
+      dispatch({ type: 'todos/todoAdded', payload: trimmedText })
+      // And clear out the text input
+      setText('')
+    }
+  }
+```
+* use `Provider` to provide store context
+```
+ReactDOM.render(
+  // Render a `<Provider>` around the entire `<App>`,
+  // and pass the Redux store to as a prop
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
+)
+```
 ## React Testing
 ### [Testing Implementation Details](https://kentcdodds.com/blog/testing-implementation-details)
 * Testing implementation deails will result in two kinds of errors: false positive (test fails but the components still works, after implementation changes) and false negative (test passes but the component breaks, because it does not test whether the component works from a users perspective)
