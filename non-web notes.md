@@ -121,6 +121,38 @@ https://stackoverflow.com/a/19419296
 		* PersistentVolume also has the state of its pod
 	* statefulSet's sticky identiy is maintained through DNS names of service and pods
 	* in general stateful applications are not suitable for containerized environments, but stateless applications are
+	
+### OAuth
+* components: client, API (Resource Server), Authorization Server, User (Resource Owner)
+	* the client is the application requesting user's account (this is the website you are trying to register with your google account)
+	* API server that has access to user info (think about Google server that has your accounts)
+	* Authorization server: it presents the interface that asks user to approve or deny access (the popup window); in smaller implementations, it is the same server as the API
+* Steps:
+	1. Authrization server asks for approval from the user
+	2. user approves, gets redicted to the application interface with a Authorization Code
+	3. user exchanges the Authorization Code with a access token from the Authorization Server
+	4. user can use this access token to access their information on the Resource Server
+* https://developers.google.com/oauthplayground/
+* Protocol flow: https://datatracker.ietf.org/doc/html/rfc6749#section-1.2
+
+     +--------+                               +---------------+
+     |        |--(A)- Authorization Request ->|   Resource    |
+     |        |                               |     Owner     |
+     |        |<-(B)-- Authorization Grant ---|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(C)-- Authorization Grant -->| Authorization |
+     | Client |                               |     Server    |
+     |        |<-(D)----- Access Token -------|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(E)----- Access Token ------>|    Resource   |
+     |        |                               |     Server    |
+     |        |<-(F)--- Protected Resource ---|               |
+     +--------+                               +---------------+
+* 
 
 ### Talk
 * K8s design principles
