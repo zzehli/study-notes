@@ -152,7 +152,7 @@ https://stackoverflow.com/a/19419296
      |        |                               |     Server    |
      |        |<-(F)--- Protected Resource ---|               |
      +--------+                               +---------------+
-* 
+* validate jwt token example from Cube https://github.com/cube-js/cube/blob/401e9e1b9c07e115804a1f84fade2bb82b55ca29/packages/cubejs-api-gateway/src/gateway.ts#L2047C43-L2047C46
 
 ### Talk
 * K8s design principles
