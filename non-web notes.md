@@ -36,6 +36,7 @@
     * https://forums.docker.com/t/editing-files-created-by-a-container/125028/1
     * https://pythonspeed.com/articles/root-capabilities-docker-security/
 	* docker logs --follow <container ID>
+* Dockerfile builds an image, therefore after modifying dockerfile, build it again to apply changes
 ## Spring Boot
 # REST API with jpa and hibernate
 * Code structure, from https://www.twilio.com/blog/create-rest-apis-java-spring-boot
@@ -53,6 +54,7 @@ Controller - This is the topmost layer, called when a request comes for a partic
 https://www.baeldung.com/spring-component-annotation
 * Spring beans
 https://stackoverflow.com/a/49443630
+https://youtu.be/aS9SQITRocc?si=aEuVv2Ik-OGDH1rx
 * Spring @Autowired
 Dependency Injection
 https://stackoverflow.com/a/1638976
@@ -123,6 +125,7 @@ https://stackoverflow.com/a/19419296
 	* in general stateful applications are not suitable for containerized environments, but stateless applications are
 	
 ### OAuth
+* definition: OAuth 2.0, which stands for “Open Authorization”, is a standard designed to allow a website or application to access resources hosted by other web apps on behalf of a user.
 * components: client, API (Resource Server), Authorization Server, User (Resource Owner)
 	* the client is the application requesting user's account (this is the website you are trying to register with your google account)
 	* API server that has access to user info (think about Google server that has your accounts)
@@ -153,6 +156,20 @@ https://stackoverflow.com/a/19419296
      |        |<-(F)--- Protected Resource ---|               |
      +--------+                               +---------------+
 * validate jwt token example from Cube https://github.com/cube-js/cube/blob/401e9e1b9c07e115804a1f84fade2bb82b55ca29/packages/cubejs-api-gateway/src/gateway.ts#L2047C43-L2047C46
+* Client Credentials Flow，this is the workflow where authorization server issues access token based on client identity (ID, secret). The client is registered in authorization server in this case. https://auth0.com/docs/get-started/authentication-and-authorization-flow/client-credentials-flow
+## Kafka
+* Definition: Kafka is a distributed system consisting of servers and clients that communicate via a high-performance TCP network protocol.
+* Components:
+	* kafka runs on a cluster of servers that are distributed. Servers that form the storage layer for kafka are called __brokers__
+	* kafka clients allow one to read ( __consumer__ ), write ( __producer__ ) and process kafka events
+* Mechanism:
+	* Producers and consumers are responsible for writing and reading event data to Kafka, respectively.
+	* Kafka events looks like consist of key, value, timestamp and optional metadata
+	* Events are organized around topics; topics are partitioned on different Kafka brokers. Events with the same event key share the same partition.
+* Why is Kafka so fast (https://www.youtube.com/watch?v=UNUz1-msbOM):
+	* sequential IO: Kafka's primary data structure is append-only logs, data are written on hard drives sequentially.
+	* read with zero copy between producer and consumer: this is saves several copy steps that exist in traditional network-disk data transfers.
+* source: https://kafka.apache.org/documentation/#introduction
 
 ### Talk
 * K8s design principles
