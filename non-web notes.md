@@ -160,12 +160,12 @@ https://stackoverflow.com/a/19419296
 ## Kafka
 * Definition: Kafka is a distributed system consisting of servers and clients that communicate via a high-performance TCP network protocol.
 * Components:
-	* kafka runs on a cluster of servers that are distributed. Servers that form the storage layer for kafka are called __brokers__
-	* kafka clients allow one to read ( __consumer__ ), write ( __producer__ ) and process kafka events
+	* kafka runs on a cluster of servers that are distributed. Servers that form the storage layer for kafka are called **brokers**
+	* kafka clients allow one to read (**consumer**), write (**producer**) and process kafka events
 * Mechanism:
 	* Producers and consumers are responsible for writing and reading event data to Kafka, respectively.
 	* Kafka events looks like consist of key, value, timestamp and optional metadata
-	* Events are organized around topics; topics are partitioned on different Kafka brokers. Events with the same event key share the same partition.
+	* Events are organized around topics; topics are **partitioned** on different Kafka brokers. Events with the same event key share the same partition.
 * Why is Kafka so fast (https://www.youtube.com/watch?v=UNUz1-msbOM):
 	* sequential IO: Kafka's primary data structure is append-only logs, data are written on hard drives sequentially.
 	* read with zero copy between producer and consumer: this is saves several copy steps that exist in traditional network-disk data transfers.
