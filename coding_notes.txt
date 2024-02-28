@@ -134,6 +134,7 @@ regex
 Rust
 * Writing an OS with Rust
 * Lifetime: Jon Gjengset
+* Rust in Action (includ system programming projects)
 
 System programming:
 From tetris to rand
@@ -208,6 +209,11 @@ Jorendorff-simple search engine in Python
 Internet Archive
 Nix Introduction: https://nixos.org/guides/nix-pills/why-you-should-give-it-a-try.html
 
+Full text search: fonts
+https://news.ycombinator.com/item?id=26582109
+https://bart.degoe.de/building-a-full-text-search-engine-150-lines-of-code/
+https://artem.krylysov.com/blog/2020/07/28/lets-build-a-full-text-search-engine/
+Lucene 1.0.1: https://github.com/apache/lucene/tree/releases/lucene/1.0.1
 Proverbs
 "Premature optimisation is the root of all evil" Don Knuth
 

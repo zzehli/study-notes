@@ -1,3 +1,12 @@
+# Networking
+## server
+### [How to write a HTTP server from scratch in GO](https://www.youtube.com/watch?v=fT1kOV1qUOc)
+* `net/http` package
+* tcp: byte stream between client and server
+# Programming language
+## Go
+* Simplicity is Complicated
+# Tools
 ## GraphQL
 * Think of it as a structured way of making REST calls: these queries are specific to your application, not to the database that holds your data.
 * In an application query language, you ask for things like "Person in age group teens" and not "SELECT * FROM people WHERE age > 12 AND age < 20". The former is how clients ask for data from the server, and the latter is how the server might fetch that data - and clients don't need to know about that. (https://medium.com/apollo-stack/how-do-i-graphql-2fcabfc94a01)
@@ -37,7 +46,7 @@
     * https://pythonspeed.com/articles/root-capabilities-docker-security/
 	* docker logs --follow <container ID>
 ## Spring Boot
-# REST API with jpa and hibernate
+### REST API with jpa and hibernate
 * Code structure, from https://www.twilio.com/blog/create-rest-apis-java-spring-boot
 * testing and mocking in Spring boot https://reflectoring.io/unit-testing-spring-boot
 * testing webclient https://www.dontpanicblog.co.uk/2022/01/15/testing-spring-reactive-webclient/
