@@ -1,3 +1,4 @@
+# Tools
 ## GraphQL
 * Think of it as a structured way of making REST calls: these queries are specific to your application, not to the database that holds your data.
 * In an application query language, you ask for things like "Person in age group teens" and not "SELECT * FROM people WHERE age > 12 AND age < 20". The former is how clients ask for data from the server, and the latter is how the server might fetch that data - and clients don't need to know about that. (https://medium.com/apollo-stack/how-do-i-graphql-2fcabfc94a01)
@@ -38,7 +39,7 @@
 	* docker logs --follow <container ID>
 * Dockerfile builds an image, therefore after modifying dockerfile, build it again to apply changes
 ## Spring Boot
-# REST API with jpa and hibernate
+### REST API with jpa and hibernate
 * Code structure, from https://www.twilio.com/blog/create-rest-apis-java-spring-boot
 * testing and mocking in Spring boot https://reflectoring.io/unit-testing-spring-boot
 * testing webclient https://www.dontpanicblog.co.uk/2022/01/15/testing-spring-reactive-webclient/
@@ -170,8 +171,25 @@ https://stackoverflow.com/a/19419296
 	* sequential IO: Kafka's primary data structure is append-only logs, data are written on hard drives sequentially.
 	* read with zero copy between producer and consumer: this is saves several copy steps that exist in traditional network-disk data transfers.
 * source: https://kafka.apache.org/documentation/#introduction
-
-### Talk
+# Accessibility
+## WCAG
+* https://www.w3.org/TR/WCAG21
+* Four principles:
+	* Perceivable - Information and user interface components must be presentable to users in ways they can perceive. (alt text, contrast)
+	* Operable - User interface components and navigation must be operable. (keyboard navigation)
+	* Understandable - Information and the operation of user interface must be understandable. (language, input assistance)
+	* Robust - Content must be robust enough that it can be interpreted reliably by a wide variety of user agents, including assistive technologies (assistive technology)
+## Aria
+* Aria helps with dynamic content and advanced user interface controls developed with HTML, JavaScript, and related technologies
+* Add semantics to custom widgets to help user understand the widgets (help screen reader to announce it to user); does not alter behavior of the widget
+* Aria authoring guide: https://www.w3.org/WAI/ARIA/apg/
+# CMS
+## WordPress
+* Wordpress is a CMS
+* headless CMS uses API to fetch data from databases, while WordPress is considered as a traditional CMS
+* LAMP (Linux, Apache, MySQL, PHP) stack is one way of hosting a WordPress site, alternatively, one can use Nginx as the web server instead of apache
+* Drupal is more customizable and complex than WordPress. It's similar to a web appliction to a blog
+# Talk
 * K8s design principles
 1. Kubernetes APIs are declarative rather than imperative. (extensible)
 2. The Kubernetes control plane is transparent. There are no hidden internal APIs. (level triggered rather than event triggered, no single point of failure, immutable)
