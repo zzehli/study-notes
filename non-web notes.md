@@ -43,6 +43,7 @@
 	* docker logs --follow <container ID>
 ## Spring Boot
 ### REST API with jpa and hibernate
+### REST API with jpa and hibernate
 * Code structure, from https://www.twilio.com/blog/create-rest-apis-java-spring-boot
 * testing and mocking in Spring boot https://reflectoring.io/unit-testing-spring-boot
 * testing webclient https://www.dontpanicblog.co.uk/2022/01/15/testing-spring-reactive-webclient/
@@ -126,8 +127,72 @@ https://stackoverflow.com/a/19419296
 		* PersistentVolume also has the state of its pod
 	* statefulSet's sticky identiy is maintained through DNS names of service and pods
 	* in general stateful applications are not suitable for containerized environments, but stateless applications are
+	
+### OAuth
+* definition: OAuth 2.0, which stands for “Open Authorization”, is a standard designed to allow a website or application to access resources hosted by other web apps on behalf of a user.
+* components: client, API (Resource Server), Authorization Server, User (Resource Owner)
+	* the client is the application requesting user's account (this is the website you are trying to register with your google account)
+	* API server that has access to user info (think about Google server that has your accounts)
+	* Authorization server: it presents the interface that asks user to approve or deny access (the popup window); in smaller implementations, it is the same server as the API
+* Steps:
+	1. Authrization server asks for approval from the user
+	2. user approves, gets redicted to the application interface with a Authorization Code
+	3. user exchanges the Authorization Code with a access token from the Authorization Server
+	4. user can use this access token to access their information on the Resource Server
+* https://developers.google.com/oauthplayground/
+* Protocol flow: https://datatracker.ietf.org/doc/html/rfc6749#section-1.2
 
-### Talk
+     +--------+                               +---------------+
+     |        |--(A)- Authorization Request ->|   Resource    |
+     |        |                               |     Owner     |
+     |        |<-(B)-- Authorization Grant ---|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(C)-- Authorization Grant -->| Authorization |
+     | Client |                               |     Server    |
+     |        |<-(D)----- Access Token -------|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(E)----- Access Token ------>|    Resource   |
+     |        |                               |     Server    |
+     |        |<-(F)--- Protected Resource ---|               |
+     +--------+                               +---------------+
+* validate jwt token example from Cube https://github.com/cube-js/cube/blob/401e9e1b9c07e115804a1f84fade2bb82b55ca29/packages/cubejs-api-gateway/src/gateway.ts#L2047C43-L2047C46
+* Client Credentials Flow，this is the workflow where authorization server issues access token based on client identity (ID, secret). The client is registered in authorization server in this case. https://auth0.com/docs/get-started/authentication-and-authorization-flow/client-credentials-flow
+## Kafka
+* Definition: Kafka is a distributed system consisting of servers and clients that communicate via a high-performance TCP network protocol.
+* Components:
+	* kafka runs on a cluster of servers that are distributed. Servers that form the storage layer for kafka are called **brokers**
+	* kafka clients allow one to read (**consumer**), write (**producer**) and process kafka events
+* Mechanism:
+	* Producers and consumers are responsible for writing and reading event data to Kafka, respectively.
+	* Kafka events looks like consist of key, value, timestamp and optional metadata
+	* Events are organized around topics; topics are **partitioned** on different Kafka brokers. Events with the same event key share the same partition.
+* Why is Kafka so fast (https://www.youtube.com/watch?v=UNUz1-msbOM):
+	* sequential IO: Kafka's primary data structure is append-only logs, data are written on hard drives sequentially.
+	* read with zero copy between producer and consumer: this is saves several copy steps that exist in traditional network-disk data transfers.
+* source: https://kafka.apache.org/documentation/#introduction
+# Accessibility
+## WCAG
+* https://www.w3.org/TR/WCAG21
+* Four principles:
+	* Perceivable - Information and user interface components must be presentable to users in ways they can perceive. (alt text, contrast)
+	* Operable - User interface components and navigation must be operable. (keyboard navigation)
+	* Understandable - Information and the operation of user interface must be understandable. (language, input assistance)
+	* Robust - Content must be robust enough that it can be interpreted reliably by a wide variety of user agents, including assistive technologies (assistive technology)
+## Aria
+* Aria helps with dynamic content and advanced user interface controls developed with HTML, JavaScript, and related technologies
+* Add semantics to custom widgets to help user understand the widgets (help screen reader to announce it to user); does not alter behavior of the widget
+* Aria authoring guide: https://www.w3.org/WAI/ARIA/apg/
+# CMS
+## WordPress
+* Wordpress is a CMS
+* headless CMS uses API to fetch data from databases, while WordPress is considered as a traditional CMS
+* LAMP (Linux, Apache, MySQL, PHP) stack is one way of hosting a WordPress site, alternatively, one can use Nginx as the web server instead of apache
+* Drupal is more customizable and complex than WordPress. It's similar to a web appliction to a blog
+# Talk
 * K8s design principles
 1. Kubernetes APIs are declarative rather than imperative. (extensible)
 2. The Kubernetes control plane is transparent. There are no hidden internal APIs. (level triggered rather than event triggered, no single point of failure, immutable)
