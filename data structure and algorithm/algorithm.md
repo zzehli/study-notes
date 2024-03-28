@@ -66,7 +66,7 @@ class TopVotedCandidate {
     }
 }
  ```
-## 53 Maximum subarray
+## 53 Maximum subarray (two pointers)
 * the basic idea is to keep track of current sum and maximum value separately, then update maximum by comparing maximum and current sum; these two values can be considered a sliding window
 * there are two ways of track the current sum
     * none of the two comepare `currSum` with `currSum + nums[i]`, because this does not keep track of consecutive sum
@@ -99,9 +99,129 @@ class Solution {
     }
 }
 ```
-## 128 Longest Consecutive Sequence
+## 128 Longest Consecutive Sequence (Hashmap)
 * Use HashSet to achieve O(1) lookup
 * for each element, check if x-1 exists, if not check if x + 1, x + 2, .. exists, then update the best consequtive array length
+## 207 Course Schedule (Graph)
+* Pointers: 1. construct an adjacency list to store prereq; 2. use dfs to search for cycle:
+```
+        adjList = defaultdict(list)
+        for k, v in prerequisites:
+            adjList[k].append(v)
+        def cycle(courseNum, visitList):
+            visitList.add(courseNum)                
+            for course in adjList[courseNum]:
+                if (course in visitList) or cycle (course, visitList):
+                    return True
+            visitList.remove(courseNum)
+            return False
+        
+        for i in range(numCourses):
+            visited = set()
+            if cycle(i, visited):
+                return False
+        
+        return True
+```
+* optimization: use a set to keep a record of the vertecies already visited.
+```
+class Solution(object):
+    def canFinish(self, numCourses, prerequisites):
+        """
+        :type numCourses: int
+        :type prerequisites: List[List[int]]
+        :rtype: bool
+        """
+        # use defaultdict to create a adjacency list, where key is course, value is the prereq
+        # use dfs to go through the adjacency list, keep a record of visited courses, return false if run into a cycle
+        adjList = defaultdict(list)
+        for k, v in prerequisites:
+            adjList[k].append(v)
+        def cycle(courseNum, visitList, uniqueCourse):
+            visitList.add(courseNum)                
+            for course in adjList[courseNum]:
+                if course in uniqueCourse:
+                    continue
+                elif (course in visitList) or cycle (course, visitList, uniqueCourse):
+                    return True
+            visitList.remove(courseNum)
+            uniqueCourse.add(courseNum)
+            return False
+        
+        courses = set() # notice the unique courses are set outside of the loop
+        for i in range(numCourses):
+            visited = set()
+            if cycle(i, visited, courses):
+                return False
+        
+        return True
+```
+## 2244 Min Rounds to Complete All Tasks (math)
+* initial thoughts:
+    * use a hash map to keep track of the number of tasks at each level
+    * iterature over the hash map and calculate the number of rounds needed
+* hint: determine the pattern for counting the rounds needed by enumeration
+* the following solution is correct, but not efficient:
+```
+        taskDict = {}
+        for i in tasks:
+            if i in taskDict.keys():
+                taskDict[i] += 1
+            else:
+                taskDict[i] = 1
+        rounds = 0
+        for j in taskDict.keys():
+            if taskDict[j] == 1:
+                return -1
+            elif taskDict[j] % 3 == 0:
+                rounds += taskDict[j] / 3
+            else:
+                rounds += ( taskDict[j] / 3 + 1)
+        return rounds
+```
+* use efficient data structure
+```
+        taskDict = Counter(tasks).values()
+        rounds = 0
+        for j in taskDict:
+            if j == 1:
+                return -1
+            else:
+                rounds += ( (j + 2) // 3 )
+        return rounds
+```
+* faster
+```
+class Solution:
+    def minimumRounds(self, tasks: List[int]) -> int:
+        k = 0
+        c = Counter(tasks).values()
+        if 1 in c:
+            return -1
+        for j in c:
+            k += j // 3 + bool(j % 3)
+        return k
+```
+## 633 Sum of Square Numbers (two pointers, hashmap)
+```
+class Solution(object):
+    def judgeSquareSum(self, c):
+        """
+        :type c: int
+        :rtype: bool
+        """
+        left = 0
+        right = math.floor(sqrt(c))
+        while left <= right:
+            if left * left + right * right == c:
+                return True
+            elif left * left + right * right < c:
+                left += 1
+            else:
+                right -= 1
+        return False
+```
+##
 # Resource
 * Chapter 14, 15 of Margaret Fleck's textbook: Building Blocks for Theoretical Computer Science
 https://mfleck.cs.illinois.edu/building-blocks/index-sp2020.html
