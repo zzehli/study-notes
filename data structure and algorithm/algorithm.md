@@ -156,6 +156,7 @@ class Solution(object):
         
         return True
 ```
+* https://youtu.be/yPldqMtg-So?si=vi4WbPuqmeupZDWQ
 ## 2244 Min Rounds to Complete All Tasks (math)
 * initial thoughts:
     * use a hash map to keep track of the number of tasks at each level
@@ -179,7 +180,7 @@ class Solution(object):
                 rounds += ( taskDict[j] / 3 + 1)
         return rounds
 ```
-* use efficient data structure
+* 
 ```
         taskDict = Counter(tasks).values()
         rounds = 0
@@ -190,7 +191,7 @@ class Solution(object):
                 rounds += ( (j + 2) // 3 )
         return rounds
 ```
-* faster
+* use efficient data structure andfaster
 ```
 class Solution:
     def minimumRounds(self, tasks: List[int]) -> int:
@@ -203,6 +204,7 @@ class Solution:
         return k
 ```
 ## 633 Sum of Square Numbers (two pointers, hashmap)
+* set two pointers apart, squeeze the two points based on their sum
 ```
 class Solution(object):
     def judgeSquareSum(self, c):
@@ -221,7 +223,38 @@ class Solution(object):
                 right -= 1
         return False
 ```
-##
+## 994 Rotting Orange (graph)
+* initial thought:
+    * breath first search
+* to move to four directions, use (1, 0) (0, 1) (-1, 0) (0, -1) to represent a move
+* besides the queue for bfs, needs another map to store the distance/time laps
+## 14 longest common prefix (string)
+* compare position i of all string at the same time, if one does not equal the others, return existing output
+## 17 letter combinations of a phone number (backtracking)
+* initial thought: how to code a permutation?
+* this q can be done both recursive, an example of backtracking: https://youtu.be/gBC_Fd8EE8A?si=32mZVN18EOQuhP6O
+* chapter 9 of Skiena
+* complexity?
+* the simplist solution is to iteratively build the permutation digit by digit (https://www.youtube.com/watch?v=7yyNwvzO240):
+```
+        _dict = {"2": "abc", "3": "def", "4": "ghi", "5": "jkl", "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"}
+        if not digits: 
+            return []
+        output = [""]
+        for d in digits:
+            # for each digit, look up letters
+            letters = _dict[d]
+            perm = []
+            for l in letters:
+                # for eaach letter, append that into the existing letter to the output
+                for o in output:
+                    newElem = o + l
+                    perm.append(newElem)
+            output = perm
+        
+        return output
+```
+
 # Resource
 * Chapter 14, 15 of Margaret Fleck's textbook: Building Blocks for Theoretical Computer Science
 https://mfleck.cs.illinois.edu/building-blocks/index-sp2020.html
