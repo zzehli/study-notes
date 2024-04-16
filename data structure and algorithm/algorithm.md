@@ -102,7 +102,7 @@ class Solution {
 ## 128 Longest Consecutive Sequence (Hashmap)
 * Use HashSet to achieve O(1) lookup
 * for each element, check if x-1 exists, if not check if x + 1, x + 2, .. exists, then update the best consequtive array length
-## 207 Course Schedule (Graph)
+## 207** Course Schedule (Graph)
 * Pointers: 1. construct an adjacency list to store prereq; 2. use dfs to search for cycle:
 ```
         adjList = defaultdict(list)
@@ -157,6 +157,7 @@ class Solution(object):
         return True
 ```
 * https://youtu.be/yPldqMtg-So?si=vi4WbPuqmeupZDWQ
+* about recursion, variable changed at the bottom will affact the same variable that is cached in the recursion above it. eg(test case: [[0,1],[0,2],[1,3]] and print visitList)
 ## 2244 Min Rounds to Complete All Tasks (math)
 * initial thoughts:
     * use a hash map to keep track of the number of tasks at each level
@@ -254,6 +255,10 @@ class Solution(object):
         
         return output
 ```
+## 153 Find Minimum in Rotated Sorted Array （binary search)
+* this question is a clever spin on binary search since the array is not sorted
+* Q: does the solution depend on the kind of array it is? Yes
+* https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/solutions/158940/beat-100-very-simple-python-very-detailed-explanation
 
 # Resource
 * Chapter 14, 15 of Margaret Fleck's textbook: Building Blocks for Theoretical Computer Science
