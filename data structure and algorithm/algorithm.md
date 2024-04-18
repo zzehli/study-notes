@@ -21,6 +21,13 @@ When g(n) is $O(f(n))$ and f(n) is $O(g(n))$, then f(n) and g(n) are forced to r
 
 For big-o analysis examples, such as merge sort, see 15-algorithms.pdf
 # Algorithms
+## Backtracking (Erickson)
+* A backtracking algorithm tries to construct a solution to a computational problem incrementally, one small piece at a time. Whenever the algorithm needs to decide between multiple alternatives to the next component of the solution, it recursively evaluates every alternative and then chooses the best one.
+* common characters for backtracking problems: 
+    * goal structure is a sequence
+    * each recursive step makes one decision, the the recursion requires a summary of the past decisions as its input; therefore in the middle of the recursion, the function try all possible next steps based on past decisions and decide wither these steps is acceptable
+* use index instead of sub-array to represent the sequence/array
+* leetcode question collection: https://leetcode.com/problems/letter-combinations-of-a-phone-number/solutions/780232/backtracking-python-problems-solutions-interview-prep and https://leetcode.com/problems/combination-sum/solutions/16502/a-general-approach-to-backtracking-questions-in-java-subsets-permutations-combination-sum-palindrome-partitioning/
 ## Greedy Algorithm
 ## Search
 ### DFS
@@ -231,7 +238,7 @@ class Solution(object):
 * besides the queue for bfs, needs another map to store the distance/time laps
 ## 14 longest common prefix (string)
 * compare position i of all string at the same time, if one does not equal the others, return existing output
-## 17 letter combinations of a phone number (backtracking)
+## 17** letter combinations of a phone number (backtracking)
 * initial thought: how to code a permutation?
 * this q can be done both recursive, an example of backtracking: https://youtu.be/gBC_Fd8EE8A?si=32mZVN18EOQuhP6O
 * chapter 9 of Skiena
@@ -256,12 +263,15 @@ class Solution(object):
         return output
 ```
 ## 153 Find Minimum in Rotated Sorted Array （binary search)
-* this question is a clever spin on binary search since the array is not sorted
+* this question is a clever spin on binary search since the array is not sorted, 
+however, the arrangement of the array is still very important
 * Q: does the solution depend on the kind of array it is? Yes
 * https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/solutions/158940/beat-100-very-simple-python-very-detailed-explanation
-
+## 39 combination sum (unlimited reuse) (backtracking)
+* to resume the same item, pay attention to the index of the iteration to allow the same index to be called in recursion
 # Resource
 * Chapter 14, 15 of Margaret Fleck's textbook: Building Blocks for Theoretical Computer Science
 https://mfleck.cs.illinois.edu/building-blocks/index-sp2020.html
-* https://usaco.guide/general/resources-cp
+* USACO guide on Competitive Programming: https://usaco.guide/general/resources-cp
 * Competitive Programmer’s Handbook by Laaksonen: https://cses.fi/book/book.pdf
+* Jeff Erickson's Algorithm textbook
