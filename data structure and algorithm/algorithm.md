@@ -22,12 +22,12 @@ When g(n) is $O(f(n))$ and f(n) is $O(g(n))$, then f(n) and g(n) are forced to r
 For big-o analysis examples, such as merge sort, see 15-algorithms.pdf
 # Algorithms
 ## Backtracking (Erickson)
+* recursion tree: The backtracking search for complete solutions is equivalent to a depth-first search of this tree.
 * A backtracking algorithm tries to construct a solution to a computational problem incrementally, one small piece at a time. Whenever the algorithm needs to decide between multiple alternatives to the next component of the solution, it recursively evaluates every alternative and then chooses the best one.
 * common characters for backtracking problems: 
     * goal structure is a sequence
     * each recursive step makes one decision, the the recursion requires a summary of the past decisions as its input; therefore in the middle of the recursion, the function try all possible next steps based on past decisions and decide wither these steps is acceptable
 * use index instead of sub-array to represent the sequence/array
-* leetcode question collection: https://leetcode.com/problems/letter-combinations-of-a-phone-number/solutions/780232/backtracking-python-problems-solutions-interview-prep and https://leetcode.com/problems/combination-sum/solutions/16502/a-general-approach-to-backtracking-questions-in-java-subsets-permutations-combination-sum-palindrome-partitioning/
 ## Greedy Algorithm
 ## Search
 ### DFS
@@ -38,7 +38,53 @@ For big-o analysis examples, such as merge sort, see 15-algorithms.pdf
 ## Tree
 ### Binary Search Tree
 # Leetcode
-## 911 Online Election
+## backtracking
+* leetcode question collection
+    * https://leetcode.com/problems/letter-combinations-of-a-phone-number/solutions/780232/backtracking-python-problems-solutions-interview-prep 
+    * https://leetcode.com/problems/permutations-ii/solutions/429532/general-backtracking-questions-solutions-in-python-for-reference
+    * https://leetcode.com/problems/combination-sum/solutions/16502/a-general-approach-to-backtracking-questions-in-java-subsets-permutations-combination-sum-palindrome-partitioning/
+* how to remove duplicate in permutations （combination instead of permutation)?
+### 17** letter combinations of a phone number (backtracking)
+* initial thought: how to code a permutation?
+* this q can be done both recursive, an example of backtracking: https://youtu.be/gBC_Fd8EE8A?si=32mZVN18EOQuhP6O
+* chapter 9 of Skiena
+* complexity?
+* the simplist solution is to iteratively build the permutation digit by digit (https://www.youtube.com/watch?v=7yyNwvzO240):
+```
+        _dict = {"2": "abc", "3": "def", "4": "ghi", "5": "jkl", "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"}
+        if not digits: 
+            return []
+        output = [""]
+        for d in digits:
+            # for each digit, look up letters
+            letters = _dict[d]
+            perm = []
+            for l in letters:
+                # for eaach letter, append that into the existing letter to the output
+                for o in output:
+                    newElem = o + l
+                    perm.append(newElem)
+            output = perm
+        
+        return output
+```
+### 79 Subset I (backtracking)
+* Initially, unclear how to construct the recursion tree
+* need to draw out recursion tree before deciding the base case and recursion case
+### 39 combination sum (unlimited reuse) (backtracking)
+* to resume the same item, pay attention to the index of the iteration to allow the same index to be called in recursion
+### 40 combination sum (no reuse) (backtracking)
+* sorting is necessary given the format of the output is sorted as well
+* since the test cases contain duplicates, in each iteration, check if the current element is a duplicate of the prev elem
+### 90 Subeset II (backtracking)
+* remove duplicates
+### 46 Permutations (backtracking)
+* unlike the previous questions, this is a permutation, not a combination
+### 47** Permutation II (backtracking)
+* permutation but remove duplicate values
+###
+## Others
+### 911 Online Election
 * Initial thought:
     * in constructor, count the votes at each time frame; however, not sure which data struct to use since we do not know how many candidates are these in the first place
     * to find the lead, go to the closest time point and compare the votes to derive the lead
@@ -73,7 +119,7 @@ class TopVotedCandidate {
     }
 }
  ```
-## 53 Maximum subarray (two pointers)
+### 53 Maximum subarray (two pointers)
 * the basic idea is to keep track of current sum and maximum value separately, then update maximum by comparing maximum and current sum; these two values can be considered a sliding window
 * there are two ways of track the current sum
     * none of the two comepare `currSum` with `currSum + nums[i]`, because this does not keep track of consecutive sum
@@ -106,10 +152,10 @@ class Solution {
     }
 }
 ```
-## 128 Longest Consecutive Sequence (Hashmap)
+### 128 Longest Consecutive Sequence (Hashmap)
 * Use HashSet to achieve O(1) lookup
 * for each element, check if x-1 exists, if not check if x + 1, x + 2, .. exists, then update the best consequtive array length
-## 207** Course Schedule (Graph)
+### 207** Course Schedule (Graph)
 * Pointers: 1. construct an adjacency list to store prereq; 2. use dfs to search for cycle:
 ```
         adjList = defaultdict(list)
@@ -165,7 +211,7 @@ class Solution(object):
 ```
 * https://youtu.be/yPldqMtg-So?si=vi4WbPuqmeupZDWQ
 * about recursion, variable changed at the bottom will affact the same variable that is cached in the recursion above it. eg(test case: [[0,1],[0,2],[1,3]] and print visitList)
-## 2244 Min Rounds to Complete All Tasks (math)
+### 2244 Min Rounds to Complete All Tasks (math)
 * initial thoughts:
     * use a hash map to keep track of the number of tasks at each level
     * iterature over the hash map and calculate the number of rounds needed
@@ -211,7 +257,7 @@ class Solution:
             k += j // 3 + bool(j % 3)
         return k
 ```
-## 633 Sum of Square Numbers (two pointers, hashmap)
+### 633 Sum of Square Numbers (two pointers, hashmap)
 * set two pointers apart, squeeze the two points based on their sum
 ```
 class Solution(object):
@@ -231,47 +277,26 @@ class Solution(object):
                 right -= 1
         return False
 ```
-## 994 Rotting Orange (graph)
+### 994 Rotting Orange (graph)
 * initial thought:
     * breath first search
 * to move to four directions, use (1, 0) (0, 1) (-1, 0) (0, -1) to represent a move
 * besides the queue for bfs, needs another map to store the distance/time laps
-## 14 longest common prefix (string)
+### 14 longest common prefix (string)
 * compare position i of all string at the same time, if one does not equal the others, return existing output
-## 17** letter combinations of a phone number (backtracking)
-* initial thought: how to code a permutation?
-* this q can be done both recursive, an example of backtracking: https://youtu.be/gBC_Fd8EE8A?si=32mZVN18EOQuhP6O
-* chapter 9 of Skiena
-* complexity?
-* the simplist solution is to iteratively build the permutation digit by digit (https://www.youtube.com/watch?v=7yyNwvzO240):
-```
-        _dict = {"2": "abc", "3": "def", "4": "ghi", "5": "jkl", "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"}
-        if not digits: 
-            return []
-        output = [""]
-        for d in digits:
-            # for each digit, look up letters
-            letters = _dict[d]
-            perm = []
-            for l in letters:
-                # for eaach letter, append that into the existing letter to the output
-                for o in output:
-                    newElem = o + l
-                    perm.append(newElem)
-            output = perm
-        
-        return output
-```
-## 153 Find Minimum in Rotated Sorted Array （binary search)
+### 153 Find Minimum in Rotated Sorted Array （binary search)
 * this question is a clever spin on binary search since the array is not sorted, 
 however, the arrangement of the array is still very important
 * Q: does the solution depend on the kind of array it is? Yes
 * https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/solutions/158940/beat-100-very-simple-python-very-detailed-explanation
-## 39 combination sum (unlimited reuse) (backtracking)
-* to resume the same item, pay attention to the index of the iteration to allow the same index to be called in recursion
+
 # Resource
 * Chapter 14, 15 of Margaret Fleck's textbook: Building Blocks for Theoretical Computer Science
 https://mfleck.cs.illinois.edu/building-blocks/index-sp2020.html
 * USACO guide on Competitive Programming: https://usaco.guide/general/resources-cp
 * Competitive Programmer’s Handbook by Laaksonen: https://cses.fi/book/book.pdf
 * Jeff Erickson's Algorithm textbook
+# Topics to be investigated:
+* backtrack big O analysis
+* recursion tree
+* improve efficiency of backtracking methods
