@@ -82,79 +82,7 @@ For big-o analysis examples, such as merge sort, see 15-algorithms.pdf
 * unlike the previous questions, this is a permutation, not a combination
 ### 47** Permutation II (backtracking)
 * permutation but remove duplicate values
-###
-## Others
-### 911 Online Election
-* Initial thought:
-    * in constructor, count the votes at each time frame; however, not sure which data struct to use since we do not know how many candidates are these in the first place
-    * to find the lead, go to the closest time point and compare the votes to derive the lead
-* Solution keys:
-    * create a leads hash map to store the lead at each time point
-    * use binary search to iterate through the leads
-```
-import java.util.Arrays;
-class TopVotedCandidate {
-    private int[] times;
-    private Map<Integer, Integer> leads = new HashMap<>(); 
-    public TopVotedCandidate(int[] persons, int[] times) {
-        int lead = persons[0];
-        this.times = times;
-        Map<Integer, Integer> scores = new HashMap<>();
-        for (int i = 0; i < persons.length; ++i) {
-            //increment the score
-            //persons[i] is the index of the person
-            scores.put(persons[i], scores.getOrDefault(persons[i], 0)+1);
-            //compare the current score with the lead's score, update the lead
-            if (scores.get(lead) <= scores.get(persons[i])) lead = persons[i];
-            leads.put(times[i], lead);
-        }
-        
-    }
-    
-    public int q(int t) {
-        //binary search to grab the time smaller then t and return the lead at the time
-        int index = Arrays.binarySearch(times, t) < 0 ? -Arrays.binarySearch(times, t)-2 : Arrays.binarySearch(times, t);
-
-        return leads.get(times[index]);
-    }
-}
- ```
-### 53 Maximum subarray (two pointers)
-* the basic idea is to keep track of current sum and maximum value separately, then update maximum by comparing maximum and current sum; these two values can be considered a sliding window
-* there are two ways of track the current sum
-    * none of the two comepare `currSum` with `currSum + nums[i]`, because this does not keep track of consecutive sum
-    * one is to `max(nums[i], currSum + nums[i])`
-```
-class Solution {
-    public int maxSubArray(int[] nums) {
-        int currMax = nums[0];
-        int max = nums[0];
-        for (int i = 1; i < nums.length; ++i) {
-            currMax = Math.max(nums[i], currMax + nums[i]);
-            max = Math.max(currMax, max);
-        }
-        return max;
-    }
-}
-```
-    * the other is `max(currSum, 0)`, which is an implementation of the Kadane's algorithm: https://www.youtube.com/watch?v=umt7t1_X8Rc
-```
-class Solution {
-    public int maxSubArray(int[] nums) {
-        int currMax = nums[0];
-        int sum = 0;
-        for (int i = 0; i < nums.length; ++i) {
-            sum += nums[i];
-            currMax = Math.max(currMax, sum);
-            sum = Math.max(sum, 0);
-        }
-        return currMax;
-    }
-}
-```
-### 128 Longest Consecutive Sequence (Hashmap)
-* Use HashSet to achieve O(1) lookup
-* for each element, check if x-1 exists, if not check if x + 1, x + 2, .. exists, then update the best consequtive array length
+## graph
 ### 207** Course Schedule (Graph)
 * Pointers: 1. construct an adjacency list to store prereq; 2. use dfs to search for cycle:
 ```
@@ -211,6 +139,111 @@ class Solution(object):
 ```
 * https://youtu.be/yPldqMtg-So?si=vi4WbPuqmeupZDWQ
 * about recursion, variable changed at the bottom will affact the same variable that is cached in the recursion above it. eg(test case: [[0,1],[0,2],[1,3]] and print visitList)
+### 994 Rotting Orange (Graph)
+* initial thought:
+    * breath first search
+* to move to four directions, use (1, 0) (0, 1) (-1, 0) (0, -1) to represent a move
+* besides the queue for bfs, needs another map to store the distance/time laps
+## Stack
+### 121 Best Time to Buy and Sell Stock (sliding window, Kadane's algorithm)
+* initial thought: two pointers
+* method 1, too slow:
+```
+        currMax = 0
+        for fst in range(len(prices)):
+            for snd in range(fst, len(prices)):
+                if fst == snd:
+                    continue
+                if prices[snd] < prices[fst]:
+                    continue
+                if prices[snd] - prices[fst] > currMax:
+                    currMax = prices[snd] - prices[fst]
+        return currMax
+```
+* Kadane's algorithm, the goal is still to find the max subarray. Here, see elements of an array as differences of two consecutive elements
+```
+currMax, arrayMax = 0, 0
+        for i in range(1, len(prices)):
+            currMax = max(currMax, 0)
+            currMax += prices[i] - prices[i - 1]
+            arrayMax = max(currMax, arrayMax)
+        
+        return arrayMax
+```
+### 169 Majority Element (moore's algorithm)
+
+## Others
+### 911 Online Election
+* Initial thought:
+    * in constructor, count the votes at each time frame; however, not sure which data struct to use since we do not know how many candidates are these in the first place
+    * to find the lead, go to the closest time point and compare the votes to derive the lead
+* Solution keys:
+    * create a leads hash map to store the lead at each time point
+    * use binary search to iterate through the leads
+```
+import java.util.Arrays;
+class TopVotedCandidate {
+    private int[] times;
+    private Map<Integer, Integer> leads = new HashMap<>(); 
+    public TopVotedCandidate(int[] persons, int[] times) {
+        int lead = persons[0];
+        this.times = times;
+        Map<Integer, Integer> scores = new HashMap<>();
+        for (int i = 0; i < persons.length; ++i) {
+            //increment the score
+            //persons[i] is the index of the person
+            scores.put(persons[i], scores.getOrDefault(persons[i], 0)+1);
+            //compare the current score with the lead's score, update the lead
+            if (scores.get(lead) <= scores.get(persons[i])) lead = persons[i];
+            leads.put(times[i], lead);
+        }
+        
+    }
+    
+    public int q(int t) {
+        //binary search to grab the time smaller then t and return the lead at the time
+        int index = Arrays.binarySearch(times, t) < 0 ? -Arrays.binarySearch(times, t)-2 : Arrays.binarySearch(times, t);
+
+        return leads.get(times[index]);
+    }
+}
+ ```
+### 53 Maximum subarray (two pointers, kadane's algorithm)
+* the basic idea is to keep track of current sum and maximum value separately, then update maximum by comparing maximum and current sum; these two values can be considered a sliding window
+* there are two ways of track the current sum
+    * none of the two comepare `currSum` with `currSum + nums[i]`, because this does not keep track of consecutive sum
+    * one is to `max(nums[i], currSum + nums[i])`
+    ```
+    class Solution {
+        public int maxSubArray(int[] nums) {
+            int currMax = nums[0];
+            int max = nums[0];
+            for (int i = 1; i < nums.length; ++i) {
+                currMax = Math.max(nums[i], currMax + nums[i]);
+                max = Math.max(currMax, max);
+            }
+            return max;
+        }
+    }
+    ```
+    * the other is `max(currSum, 0)`, which is an implementation of the Kadane's algorithm: https://www.youtube.com/watch?v=umt7t1_X8Rc
+    ```
+    class Solution {
+        public int maxSubArray(int[] nums) {
+            int currMax = nums[0];
+            int sum = 0;
+            for (int i = 0; i < nums.length; ++i) {
+                sum += nums[i];
+                currMax = Math.max(currMax, sum);
+                sum = Math.max(sum, 0);
+            }
+            return currMax;
+        }
+    }
+    ```
+### 128 Longest Consecutive Sequence (Hashmap)
+* Use HashSet to achieve O(1) lookup
+* for each element, check if x-1 exists, if not check if x + 1, x + 2, .. exists, then update the best consequtive array length
 ### 2244 Min Rounds to Complete All Tasks (math)
 * initial thoughts:
     * use a hash map to keep track of the number of tasks at each level
@@ -277,11 +310,6 @@ class Solution(object):
                 right -= 1
         return False
 ```
-### 994 Rotting Orange (graph)
-* initial thought:
-    * breath first search
-* to move to four directions, use (1, 0) (0, 1) (-1, 0) (0, -1) to represent a move
-* besides the queue for bfs, needs another map to store the distance/time laps
 ### 14 longest common prefix (string)
 * compare position i of all string at the same time, if one does not equal the others, return existing output
 ### 153 Find Minimum in Rotated Sorted Array （binary search)
