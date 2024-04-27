@@ -49,28 +49,40 @@ For big-o analysis examples, such as merge sort, see 15-algorithms.pdf
 * this q can be done both recursive, an example of backtracking: https://youtu.be/gBC_Fd8EE8A?si=32mZVN18EOQuhP6O
 * chapter 9 of Skiena
 * complexity?
-* the simplist solution is to iteratively build the permutation digit by digit (https://www.youtube.com/watch?v=7yyNwvzO240):
-```
-        _dict = {"2": "abc", "3": "def", "4": "ghi", "5": "jkl", "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"}
-        if not digits: 
-            return []
-        output = [""]
-        for d in digits:
-            # for each digit, look up letters
-            letters = _dict[d]
-            perm = []
-            for l in letters:
-                # for eaach letter, append that into the existing letter to the output
-                for o in output:
-                    newElem = o + l
-                    perm.append(newElem)
-            output = perm
-        
-        return output
-```
+* the simplist solution is to iteratively build the permutation digit by digit, not a backtracking solution (https://www.youtube.com/watch?v=7yyNwvzO240):
+    ```
+            _dict = {"2": "abc", "3": "def", "4": "ghi", "5": "jkl", "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"}
+            if not digits: 
+                return []
+            output = [""]
+            for d in digits:
+                # for each digit, look up letters
+                letters = _dict[d]
+                perm = []
+                for l in letters:
+                    # for eaach letter, append that into the existing letter to the output
+                    for o in output:
+                        newElem = o + l
+                        perm.append(newElem)
+                output = perm
+            
+            return output
+    ```
 ### 79 Subset I (backtracking)
 * Initially, unclear how to construct the recursion tree
 * need to draw out recursion tree before deciding the base case and recursion case
+* simplist case of backtracking
+    ```
+
+            def backtrack(seq, path, ret):
+                ret.append(path)
+                for i in range(len(seq)):
+                    backtrack(seq[i+1:], path + [seq[i]], ret)
+            
+            ret = []
+            backtrack(nums, [], ret)
+            return ret
+    ```
 ### 39 combination sum (unlimited reuse) (backtracking)
 * to resume the same item, pay attention to the index of the iteration to allow the same index to be called in recursion
 ### 40 combination sum (no reuse) (backtracking)
@@ -160,7 +172,7 @@ class Solution(object):
                     currMax = prices[snd] - prices[fst]
         return currMax
 ```
-* Kadane's algorithm, the goal is still to find the max subarray. Here, see elements of an array as differences of two consecutive elements
+* Kadane's algorithm, the goal is still to find the max subarray. Here, see elements of an array as differences of two consecutive elements: https://neetcode.io/courses/advanced-algorithms/0
 ```
 currMax, arrayMax = 0, 0
         for i in range(1, len(prices)):
@@ -170,8 +182,120 @@ currMax, arrayMax = 0, 0
         
         return arrayMax
 ```
-### 169 Majority Element (moore's algorithm)
+### 169** Majority Element (moore's algorithm)
+### 57 Insert Interval
+* O(n) solution makes one pass through the array, compare the start/end of the new interval with the interval i, insert if no overlap, else create a new interval based on the overlapping condition
+* don't seem to fit in existing categories of common solutions
+### 56 Merge Interval
+* the problem is similar to the one above, but the solution looks a lot simpler
+* the main point of comparison is the 2nd element of the current array in the iteration with the last array in the resulting array. In 57, the resulting array isn't involved in the comparison
+* when two array merge, only change the 2nd element of the array that is inserted in the previous iteration, no need to insert a new array
+* https://leetcode.com/problems/merge-intervals/solutions/350272/python3-sort-o-nlog-n
+### 15 3Sum (backtracking, two pointers)
+* Initial thought: can be solved with backtracking, but would exceed the time limit
+    ```
+    def threeSum(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        ret = []
+        def sum(arr):
+            res = 0
+            for i in arr:
+                res += i
+            return res
 
+        def backtrack(seq, elem):
+            if len(elem) == 3 and sum(elem) == 0:
+                ret.append(elem)
+            else:
+                for i in range(len(seq)):
+                    if i > 0 and seq[i] == seq[i - 1]:
+                        continue
+                    backtrack(seq[i+1:], elem + [seq[i]])
+        
+        nums.sort()
+        backtrack(nums, [])
+        return ret
+    ```
+* two pointers solution with iteration:
+    ```
+    def threeSum(self, nums):
+            """
+            :type nums: List[int]
+            :rtype: List[List[int]]
+            """
+            res = []
+            nums.sort()
+            for i in range(len(nums)):
+                # skip duplicate values
+                if i > 0 and nums[i] == nums[i - 1]:
+                    continue
+                l, r = i + 1, len(nums) - 1
+                while l < r:
+                    s = nums[i] + nums[l] + nums[r]
+                    if s == 0:
+                        res.append([nums[i], nums[l], nums[r]])
+                        l = l + 1
+                        while l < r and nums[l] == nums[l - 1]:
+                            l = l + 1
+                    elif s < 0:
+                        l = l + 1
+                    else:
+                        r = r - 1
+            return res
+    ```
+* https://leetcode.com/problems/3sum/solutions/736561/sum-megapost-python3-solution-with-a-detailed-explanation
+### 238 Product of Array Except Self (prefix sum)
+    ```
+    def productExceptSelf(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+   
+        n = len(nums)
+        ret = [None] * n   
+        prefix = [None] * n
+        suffix = [None] * n
+            prefix[0], suffix[n - 1] = 1, 1
+        for i in range(1, n):
+            prefix[i] = prefix[i - 1] * nums[i - 1]
+        for i in range(n - 2, -1, -1):
+            suffix[i] = suffix[i + 1] * nums[i + 1]
+        for i in range(n):
+            ret[i] = prefix[i] * suffix[i]
+        return ret
+    ```
+### 75 Sort Colors (dutch partitioning problem, quicksort)
+* topic: invest the relationship between divid-and-conquer solution used in quicksort and the iterative solution used in this problem
+```
+    def sortColors(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: None Do not return anything, modify nums in-place instead.
+        """
+        # general idea, use three index, use middle (white) to iterate index thru, if the color of the middle index is not white, then
+        # swap it with the index of its own color
+        white, red, blue = 0, 0, len(nums) - 1
+        while white <= blue:
+            # if current （white) index is red swap current and red, since it is a mismatch
+            if nums[white] == 0:
+                nums[white], nums[red] = nums[red], nums[white]
+                white += 1
+                red += 1
+            # if current (white) index is white, then proceed without changes
+            elif nums[white] == 1:
+                white += 1
+            else:
+                nums[white], nums[blue] = nums[blue], nums[white]
+                blue -= 1
+        return nums
+```
+### 11 Container With Most Water (two pointers, greedy)
+* instead of thinking about finding the two biggest elements in the list, which is global, start from two ends of the list and remove the smaller element from consider. This move turns the question into a local comparison, a greedy algorithm approach
+* topic: elaborate on the greedy algorithm lens
 ## Others
 ### 911 Online Election
 * Initial thought:
@@ -208,7 +332,7 @@ class TopVotedCandidate {
     }
 }
  ```
-### 53 Maximum subarray (two pointers, kadane's algorithm)
+### 53** Maximum subarray (two pointers, kadane's algorithm)
 * the basic idea is to keep track of current sum and maximum value separately, then update maximum by comparing maximum and current sum; these two values can be considered a sliding window
 * there are two ways of track the current sum
     * none of the two comepare `currSum` with `currSum + nums[i]`, because this does not keep track of consecutive sum
@@ -328,3 +452,5 @@ https://mfleck.cs.illinois.edu/building-blocks/index-sp2020.html
 * backtrack big O analysis
 * recursion tree
 * improve efficiency of backtracking methods
+* sliding window, two pointers
+* prefix sum
