@@ -296,6 +296,55 @@ currMax, arrayMax = 0, 0
 ### 11 Container With Most Water (two pointers, greedy)
 * instead of thinking about finding the two biggest elements in the list, which is global, start from two ends of the list and remove the smaller element from consider. This move turns the question into a local comparison, a greedy algorithm approach
 * topic: elaborate on the greedy algorithm lens
+## String
+### 8 String to Integer (atoi)
+* a bit tedius question of string parsing
+* use `ord(x) - ord('0')` to convert string to int
+* use deterministic finite automaton to solve the problem: https://leetcode.com/problems/string-to-integer-atoi/solutions/798380/fast-and-simpler-dfa-approach-python-3/
+### 3** Longest Substring Without Repeating Characters (sliding window)
+* solution:
+    ```
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        if len(s) == 0:
+            return 0
+        start, maxLen = 0, 0
+        _dict = {}
+        for i in range(len(s)):
+            # if this letter appears before and it is in the current sbustring (sliding window), 
+            # then need to update the starting point of the substring
+            if s[i] in _dict and _dict[s[i]] >= start:
+                start = _dict[s[i]] + 1
+            else:
+                maxLen = max(maxLen, i - start + 1)
+            # the update of the dictionary and the update of the sliding window is two separated processes
+            _dict[s[i]] = i
+        return maxLen
+    ```
+* https://leetcode.com/problems/longest-substring-without-repeating-characters/solutions/347818/python3-sliding-window-o-n-with-explanation/
+## 242 Valid Anagram (hashtable)
+* leverage `defaultdict()` to create a hashtable initialized with default values
+## 76** Minimum Window Substring (sliding window)
+* initial thoughts: need a function to decide whether: 1, the current window meet the condition; 2, cannot meet the condition anymore; 2, not yet meet the condition
+* the most important part of the question is to design a counter that keeps track of the status of the sliding window
+* https://leetcode.com/problems/minimum-window-substring/solutions/26808/here-is-a-10-line-template-that-can-solve-most-substring-problems/
+## 409** Longest Palindrom
+* use bitwise operation to count the occurrences of odd letters
+## 5** Longest Palindromic Substring (DP, two pointers)
+* this is a classic problem that has many approaches: brute force, DP, two pointers, etc
+* https://leetcode.com/problems/longest-palindromic-substring/solutions/650496/all-approaches-code-in-java-including-manacher-s-algorithm-explanation/
+* https://en.wikipedia.org/wiki/Longest_palindromic_substring
+* walk thru all substrings, not the since the var end doesn't exist when start is len(s) - 1, it will skip
+    ```
+    for start in range(len(s) - 1, -1, -1):
+        for end in range(start + 1, len(s)):
+    ```
+* topic: dp table, top down, bottom up dp approaches
+## 438** Find All Anagrams in a String
+* https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/175381/sliding-window-logical-thinking/
 ## Others
 ### 911 Online Election
 * Initial thought:
@@ -391,7 +440,7 @@ class TopVotedCandidate {
                 rounds += ( taskDict[j] / 3 + 1)
         return rounds
 ```
-* 
+* use `Counter()`
 ```
         taskDict = Counter(tasks).values()
         rounds = 0
@@ -434,7 +483,7 @@ class Solution(object):
                 right -= 1
         return False
 ```
-### 14 longest common prefix (string)
+### 14** longest common prefix (string)
 * compare position i of all string at the same time, if one does not equal the others, return existing output
 ### 153 Find Minimum in Rotated Sorted Array （binary search)
 * this question is a clever spin on binary search since the array is not sorted, 
@@ -454,3 +503,4 @@ https://mfleck.cs.illinois.edu/building-blocks/index-sp2020.html
 * improve efficiency of backtracking methods
 * sliding window, two pointers
 * prefix sum
+* top down and bottom up DP: https://stackoverflow.com/questions/6164629/what-is-the-difference-between-bottom-up-and-top-down
