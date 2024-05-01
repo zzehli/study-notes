@@ -33,6 +33,24 @@ For big-o analysis examples, such as merge sort, see 15-algorithms.pdf
 ### DFS
 ### BFS
 ### Binary Search
+```
+def search(self, nums, target):
+    """
+    :type nums: List[int]
+    :type target: int
+    :rtype: int
+    """
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = left + (right - left) // 2
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] > target:
+            right = mid - 1
+        else:
+            left = mid + 1  
+    return -1
+```
 ## Sort
 # Data Structure
 ## Tree
@@ -325,15 +343,15 @@ currMax, arrayMax = 0, 0
         return maxLen
     ```
 * https://leetcode.com/problems/longest-substring-without-repeating-characters/solutions/347818/python3-sliding-window-o-n-with-explanation/
-## 242 Valid Anagram (hashtable)
+### 242 Valid Anagram (hashtable)
 * leverage `defaultdict()` to create a hashtable initialized with default values
-## 76** Minimum Window Substring (sliding window)
+### 76** Minimum Window Substring (sliding window)
 * initial thoughts: need a function to decide whether: 1, the current window meet the condition; 2, cannot meet the condition anymore; 2, not yet meet the condition
 * the most important part of the question is to design a counter that keeps track of the status of the sliding window
 * https://leetcode.com/problems/minimum-window-substring/solutions/26808/here-is-a-10-line-template-that-can-solve-most-substring-problems/
-## 409** Longest Palindrom
+### 409** Longest Palindrom
 * use bitwise operation to count the occurrences of odd letters
-## 5** Longest Palindromic Substring (DP, two pointers)
+### 5** Longest Palindromic Substring (DP, two pointers)
 * this is a classic problem that has many approaches: brute force, DP, two pointers, etc
 * https://leetcode.com/problems/longest-palindromic-substring/solutions/650496/all-approaches-code-in-java-including-manacher-s-algorithm-explanation/
 * https://en.wikipedia.org/wiki/Longest_palindromic_substring
@@ -343,9 +361,58 @@ currMax, arrayMax = 0, 0
         for end in range(start + 1, len(s)):
     ```
 * topic: dp table, top down, bottom up dp approaches
-## 438** Find All Anagrams in a String
-* https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/175381/sliding-window-logical-thinking/
+### 438** Find All Anagrams in a String
+* Think about it: what is the best way to check if a string is an anagram of another?
+* use dictionaries to conduct the comparison: https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/175381/sliding-window-logical-thinking/
+    ```
+        def findAnagrams(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: List[int]
+        """
+        ret = []
+        s_len, p_len = len(s), len(p)
+        dict_s = collections.defaultdict(int)
+        dict_p = collections.defaultdict(int)
+        for i in p:
+            dict_p[i] += 1
+        right = 0
+        for left in range(s_len):
+            while right < s_len and right - left + 1 <= p_len:
+                dict_s[s[right]] += 1
+                if dict_s == dict_p:
+                    ret.append(left)
+                right += 1
+            dict_s[s[left]] -= 1
+            if dict_s[s[left]] == 0:
+                del dict_s[s[left]]
+        return ret
+    ```
+* use a counter to keep track of the comparisons: https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/92007 sliding-window-algorithm-template-to-solve-all-the-leetcode-substring-search-problem/comments/857083
 ## Others
+### 278** First Bad Version (binary search)
+* This is a binary search problem in disguise. Investigate the suble differences in how the endpoints are defined as well as the loop condition. These would depend on the starting point
+* In this question, although there is no target, the function call `isBadVersion` indicates where to find the diverging point where `True` starts. Then come up with appropriate left and right pointers so that one of them will end up at the diverging point.
+* Solution:
+    ```
+        def firstBadVersion(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        left, right = 1, n
+        while left <= right:
+            mid = left + (right - left) // 2
+            if isBadVersion(mid):
+                right = mid - 1
+            else:
+                left = mid + 1
+        return left
+    ```
+    Here `left` and `right` are based on the actual input, which starts at 1 and ends at `n`
+### 54** Spiral Matrix (simulation)
+* There is no pointers involved. Instead, create four loops and increment/decrement their boundaries after each run
 ### 911 Online Election
 * Initial thought:
     * in constructor, count the votes at each time frame; however, not sure which data struct to use since we do not know how many candidates are these in the first place
