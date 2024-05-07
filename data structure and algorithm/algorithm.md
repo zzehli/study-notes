@@ -174,6 +174,52 @@ class Solution(object):
     * breath first search
 * to move to four directions, use (1, 0) (0, 1) (-1, 0) (0, -1) to represent a move
 * besides the queue for bfs, needs another map to store the distance/time laps
+### 542 01 Matrix (Graph, Matrix, BFS, DP)
+* Brute force:
+    ```
+    def updateMatrix(self, mat):
+        """
+        :type mat: List[List[int]]
+        :rtype: List[List[int]]
+        """
+        # bfs
+        def bfs(x,y):
+            q = collections.deque()
+            q.append((x, y, 0))
+            while len(q) > 0:
+                m, n, d = q.popleft()
+                if mat[m][n] == 0:
+                    return d
+                for i, j in [(m+1, n), (m, n+1), (m-1, n), (m, n-1)]:
+                    if 0 <= i < len(mat) and 0 <= j < len(mat[0]):
+                        q.append((i,j,d+1))
+            return -1
+
+        output = [[0] * len(mat[0]) for _ in range(len(mat))]
+        for i in range(len(mat)):
+            for j in range(len(mat[0])):
+                output[i][j] = bfs(i,j)
+        return output
+    ```
+* Save memory by change matrix in-place
+    ```
+            q = collections.deque()
+        # output = [[0] * len(mat[0]) for _ in range(len(mat))]
+        for i in range(len(mat)):
+            for j in range(len(mat[0])):
+                if mat[i][j] == 0:
+                    q.append((i,j))
+                else:
+                    mat[i][j] = -1
+        while q:
+            m, n = q.popleft()
+            for i, j in [(m+1, n), (m, n+1), (m-1, n), (m, n-1)]:
+                if 0 <= i < len(mat) and 0 <= j < len(mat[0]) and mat[i][j] == -1:
+                    mat[i][j] = mat[m][n] + 1
+                    q.append((i,j))              
+        return mat
+    ```
+* investigate DP solution
 ## Stack
 ### 121 Best Time to Buy and Sell Stock (sliding window, Kadane's algorithm)
 * initial thought: two pointers
@@ -390,7 +436,7 @@ currMax, arrayMax = 0, 0
         return ret
     ```
 * use a counter to keep track of the comparisons: https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/92007 sliding-window-algorithm-template-to-solve-all-the-leetcode-substring-search-problem/comments/857083
-## Others
+## Binary Search
 ### 278** First Bad Version (binary search)
 * This is a binary search problem in disguise. Investigate the suble differences in how the endpoints are defined as well as the loop condition. These would depend on the starting point
 * In this question, although there is no target, the function call `isBadVersion` indicates where to find the diverging point where `True` starts. Then come up with appropriate left and right pointers so that one of them will end up at the diverging point.
@@ -411,6 +457,88 @@ currMax, arrayMax = 0, 0
         return left
     ```
     Here `left` and `right` are based on the actual input, which starts at 1 and ends at `n`
+### 153 Find Minimum in Rotated Sorted Array (binary search)
+* this question is a clever spin on binary search since the array is not sorted, 
+however, the arrangement of the array is still very important
+* Q: does the solution depend on the kind of array it is? Yes
+* https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/solutions/158940/beat-100-very-simple-python-very-detailed-explanation
+### 33 Search in Rotated Sorted Array (binary search)
+* Similar to 153, but more thoughts needed to find the target, since knowing the rotation point is not enough.
+* One solution is to list all possible senario and instruct how to choose in each:
+    ```
+        def search(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        
+        left, right = 0, len(nums) - 1
+        while left <= right:
+            mid = left + (right - left) // 2
+            if nums[mid] == target:
+                return mid
+            elif nums[right] >= nums[mid]:
+                if target >= nums[mid] and nums[right] >= target:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+            else:
+                if target <= nums[mid] and nums[left] <= target:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+        return -1
+    ```
+### 981 Time Based Key-Value Store (binary search)
+* This can be solved by a speicial case of binary search that output the biggest value smaller than the targetf:
+    ```
+    def get(self, key, timestamp):
+    values = self.__dict[key]
+    if len(values) == 0:
+        return ""
+    left, right = 0, len(values)
+    while left < right:
+        mid = right + (left - right) // 2
+        if values[mid][0] == timestamp:
+            return values[mid][1]
+        elif values[mid][0] < timestamp:
+            left = mid + 1
+        else:
+            right = mid
+    if right == 0:
+        return ""
+    else:
+        return values[right - 1][1]
+    ```
+* topic: investigate the generalization of different binary search variation
+### 1235** Maximum Profit in Job Scheduling (binary search, DP, backtracking)
+* Topic: knapsack problem
+* the brute force solution is thru backtracking
+* don't entirely understand the use of bisect
+* Solution:
+    ```
+        def jobScheduling(self, startTime, endTime, profit):
+        """
+        :type startTime: List[int]
+        :type endTime: List[int]
+        :type profit: List[int]
+        :rtype: int
+        """
+        jobs = sorted(zip(startTime, endTime, profit), key = lambda v: v[1])
+        dp = [[0,0]]
+        for s, e, p in jobs:
+            # i is not the insertion point, it element prior to the insertion point
+            # we compare the the potential profit (new_profit) by adding the existing profit dp[i][1] and current profit p with max profit so far dp[-1][1]
+            i = bisect.bisect(dp, [s + 1]) - 1
+            new_profit = dp[i][1] + p
+            if new_profit > dp[-1][1]:
+                # note that this dp is the resulting job combo
+                # rather, it is a lookup table of each end time and its maximum profit
+                dp.append([e, dp[i][1] + p])
+        return dp[-1][1]
+    ```
+## Others
 ### 54** Spiral Matrix (simulation)
 * There is no pointers involved. Instead, create four loops and increment/decrement their boundaries after each run
 ### 911 Online Election
@@ -552,12 +680,6 @@ class Solution(object):
 ```
 ### 14** longest common prefix (string)
 * compare position i of all string at the same time, if one does not equal the others, return existing output
-### 153 Find Minimum in Rotated Sorted Array （binary search)
-* this question is a clever spin on binary search since the array is not sorted, 
-however, the arrangement of the array is still very important
-* Q: does the solution depend on the kind of array it is? Yes
-* https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/solutions/158940/beat-100-very-simple-python-very-detailed-explanation
-
 # Resource
 * Chapter 14, 15 of Margaret Fleck's textbook: Building Blocks for Theoretical Computer Science
 https://mfleck.cs.illinois.edu/building-blocks/index-sp2020.html

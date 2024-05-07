@@ -41,3 +41,12 @@
     sorted(student_tuples, key=lambda student: student[2])   # sort by age
     [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
     ```
+* use `bisect` for binary search
+    * `bisect_left` returns the left most place of insertion, while `bisect` or `bisect_right` returns the right most place:
+    ```
+    >>> bisect.bisect_left([1,2,3], 2)
+    1
+    >>> bisect.bisect_right([1,2,3], 2)
+    2
+    ```
+* create a 2d array (matrix): don't use `list * N`, instead use `[ [0]*M for _ in range(N) ]`
