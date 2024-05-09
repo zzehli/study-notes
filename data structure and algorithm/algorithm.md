@@ -169,11 +169,13 @@ class Solution(object):
 ```
 * https://youtu.be/yPldqMtg-So?si=vi4WbPuqmeupZDWQ
 * about recursion, variable changed at the bottom will affact the same variable that is cached in the recursion above it. eg(test case: [[0,1],[0,2],[1,3]] and print visitList)
+* pay attention to how the visited list is updated
 ### 994 Rotting Orange (Graph)
 * initial thought:
     * breath first search
 * to move to four directions, use (1, 0) (0, 1) (-1, 0) (0, -1) to represent a move
 * besides the queue for bfs, needs another map to store the distance/time laps
+* Why dfs doesn't work? Because the algorithm traverses from multiple starting points, only bfs would ensure that the "flood fill" spread as intended (similar to 733. Flood Fill)
 ### 542 01 Matrix (Graph, Matrix, BFS, DP)
 * Brute force:
     ```
@@ -220,6 +222,11 @@ class Solution(object):
         return mat
     ```
 * investigate DP solution
+### 133** Clone Graph (Graph, DFS/BFS)
+* basic problem type, can be implemented in many ways
+* needs a dictionary to hold all the nodes
+### 200 Number of Islands
+* initial thought: dfs on islands of 1s, traverse and turn 1 to 2
 ## Stack
 ### 121 Best Time to Buy and Sell Stock (sliding window, Kadane's algorithm)
 * initial thought: two pointers
@@ -515,7 +522,6 @@ however, the arrangement of the array is still very important
 ### 1235** Maximum Profit in Job Scheduling (binary search, DP, backtracking)
 * Topic: knapsack problem
 * the brute force solution is thru backtracking
-* don't entirely understand the use of bisect
 * Solution:
     ```
         def jobScheduling(self, startTime, endTime, profit):
@@ -693,3 +699,4 @@ https://mfleck.cs.illinois.edu/building-blocks/index-sp2020.html
 * sliding window, two pointers
 * prefix sum
 * top down and bottom up DP: https://stackoverflow.com/questions/6164629/what-is-the-difference-between-bottom-up-and-top-down
+* union find for graph problems
