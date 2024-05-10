@@ -50,3 +50,10 @@
     2
     ```
 * create a 2d array (matrix): don't use `list * N`, instead use `[ [0]*M for _ in range(N) ]`
+* create a dictionary of arrays: `defaultdict(list)`:
+    ```
+    s = [('yellow', 1), ('blue', 2), ('yellow', 3), ('blue', 4), ('red', 1)]
+    d = defaultdict(list)
+    for k, v in s:
+        d[k].append(v)
+    ```

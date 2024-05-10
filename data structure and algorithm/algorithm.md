@@ -227,6 +227,33 @@ class Solution(object):
 * needs a dictionary to hold all the nodes
 ### 200 Number of Islands
 * initial thought: dfs on islands of 1s, traverse and turn 1 to 2
+### 721** Accounts merge (Graph, DFS/BFS)
+* construct the graph with email as key and a list of accounts as values
+* because email identifies a person, use emails to connect accounts and merge them: eg. if A has email E1 and E1 is associated with [A, B], then A and B are the same person and A should have all emails for A and B.
+* to merge the emails/accounts, iterature over the list of accounts, for each email Ei in an account i, traverse the graph to collect the all accounts associated with the email and traverse the account list, Li, since these accounts belong to the same person i.
+### 127 Word Ladder (BFS)
+* Initial thoughts: 
+    * construct all posible word lists and choose the shortest
+    * how to effectively see if two words differ by 1 letter en masse?
+    * could use backtracking to construct words
+* "So, all this problem is asking us to do, is find a shortest path from our start word to end word using only word inside our list." (https://leetcode.com/problems/word-ladder/solutions/1764371/a-very-highly-detailed-explanation)
+* an elegant solution that uses `string.ascii_lowercase` and `yield`: https://leetcode.com/problems/word-ladder/solutions/509769/java-python-bfs-solution-clean-concise/
+### 79 Word Search 
+* Initial thoughts
+    * brute force and keep track of visited cells
+    * there could be multiple starting points -> need to use bfs
+    * the difficulty is that each starting point need to keep track of their track separately -> flood fill with bfs is hard to fullfil the requirements
+* For iterative solution to work, need to add the state of the stack to another var: https://leetcode.com/problems/word-search/solutions/131327/iterative-python-solution/
+* dfs with recursion is the most straight forward solution
+### 310** Minimum Height Trees
+* Initial thought:
+    * make an adjacency list out of the edges
+    * construct all possible trees and compare their heights
+    * construct a tree is a traversal
+    * but how to calculate height?
+* this q is unlike the other graph questions but it feels very practical
+* the simplist solution treat the adjacency list as a tree and trim leaf nodes along the way until there are only 1/2 nodes left
+* topic: topological sort
 ## Stack
 ### 121 Best Time to Buy and Sell Stock (sliding window, Kadane's algorithm)
 * initial thought: two pointers
