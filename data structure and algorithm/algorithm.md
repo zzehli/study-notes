@@ -252,7 +252,7 @@ class Solution(object):
     * construct a tree is a traversal
     * but how to calculate height?
 * this q is unlike the other graph questions but it feels very practical
-* the simplist solution treat the adjacency list as a tree and trim leaf nodes along the way until there are only 1/2 nodes left
+* the simplist solution treat the adjacency list as a tree and trim leaf nodes along the way until there are only 1 or 2 nodes left
 * topic: topological sort
 ## Stack
 ### 121 Best Time to Buy and Sell Stock (sliding window, Kadane's algorithm)
@@ -571,6 +571,50 @@ however, the arrangement of the array is still very important
                 dp.append([e, dp[i][1] + p])
         return dp[-1][1]
     ```
+## B-Tree/Binary Search Tree
+### 230** Kth Smallest Element in a BST (Binary Search Tree)
+* traverse to the leaves of the tree, decrement k for on the way back until 0
+### 102** Binary Tree Level Order Traversal (Binary Tree)
+* use a queue to keep track of the number of nodes in a level; for each level, append each node's children to the queue, as well as put node's value to a temporary array, then append the array to the output at the end of the level iteration
+```
+    def levelOrder(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        if not root: return []
+        queue = deque([root])
+        res = []
+
+        while queue:
+            currLv = []
+            size = len(queue)
+            for i in range(size):
+                node = queue.popleft()
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+                currLv.append(node.val)
+            res.append(currLv)
+        return res
+```
+### 236 Lowest Common Ancestor of a Binary Tree (Binary Tree)
+* similar to 235, which is for binary search tree, but harder, since b-tree is not ordered
+* unlike 235, need to traverse first then see if a node has both p and q as its children
+### 297** Serialize and Deserialize Binary Tree (Binary Tree)
+### 543** Diameter of Binary Tree (Binary Tree)
+* common b-tree problem
+* `1 + max` to calculate the height of the tree
+### 199 Binary Tree Right Side View (Binary Tree)
+* similar to the level order traversal, keep track of levels. Traverse the whole tree but only insert the right most element
+* similar to 102, 104
+### 104 Maximum Depth of Binary Tree (Binary Tree)
+* try to come up with the recursive solution
+* can be solved by keep track the levels as in 102
+### 105** Construct Binary Tree from Preorder and Inorder Traversal
+* initial thoughts: no clue how to approach this
+* the recursive solution split the inorder array in half, left children take the first half and the right children take the second half
 ## Others
 ### 54** Spiral Matrix (simulation)
 * There is no pointers involved. Instead, create four loops and increment/decrement their boundaries after each run
