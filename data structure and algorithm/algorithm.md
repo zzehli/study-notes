@@ -86,7 +86,7 @@ def search(self, nums, target):
             
             return output
     ```
-### 79 Subset I (backtracking)
+### 78 Subsets I (backtracking)
 * Initially, unclear how to construct the recursion tree
 * need to draw out recursion tree before deciding the base case and recursion case
 * simplist case of backtracking
@@ -106,9 +106,9 @@ def search(self, nums, target):
 ### 40 combination sum (no reuse) (backtracking)
 * sorting is necessary given the format of the output is sorted as well
 * since the test cases contain duplicates, in each iteration, check if the current element is a duplicate of the prev elem
-### 90 Subeset II (backtracking)
+### 90 Subesets II (backtracking)
 * remove duplicates
-### 46 Permutations (backtracking)
+### 46** Permutations (backtracking)
 * unlike the previous questions, this is a permutation, not a combination
 ### 47** Permutation II (backtracking)
 * permutation but remove duplicate values
@@ -254,7 +254,7 @@ class Solution(object):
 * this q is unlike the other graph questions but it feels very practical
 * the simplist solution treat the adjacency list as a tree and trim leaf nodes along the way until there are only 1 or 2 nodes left
 * topic: topological sort
-## Stack
+## Array
 ### 121 Best Time to Buy and Sell Stock (sliding window, Kadane's algorithm)
 * initial thought: two pointers
 * method 1, too slow:
@@ -281,7 +281,7 @@ currMax, arrayMax = 0, 0
         return arrayMax
 ```
 ### 169** Majority Element (moore's algorithm)
-### 57 Insert Interval
+### 57** Insert Interval
 * O(n) solution makes one pass through the array, compare the start/end of the new interval with the interval i, insert if no overlap, else create a new interval based on the overlapping condition
 * don't seem to fit in existing categories of common solutions
 ### 56 Merge Interval
@@ -394,6 +394,9 @@ currMax, arrayMax = 0, 0
 ### 11 Container With Most Water (two pointers, greedy)
 * instead of thinking about finding the two biggest elements in the list, which is global, start from two ends of the list and remove the smaller element from consider. This move turns the question into a local comparison, a greedy algorithm approach
 * topic: elaborate on the greedy algorithm lens
+### 232** Implement Queue using Stacks
+* use in and out arrays to keep track of ins and outs of the array
+* need a sync function to keep the two functions in sync
 ## String
 ### 8 String to Integer (atoi)
 * a bit tedius question of string parsing
@@ -470,6 +473,13 @@ currMax, arrayMax = 0, 0
         return ret
     ```
 * use a counter to keep track of the comparisons: https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/92007 sliding-window-algorithm-template-to-solve-all-the-leetcode-substring-search-problem/comments/857083
+## Linked List
+### 146** LRU Cache
+* Doubly linked list + hashmap
+### 21** Merge Two Sorted Lists
+* the recursive solution is more intuitive: create the return list by modifying the exisiting list
+### 141** Linked List Cycle
+* clever solution with a fast and a slow pointer and see if the fast can catch the slow pointer
 ## Binary Search
 ### 278** First Bad Version (binary search)
 * This is a binary search problem in disguise. Investigate the suble differences in how the endpoints are defined as well as the loop condition. These would depend on the starting point
