@@ -391,12 +391,50 @@ currMax, arrayMax = 0, 0
                 blue -= 1
         return nums
 ```
-### 11 Container With Most Water (two pointers, greedy)
-* instead of thinking about finding the two biggest elements in the list, which is global, start from two ends of the list and remove the smaller element from consider. This move turns the question into a local comparison, a greedy algorithm approach
-* topic: elaborate on the greedy algorithm lens
-### 232** Implement Queue using Stacks
+### 11** Container With Most Water (two pointers, greedy)
+* instead of thinking about finding the two biggest elements in the list, which is global, start from two ends of the list and remove the smaller element from consideration. This move turns the question into a local comparison, a greedy algorithm approach
+* topic: elaborate on the greedy algorithm approach
+## Stack
+### 232** Implement Queue using Stacks (stack)
 * use in and out arrays to keep track of ins and outs of the array
 * need a sync function to keep the two functions in sync
+### 150** Evaluate Reverse Polish Notation (stack)
+* initial thoughts: no idea how to approach this
+* the solution is quite simple, since the arithmetic rule is straight forward, despite of its seeming variations
+* the stack will keep track of all the numbers (and result of operation), when you iterate thru the expression, the operation is always performed on the top most numbers in the stack
+### 155** Min Stack (stack)
+* since the requirement is O(1), iterate thru the stack is not possible
+* one way to go about it is to record the new minimum value with every push and retrieve the current minium from the end of the stack/array
+### 42** Trapping Rain Water (stack, two pointers)
+* use two pointers (l and r) and two maximum values (lmax and rmax), if the current values are bigger than the max, update the max, otherwise add to the overall area
+* Similar to 11 Container with Most Water
+* topic: similarities with 84. Largest Rectangle in Histogram https://leetcode.com/problems/trapping-rain-water/solutions/17414/a-stack-based-solution-for-reference-inspired-by-histogram/
+### 224 Basic Calculator (stack)
+* https://leetcode.com/problems/basic-calculator/solutions/1456850/python-basic-calculator-i-ii-iii-easy-solution-detailed-explanation/
+### 84** Largest Rectangle in Histogram
+* topic: Monostack: https://leetcode.com/problems/largest-rectangle-in-histogram/solutions/995249/python-increasing-stack-explained/
+* concise monostack: * https://leetcode.com/problems/largest-rectangle-in-histogram/solutions/28917/ac-python-clean-solution-using-stack-76ms/
+    ```
+    class Solution(object):
+    def largestRectangleArea(self, heights):
+        """
+        :type heights: List[int]
+        :rtype: int
+        """
+        heights.append(0)
+        stack = [-1]
+        ret = 0
+        for i in range(len(heights)):
+            <!-- make sure the current height is high than the ones saved in the stack -->
+            while heights[i] < heights[stack[-1]]:
+                h = heights[stack.pop()]
+                <!-- the width is from stack[-1] (which is always taller than height[i]) (left bound) to i - 1 (right bound)  -->
+                w = i - stack[-1] - 1
+                ret = max(ret, h * w)
+            stack.append(i)
+        # heights.pop()
+        return ret
+    ```
 ## String
 ### 8 String to Integer (atoi)
 * a bit tedius question of string parsing
