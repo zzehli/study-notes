@@ -53,8 +53,49 @@ def search(self, nums, target):
 ```
 ## Sort
 # Data Structure
-## Tree
-### Binary Search Tree
+## String
+### Trie
+A trie is a rooted tree that maintains a set of strings. Each String in the set is stored as a chain of characters that starts at the root. If two strings have a common prefix, they also have a common chain in the tree. 
+
+Each character can be represented as a node in the chain. The node holds two properties, one to represent if this character is the end of a word; another is linked to the rest of the string via a dict (so technically this is not a chain as in linked list)
+
+Look up or adding a string in the trie takes O(n).
+```
+class TrieNode:
+    def __init__(self):
+        self.word = False
+        self.children = {}
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        node = self.root
+        for i in word:
+            if i not in node.children:
+                node.children[i] = TrieNode()
+            node = node.children[i]
+        node.word = True
+    
+    def search(self, word: str) -> bool:
+        node = self.root
+        for i in word:
+            if i not in node.children:
+                return False
+            node = node.children[i]
+        return node.word
+        
+
+    def startsWith(self, prefix: str) -> bool:
+        node = self.root
+        for i in prefix:
+            if i not in node.children:
+                return False
+            node = node.children[i]
+        return True
+
+```
 # Leetcode
 ## backtracking
 * leetcode question collection
@@ -422,6 +463,7 @@ currMax, arrayMax = 0, 0
         :rtype: int
         """
         heights.append(0)
+        <!-- stack holds a list of index where the heights are higher than the current height -->
         stack = [-1]
         ret = 0
         for i in range(len(heights)):
@@ -482,6 +524,7 @@ currMax, arrayMax = 0, 0
         for end in range(start + 1, len(s)):
     ```
 * topic: dp table, top down, bottom up dp approaches
+* leetcode editorial: https://leetcode.com/problems/longest-palindromic-substring/editorial/
 ### 438** Find All Anagrams in a String
 * Think about it: what is the best way to check if a string is an anagram of another?
 * use dictionaries to conduct the comparison: https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/175381/sliding-window-logical-thinking/
@@ -511,6 +554,29 @@ currMax, arrayMax = 0, 0
         return ret
     ```
 * use a counter to keep track of the comparisons: https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/92007 sliding-window-algorithm-template-to-solve-all-the-leetcode-substring-search-problem/comments/857083
+## Trie
+
+### 208 Implement Trie (Prefix Tree)
+* See notes above
+### 139** Word Break (String, Trie)
+* initial throughts: with a Trie that contains the dictionary, a naitive search in the Trie based on the given string won't work since the words in the dict won't always match the start of the string
+* The editorial: https://leetcode.com/problems/word-break/editorial/
+    * Sol1: BFS solution is easy to understand
+    * Q: time complexities for BFS
+    * Sol2: top-down dynamic programming is easy to implement
+    ```
+        def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        @cache
+        def dp(i: int) -> bool:
+            if i < 0:
+                return True
+            for word in wordDict:
+                if s[i - len(word) + 1: i+1] == word and dp(i - len(word)):
+                    return True
+            return False
+
+        return dp(len(s) - 1)
+    ```
 ## Linked List
 ### 146** LRU Cache
 * Doubly linked list + hashmap
@@ -663,6 +729,21 @@ however, the arrangement of the array is still very important
 ### 105** Construct Binary Tree from Preorder and Inorder Traversal
 * initial thoughts: no clue how to approach this
 * the recursive solution split the inorder array in half, left children take the first half and the right children take the second half
+## Heap
+### 973 K Closest Point to Origin (heap)
+* classic heap question: https://leetcode.com/problems/k-closest-points-to-origin/solutions/294389/easy-to-read-python-min-heap-solution-beat-99-python-solutions/
+### 295 Find Median from Data Stream
+* initial thought: store the number in a heap and use length to find the median -> won't work because heap is not sorted
+* use two heaps and balance their length with each add
+### 23** Merge k Sorted Lists (recursion, heap)
+* two approaches, merge recursively or use heap
+* recursion: https://leetcode.com/problems/merge-k-sorted-lists/solutions/10919/python-easy-to-understand-divide-and-conquer-solution/
+* heap solution: https://leetcode.com/problems/merge-k-sorted-lists/solutions/465094/problems-with-python3-and-multiple-solutions/
+### 621** Task Scheduler (greedy, heap)
+* two solutions, greedy and heap
+* topic, research greedy solution: https://leetcode.com/problems/task-scheduler/solutions/104500/java-o-n-time-o-1-space-1-pass-no-sorting-solution-with-detailed-explanation/ and https://www.youtube.com/watch?v=jUE-W5o6lMU
+* heap, not time efficient: https://leetcode.com/problems/task-scheduler/solutions/130786/python-solution-with-detailed-explanation/
+
 ## Others
 ### 54** Spiral Matrix (simulation)
 * There is no pointers involved. Instead, create four loops and increment/decrement their boundaries after each run
