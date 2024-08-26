@@ -97,6 +97,9 @@ class Trie:
 
 ```
 # Leetcode
+## binary
+### 67** Add Binary
+* keep track of carry and sum
 ## backtracking
 * leetcode question collection
     * https://leetcode.com/problems/letter-combinations-of-a-phone-number/solutions/780232/backtracking-python-problems-solutions-interview-prep 
@@ -743,7 +746,105 @@ however, the arrangement of the array is still very important
 * two solutions, greedy and heap
 * topic, research greedy solution: https://leetcode.com/problems/task-scheduler/solutions/104500/java-o-n-time-o-1-space-1-pass-no-sorting-solution-with-detailed-explanation/ and https://www.youtube.com/watch?v=jUE-W5o6lMU
 * heap, not time efficient: https://leetcode.com/problems/task-scheduler/solutions/130786/python-solution-with-detailed-explanation/
+## Dynamic Programming
+### 53** Maximum subarray (two pointers, dp, kadane's algorithm)
+* the basic idea is to keep track of current sum and maximum value separately, then update maximum by comparing maximum and current sum; these two values can be considered a sliding window
+* another important insight: don't judge the new value, instead decide whether the current sum is negative or not; the rationale is that even if the current value is negative, the current sum could still be positive thus useful for the future; don't look at the value in isolation
+* there are two ways of track the current sum
+    * none of the two comepare `currSum` with `currSum + nums[i]`, because this does not keep track of consecutive sum
+    * one is to `max(nums[i], currSum + nums[i])`
+    ```
+    class Solution {
+        public int maxSubArray(int[] nums) {
+            int currMax = nums[0];
+            int max = nums[0];
+            for (int i = 1; i < nums.length; ++i) {
+                currMax = Math.max(nums[i], currMax + nums[i]);
+                max = Math.max(currMax, max);
+            }
+            return max;
+        }
+    }
+    ```
+    * the other is `max(currSum, 0)`, which is an implementation of the Kadane's algorithm: https://www.youtube.com/watch?v=umt7t1_X8Rc
+    ```
+    class Solution {
+        public int maxSubArray(int[] nums) {
+            int currMax = nums[0];
+            int sum = 0;
+            for (int i = 0; i < nums.length; ++i) {
+                sum += nums[i];
+                currMax = Math.max(currMax, sum);
+                sum = Math.max(sum, 0);
+            }
+            return currMax;
+        }
+    }
+    ```
+* dynamic programming perspective: no recursion needed, but identify subproblem and build the answer through bottom-up approach
+### 62 Unique Paths (dynamic programming)
+* a classic top down approach use case
+* many solutions: https://leetcode.com/problems/unique-paths/solutions/1581998/c-python-5-simple-solutions-w-explanation-optimization-from-brute-force-to-dp-to-math/
+* recursion -> recursion with cache (bottom up solution)
+```
+    #same as recursion, add cache keyword to turn it into dp
+    @cache
+    def rec(i, j) -> int:
+        if i > n - 1 or j > m - 1:
+            return 0
+        if i == n - 1 and j == m - 1:
+            return 1
+        return rec(i + 1, j) + rec(i, j + 1)
+    return rec(0, 0)
 
+    #avoid the cache keyword, use an array of array to store results
+    def uniquePaths(self, m: int, n: int) -> int:
+        # brute force would be a dfs/bfs solution
+        cache = [ [None]*n for _ in range(m) ]
+        def dp(c, i, j):
+            if i > m - 1 or j > n - 1:
+                return 0
+            elif i == m - 1 and j == n - 1:
+                return 1
+            if c[i][j]:
+                return c[i][j]
+            c[i][j] = dp(c, i + 1, j) + dp(c, i, j + 1)
+            return c[i][j]
+        return dp(cache, 0, 0)
+
+```
+* Is dynamic programming just backtracking with cache? https://stackoverflow.com/a/22919483 (DAG, cahce with data struct instead of recursion)
+### 322 Coin Change (DP)
+* initial thoughts: 
+    * isn't clear what the recursive step is since every case is unique in its coin combintion
+    * could recursively find whether a given amount is possible given the coins
+* bottom up dp approach:
+    ```
+        def coinChange(self, coins: List[int], amount: int) -> int:
+            # tabular is an array that initialized with amount + 1 as the ct (fewest number of coins) at each index amount
+            rs = [amount + 1] * (amount + 1)
+            # when amount is 0, ct is 0
+            rs[0] = 0
+            # even tho rs has amount + 1 cells, the index of the array rs only goes to amount + 1: if amount is 2, we need an array of 3 with the biggest index 2
+            for i in range(1, amount + 1):
+                for c in coins:
+                    if i >= c:
+                        # don't need to know how to build the amount from scratch, simply build it by comparing i - c for all coins value c
+                        rs[i] = min(rs[i], rs[i - c] + 1)
+            
+            # if the ct is amount + 1, it is impossible theoretically since the biggest ct would be amount, which is amount # of 1s
+            if rs[amount] == amount + 1:
+                return -1
+            return rs[amount]
+    ```
+* top down approach: https://leetcode.com/problems/coin-change/solutions/2058537/python-easy-2-dp-approaches/
+* Q: explore knapsack problem: https://www.geeksforgeeks.org/unbounded-knapsack-repetition-items-allowed/
+### 70 Climbing Stairs (DP)
+* easy problem, after investigation, realize this is somehow just a Fibonacci sequence
+### 416 Partition Equal Subset Sum (DP)
+* initial thought: backtracking seems to be a straight forward solution to this
+* backtracking works, but most solutions suggest the knapsack problem as a more optimized solution
+* Q: understand knapsack problem
 ## Others
 ### 54** Spiral Matrix (simulation)
 * There is no pointers involved. Instead, create four loops and increment/decrement their boundaries after each run
@@ -782,39 +883,6 @@ class TopVotedCandidate {
     }
 }
  ```
-### 53** Maximum subarray (two pointers, kadane's algorithm)
-* the basic idea is to keep track of current sum and maximum value separately, then update maximum by comparing maximum and current sum; these two values can be considered a sliding window
-* there are two ways of track the current sum
-    * none of the two comepare `currSum` with `currSum + nums[i]`, because this does not keep track of consecutive sum
-    * one is to `max(nums[i], currSum + nums[i])`
-    ```
-    class Solution {
-        public int maxSubArray(int[] nums) {
-            int currMax = nums[0];
-            int max = nums[0];
-            for (int i = 1; i < nums.length; ++i) {
-                currMax = Math.max(nums[i], currMax + nums[i]);
-                max = Math.max(currMax, max);
-            }
-            return max;
-        }
-    }
-    ```
-    * the other is `max(currSum, 0)`, which is an implementation of the Kadane's algorithm: https://www.youtube.com/watch?v=umt7t1_X8Rc
-    ```
-    class Solution {
-        public int maxSubArray(int[] nums) {
-            int currMax = nums[0];
-            int sum = 0;
-            for (int i = 0; i < nums.length; ++i) {
-                sum += nums[i];
-                currMax = Math.max(currMax, sum);
-                sum = Math.max(sum, 0);
-            }
-            return currMax;
-        }
-    }
-    ```
 ### 128 Longest Consecutive Sequence (Hashmap)
 * Use HashSet to achieve O(1) lookup
 * for each element, check if x-1 exists, if not check if x + 1, x + 2, .. exists, then update the best consequtive array length
