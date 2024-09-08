@@ -511,6 +511,9 @@ currMax, arrayMax = 0, 0
 * https://leetcode.com/problems/longest-substring-without-repeating-characters/solutions/347818/python3-sliding-window-o-n-with-explanation/
 ### 242 Valid Anagram (hashtable)
 * leverage `defaultdict()` to create a hashtable initialized with default values
+### 49** Group Anagrams (hashtable)
+* use hashmap to keep track of word counts in words, use another dict to keep track of anagrams
+* https://leetcode.com/problems/group-anagrams/solutions/4683832/beats-99-users-c-java-python-javascript-2-approaches-explained
 ### 76** Minimum Window Substring (sliding window)
 * initial thoughts: need a function to decide whether: 1, the current window meet the condition; 2, cannot meet the condition anymore; 2, not yet meet the condition
 * the most important part of the question is to design a counter that keeps track of the status of the sliding window
@@ -528,7 +531,7 @@ currMax, arrayMax = 0, 0
     ```
 * topic: dp table, top down, bottom up dp approaches
 * leetcode editorial: https://leetcode.com/problems/longest-palindromic-substring/editorial/
-### 438** Find All Anagrams in a String
+### 438** Find All Anagrams in a String (sliding window, hashtable)
 * Think about it: what is the best way to check if a string is an anagram of another?
 * use dictionaries to conduct the comparison: https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/175381/sliding-window-logical-thinking/
     ```
@@ -556,7 +559,9 @@ currMax, arrayMax = 0, 0
                 del dict_s[s[left]]
         return ret
     ```
-* use a counter to keep track of the comparisons: https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/92007 sliding-window-algorithm-template-to-solve-all-the-leetcode-substring-search-problem/comments/857083
+* use a counter to keep track of the comparisons: https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/92007/sliding-window-algorithm-template-to-solve-all-the-leetcode-substring-search-problem/comments/857083
+### 2273 Find Resultant Array After removing anagrams (hashtable)
+* use an array to count letters in an anagram and compare the array or use tuple for hashtable
 ## Trie
 
 ### 208 Implement Trie (Prefix Tree)
@@ -746,6 +751,14 @@ however, the arrangement of the array is still very important
 * two solutions, greedy and heap
 * topic, research greedy solution: https://leetcode.com/problems/task-scheduler/solutions/104500/java-o-n-time-o-1-space-1-pass-no-sorting-solution-with-detailed-explanation/ and https://www.youtube.com/watch?v=jUE-W5o6lMU
 * heap, not time efficient: https://leetcode.com/problems/task-scheduler/solutions/130786/python-solution-with-detailed-explanation/
+### 347** Top K Frequent Element (heap, bucket sort)
+* turn a counter into a priority heap (https://leetcode.com/problems/top-k-frequent-elements/solutions/1502514/c-python-2-solutions-maxheap-bucket-sort-clean-concise)
+```
+        cnt = Counter(nums)
+        maxHeap = [[-freq, num] for num, freq in cnt.items()]
+        heapify(maxHeap)
+```
+* the most efficient solution is bucket sort
 ## Dynamic Programming
 ### 53** Maximum subarray (two pointers, dp, kadane's algorithm)
 * the basic idea is to keep track of current sum and maximum value separately, then update maximum by comparing maximum and current sum; these two values can be considered a sliding window
@@ -844,6 +857,25 @@ however, the arrangement of the array is still very important
 ### 416 Partition Equal Subset Sum (DP)
 * initial thought: backtracking seems to be a straight forward solution to this
 * backtracking works, but most solutions suggest the knapsack problem as a more optimized solution
+* backtrack with cache solution, notice how recursion is implemented:
+```
+    def canPartition(self, nums: List[int]) -> bool:
+        target = 0
+        for i in nums:
+            target += i
+        if target%2:
+            return False
+        target /= 2
+        @cache
+        def backtrack(currSum, index):
+            if currSum > target or index >= len(nums):
+                return False
+            if currSum == target:
+                return True
+            return backtrack(currSum + nums[index], index + 1) or backtrack(currSum, index + 1)
+        
+        return backtrack(0, 0)
+```
 * Q: understand knapsack problem
 ## Others
 ### 54** Spiral Matrix (simulation)
