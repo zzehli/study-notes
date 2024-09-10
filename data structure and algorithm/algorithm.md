@@ -795,7 +795,7 @@ however, the arrangement of the array is still very important
     }
     ```
 * dynamic programming perspective: no recursion needed, but identify subproblem and build the answer through bottom-up approach
-### 62 Unique Paths (dynamic programming)
+### 62 Unique Paths (2-d dynamic programming)
 * a classic top down approach use case
 * many solutions: https://leetcode.com/problems/unique-paths/solutions/1581998/c-python-5-simple-solutions-w-explanation-optimization-from-brute-force-to-dp-to-math/
 * recursion -> recursion with cache (bottom up solution)
@@ -877,6 +877,53 @@ however, the arrangement of the array is still very important
         return backtrack(0, 0)
 ```
 * Q: understand knapsack problem
+### 118 Pascal's Triangle (DP)
+* the edge cases are hard to figure out: 1st, 2nd rows and 1st and last element of each row are 1s (not sum of prev row)
+* create a triangle and fill it with 1s: 
+`rt = [[1] * i for i in range(1, numRows + 1)]`
+### 746** Min Cost Climbing Stairs (1-d DP)
+* This is a classic DP that can be solved by top down and bottom up
+* backtracking solution (exceeds time limit):
+```
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+        if len(cost) == 0:
+            return 0
+        if len(cost) == 1:
+            return 0
+        minCost = 0
+        minCost += min(cost[0] + self.minCostClimbingStairs(cost[1:]), cost[1] + self.minCostClimbingStairs(cost[2:]))
+        return minCost
+```
+* add memoization to backtracking:
+```
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+        l = len(cost)
+        stack = [None] *l
+        def dp(cost, index):
+            if index == l - 1 or index == l:
+                return 0
+            if stack[index]:
+                return stack[index]
+            minCost = 0
+            minCost += min(cost[index] + dp(cost, index + 1), cost[index + 1] + dp(cost, index + 2))
+            stack[index] = minCost
+            return minCost
+        return dp(cost, 0)
+```
+* Q: come back and add bottom up approach with iterative solution
+### 198 House Robber (1-d DP)
+* similar to the previous, can be solved by bottom-up approach in an array:
+```
+    def rob(self, nums: List[int]) -> int:
+        dp = [None] * len(nums)
+        if len(nums) == 1:
+            return nums[0]
+        dp[0] = nums[0]
+        dp[1] = max(nums[0], nums[1])
+        for i in range(2, len(nums)):
+            dp[i] = max(dp[i - 1], nums[i] + dp[i - 2])
+        return dp[-1]
+```
 ## Others
 ### 54** Spiral Matrix (simulation)
 * There is no pointers involved. Instead, create four loops and increment/decrement their boundaries after each run
