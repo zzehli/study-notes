@@ -752,13 +752,39 @@ however, the arrangement of the array is still very important
 * topic, research greedy solution: https://leetcode.com/problems/task-scheduler/solutions/104500/java-o-n-time-o-1-space-1-pass-no-sorting-solution-with-detailed-explanation/ and https://www.youtube.com/watch?v=jUE-W5o6lMU
 * heap, not time efficient: https://leetcode.com/problems/task-scheduler/solutions/130786/python-solution-with-detailed-explanation/
 ### 347** Top K Frequent Element (heap, bucket sort)
-* turn a counter into a priority heap (https://leetcode.com/problems/top-k-frequent-elements/solutions/1502514/c-python-2-solutions-maxheap-bucket-sort-clean-concise)
+* turn a counter into a priority heap, attention to the maxHeap (as opposed to the default min heap) (https://leetcode.com/problems/top-k-frequent-elements/solutions/1502514/c-python-2-solutions-maxheap-bucket-sort-clean-concise)
 ```
         cnt = Counter(nums)
         maxHeap = [[-freq, num] for num, freq in cnt.items()]
         heapify(maxHeap)
 ```
 * the most efficient solution is bucket sort
+### 215** Kth Largest Element in an Array (heap, sorting)
+* solution using heap: create an array, heap push into the array until the length of the array is k, heap pop extra element afterwards
+* https://leetcode.com/problems/kth-largest-element-in-an-array/solutions/1349609/python-4-solutions-minheap-maxheap-quickselect-clean-concise
+* multiple solutions, quick select is the fastest
+```
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        return self.quick_select(nums, len(nums) - k)
+    def quick_select(self, nums, j):
+        pivot = random.choice(nums)
+        left, mid, right = [], [], []
+        for num in nums:
+            if num < pivot:
+                left.append(num)
+            elif num > pivot:
+                right.append(num)
+            else:
+                mid.append(num)
+        
+        if j < len(left):
+            return self.quick_select(left, j)
+        elif j < len(left) + len(mid):
+            return pivot
+        return self.quick_select(right, j - len(left) - len(mid))
+``` 
+### 506** Relative Ranks (heap)
+* distinguish rank and position, create a map between them 
 ## Dynamic Programming
 ### 53** Maximum subarray (two pointers, dp, kadane's algorithm)
 * the basic idea is to keep track of current sum and maximum value separately, then update maximum by comparing maximum and current sum; these two values can be considered a sliding window
