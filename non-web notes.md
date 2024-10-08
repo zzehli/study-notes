@@ -1,3 +1,5 @@
+# API Design
+* API Design best practices from Microsoft https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design
 # Networking
 # Programming language
 ## Go

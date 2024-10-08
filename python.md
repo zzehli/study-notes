@@ -58,3 +58,4 @@
         d[k].append(v)
     ```
 * Use memoization to avoid repetition with `@cache`. see sol 2 of https://leetcode.com/problems/word-break/editorial/
+* recursion: remember, the return statement cannot be inside the loop (see notes from no. 55, Jump Game )

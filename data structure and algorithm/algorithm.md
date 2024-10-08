@@ -324,6 +324,9 @@ currMax, arrayMax = 0, 0
         
         return arrayMax
 ```
+### 122** Best Time to Buy and Sell Stock II
+* initial thought: this seems way more difficult that the previous one
+* Q: explore the relationship between different solutions: https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/solutions/803206/python-js-java-go-c-o-n-by-dp-greedy-visualization-thinking-process
 ### 169** Majority Element (moore's algorithm)
 ### 57** Insert Interval
 * O(n) solution makes one pass through the array, compare the start/end of the new interval with the interval i, insert if no overlap, else create a new interval based on the overlapping condition
@@ -438,6 +441,43 @@ currMax, arrayMax = 0, 0
 ### 11** Container With Most Water (two pointers, greedy)
 * instead of thinking about finding the two biggest elements in the list, which is global, start from two ends of the list and remove the smaller element from consideration. This move turns the question into a local comparison, a greedy algorithm approach
 * topic: elaborate on the greedy algorithm approach
+### 88 Merge Sorted Array** (in-place) (two pointers)
+* move from the end of the word to the beginning
+### 27 Remove Element (in-place)
+* similar to 26
+* make two pointers, one keep track of first pass, the other keep track of the modified version
+### 26 Remove Duplicates in Sorted Array (in-place)
+* similar to above
+### 80 Remove Duplicates II
+* can be solved in the same as above, only change 1 num
+* https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/solutions/27987/short-and-simple-java-solution-easy-to-understand
+### 189 Rotate Array
+* in-place rotation thru reversal (a bit tricky)
+### 28 Find the Index of the First Occurrence in a String
+* design index so that the third index is not needed
+* Q: explore KMT solution
+### 55** Jump Game
+* Initial throughts: this is a dynamic programming question: options at each step are fixed and can be memoized
+* important lesson: how to prevent the loop from exiting early before trying all options with recursive calls?
+    compare:
+    ```
+    for j in range(1, nums[start] + 1):
+        if j > end:
+            break
+        return rec(j + start, end)
+    print('here?')
+    ```
+    with
+    ```
+    for j in range(1, nums[start] + 1):
+            if j > end:
+                break
+            if rec(j + start, end):
+                return True
+        return False  
+    ```
+    The second solution will try all possible iterations in the `range` call before exiting. Remember, the return statement cannot be inside the loop
+
 ## Stack
 ### 232** Implement Queue using Stacks (stack)
 * use in and out arrays to keep track of ins and outs of the array
@@ -480,6 +520,7 @@ currMax, arrayMax = 0, 0
         # heights.pop()
         return ret
     ```
+
 ## String
 ### 8 String to Integer (atoi)
 * a bit tedius question of string parsing
@@ -560,6 +601,9 @@ currMax, arrayMax = 0, 0
         return ret
     ```
 * use a counter to keep track of the comparisons: https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/92007/sliding-window-algorithm-template-to-solve-all-the-leetcode-substring-search-problem/comments/857083
+### 567** Permutation in String (sliding window)
+* similar to 438: https://leetcode.com/problems/permutation-in-string/solutions/559278/java-python-sliding-window-clear-explanation-clean-concise
+* notice how the hashtable is incremented/decremented as the window moves: https://leetcode.com/problems/permutation-in-string/solutions/1761953/python3-sliding-window-optimized-explained
 ### 2273 Find Resultant Array After removing anagrams (hashtable)
 * use an array to count letters in an anagram and compare the array or use tuple for hashtable
 ## Trie

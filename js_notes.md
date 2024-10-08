@@ -644,6 +644,15 @@ btn.addEventListener('click', greet);
 setSearchRes(data['Search'].map(elem => ({Title: elem.Title, Year: elem.Year})));
 ```
 * Every module can have two different types of export, named export and default export. You can have multiple named exports per module but only one default export.
+# Typescript
+* TypeScript can infer the type of an object or variable based on the initial values you provide, eg 
+  ```
+  let users = [
+    { id: 1, name: 'John Doe', age: 30 },
+    { id: 2, name: 'Jane Doe', age: 25 }
+  ];
+  ``` 
+  (chatGPT) 
 # React
 
 ## React, [Tic-Tac-Toe Game Tutorial](https://reactjs.org/tutorial/tutorial.html)
