@@ -456,8 +456,28 @@ currMax, arrayMax = 0, 0
 ### 28 Find the Index of the First Occurrence in a String
 * design index so that the third index is not needed
 * Q: explore KMT solution
-### 55** Jump Game
+### 55** Jump Game (DP, Kadane)
 * Initial throughts: this is a dynamic programming question: options at each step are fixed and can be memoized
+```
+def canJump(self, nums: List[int]) -> bool:
+
+        @cache
+        def rec(start, end):
+            # if len(nums) == 0:
+            #     return False
+            if start + nums[start] >= end:
+                return True
+            else:
+                for j in range(1, nums[start] + 1):
+                    if j > end:
+                        break
+                    # print(f'checking {nums[j+start: end + 1]} for range {nums[start] + 1}')
+                    if rec(j + start, end):
+                        return True
+                return False
+        
+        return rec(0, len(nums) - 1)
+```
 * important lesson: how to prevent the loop from exiting early before trying all options with recursive calls?
     compare:
     ```
@@ -477,7 +497,64 @@ currMax, arrayMax = 0, 0
         return False  
     ```
     The second solution will try all possible iterations in the `range` call before exiting. Remember, the return statement cannot be inside the loop
+* https://leetcode.com/problems/jump-game/solutions/4534808/super-simple-intuitive-8-line-python-solution-beats-99-92-of-users
+* https://leetcode.com/problems/jump-game/solutions/2375320/interview-scenario-recursion-memoization-dp-greedy
+### 45** Jump Game II (DP, Greedy)
+* initial solution:
+    ```
+        def jump(self, nums: List[int]) -> int:
+            # construct a 1-d array to save the # of jumps from there to the end
+            l = len(nums)
 
+            @cache
+            def rec(index):
+
+                if index == l - 1:
+                    return 0
+                elif nums[index] >= l - index - 1:
+                    return 1
+                else:
+                    if nums[index] > 1:
+                        ok = min(rec(index + i) for i in range(1, nums[index] + 1))
+                        min_result = 1 + ok
+                    elif nums[index] == 1:
+                        min_result = 1 + rec(index + 1)
+                    elif nums[index] == 0 and index < l - 1:
+                        return float(inf)
+                    return min_result
+            
+            return rec(0)
+    ```
+* https://leetcode.com/problems/jump-game-ii/solutions/1192457/java-python-dp-greedy-solutions-time-o-n-space-o-1
+* Greedy, watching a step ahead:
+    ```
+    class Solution:
+    def jump(self, nums: List[int]) -> int:
+        step = 0
+        reach = 0
+        left = right = 0
+        while right < len(nums) - 1:
+            for i in range(left, right + 1):
+                reach = max(reach, nums[i] + i)
+            left = right + 1
+            right = reach
+            step += 1
+        return step
+    ```
+* important: get the max result out of a loop 
+    ```
+     for i in range(left, right + 1):
+                reach = max(reach, nums[i] + i)
+    ```
+### 274 H-index (counting sort)
+* can be solved by sorting and apply the definition of h-index, but it's not an optimized solution: https://leetcode.com/problems/h-index/solutions/4928640/python-2-approaches-sorting-counting-summary-with-comparison
+* O(n) space and time solution, https://leetcode.com/problems/h-index/solutions/70768/java-bucket-sort-o-n-solution-with-detail-explanation
+### 380 Insert Delete GetRandom
+* this is a data structure question
+* construct an array to store values, and a dictionary to store indexes
+* when remove, replace the removed elements with the last element in the array, so that the removal can be done on the last element and get O(1) result
+### 135 Candy (greedy)
+* can be done with one or two passes
 ## Stack
 ### 232** Implement Queue using Stacks (stack)
 * use in and out arrays to keep track of ins and outs of the array
@@ -490,9 +567,9 @@ currMax, arrayMax = 0, 0
 * since the requirement is O(1), iterate thru the stack is not possible
 * one way to go about it is to record the new minimum value with every push and retrieve the current minium from the end of the stack/array
 ### 42** Trapping Rain Water (stack, two pointers)
-* use two pointers (l and r) and two maximum values (lmax and rmax), if the current values are bigger than the max, update the max, otherwise add to the overall area
+* use two pointers (l and r) and two maximum values (lmax and rmax); take the lesser of the two max and calculate water level at the same side (since the lower max determines the water level); 
 * Similar to 11 Container with Most Water
-* topic: similarities with 84. Largest Rectangle in Histogram https://leetcode.com/problems/trapping-rain-water/solutions/17414/a-stack-based-solution-for-reference-inspired-by-histogram/
+* topic: similarities with 84. Largest Rectangle in Histogram: https://leetcode.com/problems/trapping-rain-water/solutions/17414/a-stack-based-solution-for-reference-inspired-by-histogram/
 ### 224 Basic Calculator (stack)
 * https://leetcode.com/problems/basic-calculator/solutions/1456850/python-basic-calculator-i-ii-iii-easy-solution-detailed-explanation/
 ### 84** Largest Rectangle in Histogram
@@ -606,6 +683,8 @@ currMax, arrayMax = 0, 0
 * notice how the hashtable is incremented/decremented as the window moves: https://leetcode.com/problems/permutation-in-string/solutions/1761953/python3-sliding-window-optimized-explained
 ### 2273 Find Resultant Array After removing anagrams (hashtable)
 * use an array to count letters in an anagram and compare the array or use tuple for hashtable
+### 12 Integer to Roman
+* iterate through the list of possible values (symbol-value list) in desc order, add corresponding symbol to res
 ## Trie
 
 ### 208 Implement Trie (Prefix Tree)
