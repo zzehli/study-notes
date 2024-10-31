@@ -336,7 +336,10 @@ currMax, arrayMax = 0, 0
 * the main point of comparison is the 2nd element of the current array in the iteration with the last array in the resulting array. In 57, the resulting array isn't involved in the comparison
 * when two array merge, only change the 2nd element of the array that is inserted in the previous iteration, no need to insert a new array
 * https://leetcode.com/problems/merge-intervals/solutions/350272/python3-sort-o-nlog-n
-### 15 3Sum (backtracking, two pointers)
+### 167 Two Sum II (two pointers)
+* backtracking would exceed time limit
+* use two pointers (l, r) and move into the middle one step at a time depending on the sum
+### 15** 3Sum (backtracking, two pointers)
 * Initial thought: can be solved with backtracking, but would exceed the time limit
     ```
     def threeSum(self, nums):
@@ -364,7 +367,7 @@ currMax, arrayMax = 0, 0
         backtrack(nums, [])
         return ret
     ```
-* two pointers solution with iteration:
+* two pointers solution with iteration, the idea is to fix the first first element, and move the 2nd and 3rd element according to all three's sum:
     ```
     def threeSum(self, nums):
             """
@@ -439,8 +442,10 @@ currMax, arrayMax = 0, 0
         return nums
 ```
 ### 11** Container With Most Water (two pointers, greedy)
-* instead of thinking about finding the two biggest elements in the list, which is global, start from two ends of the list and remove the smaller element from consideration. This move turns the question into a local comparison, a greedy algorithm approach
+* backtracking would exceed the time limit
+* instead of thinking about finding the two biggest elements in the list, which is global, start from two ends of the list and remove the smaller element from consideration. This move turns the question into a local comparison, a greedy algorithm approach. (this approach is similar to 167 two sum II)
 * topic: elaborate on the greedy algorithm approach
+* read the proof https://leetcode.com/problems/container-with-most-water/solutions/6099/yet-another-way-to-see-what-happens-in-the-o-n-algorithm
 ### 88 Merge Sorted Array** (in-place) (two pointers)
 * move from the end of the word to the beginning
 ### 27 Remove Element (in-place)
@@ -597,7 +602,9 @@ def canJump(self, nums: List[int]) -> bool:
         # heights.pop()
         return ret
     ```
-
+### 209** Minimum Size Subarray Sum (two pointers, sliding window)
+* Q: difference between sliding window and two pointers: https://leetcode.com/problems/minimum-size-subarray-sum/solutions/433123/java-c-python-sliding-window
+* add array one by one use the right pointer, after reach the target, move the the left pointer forward and subtract the previous number from the current total, if the total is smaller than the target, keep moving the right pointer
 ## String
 ### 8 String to Integer (atoi)
 * a bit tedius question of string parsing
@@ -685,6 +692,13 @@ def canJump(self, nums: List[int]) -> bool:
 * use an array to count letters in an anagram and compare the array or use tuple for hashtable
 ### 12 Integer to Roman
 * iterate through the list of possible values (symbol-value list) in desc order, add corresponding symbol to res
+### 151 Reverse Words In a String
+* can be done with `strip()` and `split()`
+* a better solution is to use two pointers to reverse the string char by char: https://leetcode.com/problems/reverse-words-in-a-string/solutions/737124/python-2-solutions-oneliner-inplace-for-list-of-chars-explained
+### 6 Zigzag Conversion
+* find patterns through organization (https://leetcode.com/problems/zigzag-conversion/solutions/817306/very-simple-and-intuitive-o-n-python-solution-with-explanation)
+### 68** Text Justification
+* pure string manipulation, pay attention to how space are distributed when maxwidth is reached
 ## Trie
 
 ### 208 Implement Trie (Prefix Tree)
