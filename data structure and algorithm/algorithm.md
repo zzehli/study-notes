@@ -637,12 +637,13 @@ def canJump(self, nums: List[int]) -> bool:
 ### 242 Valid Anagram (hashtable)
 * leverage `defaultdict()` to create a hashtable initialized with default values
 ### 49** Group Anagrams (hashtable)
-* use hashmap to keep track of word counts in words, use another dict to keep track of anagrams
+* use something to keep track of word counts in words, use another thing to keep track of anagrams
 * https://leetcode.com/problems/group-anagrams/solutions/4683832/beats-99-users-c-java-python-javascript-2-approaches-explained
 ### 76** Minimum Window Substring (sliding window)
 * initial thoughts: need a function to decide whether: 1, the current window meet the condition; 2, cannot meet the condition anymore; 2, not yet meet the condition
 * the most important part of the question is to design a counter that keeps track of the status of the sliding window
 * https://leetcode.com/problems/minimum-window-substring/solutions/26808/here-is-a-10-line-template-that-can-solve-most-substring-problems/
+* similar to Permutation in String 567
 ### 409** Longest Palindrom
 * use bitwise operation to count the occurrences of odd letters
 ### 5** Longest Palindromic Substring (DP, two pointers)
@@ -688,6 +689,9 @@ def canJump(self, nums: List[int]) -> bool:
 ### 567** Permutation in String (sliding window)
 * similar to 438: https://leetcode.com/problems/permutation-in-string/solutions/559278/java-python-sliding-window-clear-explanation-clean-concise
 * notice how the hashtable is incremented/decremented as the window moves: https://leetcode.com/problems/permutation-in-string/solutions/1761953/python3-sliding-window-optimized-explained
+### 30 Substring with Concatenation of All Words (sliding window)
+* solution is complex, didn't solve it
+* https://leetcode.com/problems/substring-with-concatenation-of-all-words/solutions/13673/accepted-java-solution-12ms-with-explanation/?envType=study-plan-v2&envId=top-interview-150
 ### 2273 Find Resultant Array After removing anagrams (hashtable)
 * use an array to count letters in an anagram and compare the array or use tuple for hashtable
 ### 12 Integer to Roman
@@ -1087,9 +1091,17 @@ however, the arrangement of the array is still very important
             dp[i] = max(dp[i - 1], nums[i] + dp[i - 2])
         return dp[-1]
 ```
-## Others
+## Matrix
 ### 54** Spiral Matrix (simulation)
 * There is no pointers involved. Instead, create four loops and increment/decrement their boundaries after each run
+### 36 Valid Sudoku
+* create a hashset for each row, col and square, fill them in as you go, invalidate if a number is already there
+### 48 Rotate Image
+* to rotate clockwise: reverse the matrix array (make the first row last, last row first) with `reverse()`, then transpose the matrix
+* to rotate counter-clockwise: reverse each row in the matrix, then transpose
+### 73 Set Set Matrix Zeros
+* two passes: first, find out all 0s; second, modify the matrix in place
+## Others
 ### 911 Online Election
 * Initial thought:
     * in constructor, count the votes at each time frame; however, not sure which data struct to use since we do not know how many candidates are these in the first place
@@ -1196,6 +1208,9 @@ class Solution(object):
 ```
 ### 14** longest common prefix (string)
 * compare position i of all string at the same time, if one does not equal the others, return existing output
+### 202** Happy Number (cycle detection)
+* can be solved by a fast and slow pointer, similar to Linked List Cycle problem
+* the same can be achieved by saving the result of each run in a hash table and see if the same result has occured before
 # Resource
 * Chapter 14, 15 of Margaret Fleck's textbook: Building Blocks for Theoretical Computer Science
 https://mfleck.cs.illinois.edu/building-blocks/index-sp2020.html
