@@ -59,3 +59,15 @@
     ```
 * Use memoization to avoid repetition with `@cache`. see sol 2 of https://leetcode.com/problems/word-break/editorial/
 * recursion: remember, the return statement cannot be inside the loop (see notes from no. 55, Jump Game )
+* `zip()` is transpose a matrix (see Rotate Image)
+* initialize new object:
+    ```
+    class ListNode:
+        def __init__(self, val=0, next=None):
+            self.val = val
+            self.next = next
+            
+    newNode = ListNode(val)
+    ret.next = newNode
+    ret = ret.next
+    ```

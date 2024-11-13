@@ -4,7 +4,7 @@
 * A Java Book (Hilfinger, 2018 CS61B from Berkeley, contain syntactical representation of the Java, which is hard to read)
 * Effective Java (Bloch, 3rd, academic) 
 ## Knowledge
-### OOP
+### Object-oriented programming (OOP)
 * encapsulation: hide irrelevant information, expose API instead
     * example: get and set methods for classes, 
 * inheritance: class hierarchy

@@ -6,8 +6,9 @@
 * Simplicity is Complicated
 # Tools
 ## GraphQL
-* Think of it as a structured way of making REST calls: these queries are specific to your application, not to the database that holds your data.
+* Think of it as a structured way of making REST calls: these queries are specific to your application, not to the database.
 * In an application query language, you ask for things like "Person in age group teens" and not "SELECT * FROM people WHERE age > 12 AND age < 20". The former is how clients ask for data from the server, and the latter is how the server might fetch that data - and clients don't need to know about that. (https://medium.com/apollo-stack/how-do-i-graphql-2fcabfc94a01)
+* 
 * mutation and query: https://graphql.org/learn/queries/#operation-name https://www.apollographql.com/docs/apollo-server/schema/schema#the-query-type
 
 ## Postgres
@@ -194,6 +195,21 @@ https://stackoverflow.com/a/19419296
 * headless CMS uses API to fetch data from databases, while WordPress is considered as a traditional CMS
 * LAMP (Linux, Apache, MySQL, PHP) stack is one way of hosting a WordPress site, alternatively, one can use Nginx as the web server instead of apache
 * Drupal is more customizable and complex than WordPress. It's similar to a web appliction to a blog
+# Web Performance-Frontend Focused
+* Fireship Vid: https://www.youtube.com/watch?v=0fONene3OIA
+	* Core Web Vitals
+		* LCP (Largest Contentful Paint): loading performance; LCP reports the render time of the largest image, text block, or video visible in the viewport, relative to when the user first navigated to the page
+			* reduce resource load time (compress image, fewer fonts)
+			* use CDN
+			* blocking js (use server side rendering instead of client side)
+		* FID (First Input Delay): interactivity; how long the web app takes to responde to interactions
+			* reduce js by moving js to workers or lazy loading
+		* CLS (Cumulative Layout Shift): measures every unexpected layout shift that occurs during the entire lifecycle of a page
+			* set image size
+* Google framework (https://web.dev/performance?hl=en)
+* 14 Rules of Web Performance (https://youtu.be/HC1eVj5cQOo?si=6deqhNjAdyVth2TS)
+# Performance
+* N + 1 problem (https://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem-in-orm-object-relational-mapping)
 # Talk
 * K8s design principles
 1. Kubernetes APIs are declarative rather than imperative. (extensible)

@@ -44,7 +44,27 @@
     * prompt injection (inject additional prompt to LLM)
     * data poisoning (malicious data used in training model can poison LLM)
 # Neural Network, 3Blue1Brown
-## [Chapter 5. How LLM work, a visual intro](https://youtu.be/wjZofJX0v4M?si=-tTdjMPGNNMZ5ckH)
+## [Chapter 1. neural network (multilayer perceptron)](https://youtu.be/aircAruvnKk?si=BBdfFO5u6oVUcr3c)
+* neural network as a metaphor (example, recognize an image of digits):
+* neuron: a thing that holds a number (the first layer in the neural network is the all pixels of the image, the last is the probability of the possible results); the values (normalized between 0 to 1) of neurons are called *activation*; neurons are also functions that take output from the previous layer and output an activation
+* activation in one layer determines the activation in another layer, which is similar to how neuron works
+* the middle layers are called hidden layer
+* the goal is to have a neuron recognize one aspect of the image, eg. a horizontal edge
+* from one layer to another, calculates the weighted sum of the activation, which also include a bias and a normalization function (sigmoid)
+* *learning* refers to the process of finding the right weights and biases
+## [Chapter 2. Gradient descent, NN training](https://youtu.be/IHZwWFHWa-w?si=h6RbFvXM-zv9QmnF)
+* start the training with random weights and bias, calculate the *cost*; the cost is small when the prediction is correct and large when wrong
+* the cost meansures the performance of the parameters
+* to tell the model to perform better, minimize the cost function by telling the model where to move (towards a local minimum) based on the direction of the fastest descent, aka the *gradient* of the location
+* the algorithm for computing the gradient efficiently is called *backpropagation*
+## [Chapter 3. Backpropagation](https://youtu.be/Ilg3gGewQ5U?si=Y1ge6ogfs8sFxBra)
+* adjust weights, bias so that desired activation of neurons are achieved
+* use gradient descent to adjust weights and bias; use backpropagation to calculate gradient
+* each neuron is connected to every neuron in the next layer, each of these neurons require different adjustments to this neuron, summing them get us the desired change, propagate this process backwards becomes the intuition of backpropagation
+* because backpropagation on each neuron is costly, we batch training set and perform the backpropagation on a batch; this is faster; this is called *stochastic gradient descent*
+## [Chapter 4. Backpropagation calculus](https://youtu.be/tIeHLnjs5U8?si=828RZzkAjBPHsiMO)
+* use chain rule to backpropagate (cost as a function of previous layers' weights * activate - bias) how each weights and bias affect the cost function to achieve gradient descent
+## [Chapter 5. How LLM work](https://youtu.be/wjZofJX0v4M?si=-tTdjMPGNNMZ5ckH)
 * transformers are mechanisms for nex-word-predictions
 * structure of transformers
     * sentence into token (roughly equals to individual words)
@@ -67,7 +87,7 @@
 * last step, come up with a possible list of word predictions
     * use the last vector in the embeddings, times a matrix, called *unembedding matrix*, to get a vector of 50k values (each word in the gpt-3 model gets a value); this umembedding matrix has 50k row and 12288 dimension
     * turn this vector into a probability distribution with a normalization function called softmax
-## [Chapter 6. Attention in transformers, visually explained](https://youtu.be/eMlx5fFNoYc?si=k8-PyFulowhBQ1-T)
+## [Chapter 6. Attention in transformers](https://youtu.be/eMlx5fFNoYc?si=k8-PyFulowhBQ1-T)
 * the notion of transformer is to change word embeddings to incorporate contextual information
 * what does attention (layer/block) do?
     * move a generic embedding saved as part of the embedding matrix to a more contextual specific direction
@@ -82,6 +102,7 @@
         * value matrix formation contains a low rank transformation to reduce the parameter size
     * In one layer, query, key and value matrices together contains the same amount of parameters as embedding/unembedding matrix, but GPT has 96 attention layers, which makes attention layer 96 times the size of embedding parameters. The attention layer accounts for 1/3 of total parameters
     * full attention are multi-headed attention: GPT has 96 attention heads
+# [The spelled-out intro to neural networks and backpropagation: building micrograd](https://youtu.be/VMj-3S1tku0?si=pJ88FgwuDpLq2OgR)
 # [Building Large Language Models (LLMs), Yann Dubois](https://www.youtube.com/watch?v=9vM4p9NN0Ts)
 # Math topic
 ## Low rank transformation

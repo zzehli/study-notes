@@ -329,13 +329,18 @@ currMax, arrayMax = 0, 0
 * Q: explore the relationship between different solutions: https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/solutions/803206/python-js-java-go-c-o-n-by-dp-greedy-visualization-thinking-process
 ### 169** Majority Element (moore's algorithm)
 ### 57** Insert Interval
-* O(n) solution makes one pass through the array, compare the start/end of the new interval with the interval i, insert if no overlap, else create a new interval based on the overlapping condition
+* O(n) solution makes one pass through the array, compare the start/end of the new array with array i, insert if no overlap, else update the new array based on the overlapping condition
+* not altering the original array, but construct the result from ground up, not updating the resulting array in each iteration since the current array might be part of the inserting array
 * don't seem to fit in existing categories of common solutions
+* there are two places where the new interval can be inserted, in the middle of the internval or towards the end
 ### 56 Merge Interval
 * the problem is similar to the one above, but the solution looks a lot simpler
 * the main point of comparison is the 2nd element of the current array in the iteration with the last array in the resulting array. In 57, the resulting array isn't involved in the comparison
 * when two array merge, only change the 2nd element of the array that is inserted in the previous iteration, no need to insert a new array
 * https://leetcode.com/problems/merge-intervals/solutions/350272/python3-sort-o-nlog-n
+### 452 Minimum Number of Arrows to Burst Ballons (interval)
+* Q: greedy?
+* share solution in leetcode post
 ### 167 Two Sum II (two pointers)
 * backtracking would exceed time limit
 * use two pointers (l, r) and move into the middle one step at a time depending on the sum
@@ -561,6 +566,19 @@ def canJump(self, nums: List[int]) -> bool:
 ### 135 Candy (greedy)
 * can be done with one or two passes
 ## Stack
+### 20 Valid Parentheses (hashtable, stack)
+* Solution:
+    ```
+    def isValid(self, s: str) -> bool:
+        stack = []
+        d = {'(':')', '{':'}','[':']'}
+        for i in s:
+            if i in d:
+                stack.append(i)
+            elif stack == [] or i != d[stack.pop()]:
+                return False
+        return stack == []
+    ```
 ### 232** Implement Queue using Stacks (stack)
 * use in and out arrays to keep track of ins and outs of the array
 * need a sync function to keep the two functions in sync
@@ -568,6 +586,8 @@ def canJump(self, nums: List[int]) -> bool:
 * initial thoughts: no idea how to approach this
 * the solution is quite simple, since the arithmetic rule is straight forward, despite of its seeming variations
 * the stack will keep track of all the numbers (and result of operation), when you iterate thru the expression, the operation is always performed on the top most numbers in the stack
+* operator always operates on two numbers, so pop two at a time
+* no need to keep track of the return result, since it is saved in the stack
 ### 155** Min Stack (stack)
 * since the requirement is O(1), iterate thru the stack is not possible
 * one way to go about it is to record the new minimum value with every push and retrieve the current minium from the end of the stack/array
@@ -575,8 +595,10 @@ def canJump(self, nums: List[int]) -> bool:
 * use two pointers (l and r) and two maximum values (lmax and rmax); take the lesser of the two max and calculate water level at the same side (since the lower max determines the water level); 
 * Similar to 11 Container with Most Water
 * topic: similarities with 84. Largest Rectangle in Histogram: https://leetcode.com/problems/trapping-rain-water/solutions/17414/a-stack-based-solution-for-reference-inspired-by-histogram/
-### 224 Basic Calculator (stack)
+### 224** Basic Calculator (stack)
+* classic approach parser with https://leetcode.com/problems/basic-calculator/solutions/2017431/stop-hating-parsing-problems-and-start-having-fun and https://leetcode.com/problems/basic-calculator/solutions/4255054/tiny-ll-1-compiler-in-python3-compiles-expression-to-rpn-and-evaluate
 * https://leetcode.com/problems/basic-calculator/solutions/1456850/python-basic-calculator-i-ii-iii-easy-solution-detailed-explanation/
+* Q: ast approach
 ### 84** Largest Rectangle in Histogram
 * topic: Monostack: https://leetcode.com/problems/largest-rectangle-in-histogram/solutions/995249/python-increasing-stack-explained/
 * concise monostack: * https://leetcode.com/problems/largest-rectangle-in-histogram/solutions/28917/ac-python-clean-solution-using-stack-76ms/
@@ -733,6 +755,10 @@ def canJump(self, nums: List[int]) -> bool:
 * the recursive solution is more intuitive: create the return list by modifying the exisiting list
 ### 141** Linked List Cycle
 * clever solution with a fast and a slow pointer and see if the fast can catch the slow pointer
+### 2 Add Two Numbers
+* two cases, when l1 is not null, when l2 is not null
+* carry and current value can be saved in the same variable
+* need a dummy node at the beginning to initiate the loop correctly
 ## Binary Search
 ### 278** First Bad Version (binary search)
 * This is a binary search problem in disguise. Investigate the suble differences in how the endpoints are defined as well as the loop condition. These would depend on the starting point
