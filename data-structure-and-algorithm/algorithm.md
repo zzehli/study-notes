@@ -750,15 +750,40 @@ def canJump(self, nums: List[int]) -> bool:
     ```
 ## Linked List
 ### 146** LRU Cache
-* Doubly linked list + hashmap
+* the main idea is to create a linked list that can insert from front and remove tail
+* Doubly linked list + hashmap, as well as two dummy pointers at the start and tail of the list
+* the hashmap saves the key as key and node as val
+* did not solve
 ### 21** Merge Two Sorted Lists
 * the recursive solution is more intuitive: create the return list by modifying the exisiting list
+* basic but challenging
 ### 141** Linked List Cycle
 * clever solution with a fast and a slow pointer and see if the fast can catch the slow pointer
 ### 2 Add Two Numbers
 * two cases, when l1 is not null, when l2 is not null
 * carry and current value can be saved in the same variable
 * need a dummy node at the beginning to initiate the loop correctly
+### 138 Copy List with Random Pointers
+* two solutions, first take O(n) and another O(1) space, both O(1) time. The first is more intuitive
+* create a hashmap of node -> node, iterate the list twice, first time to create the deep copy without pointers, and add the pointers in the second iteration
+* investigate the in-place modification
+### 92** Reverse Linked List
+* intuition: keep track of the address of node that neighbors the start/end node for later
+* 头插法 take out element and insert to the front one at a time：https://www.bilibili.com/video/BV18q4y1a76F/?share_source=copy_web
+* alternatively use the convertional reverse linked list method: https://www.youtube.com/watch?v=zEfA0QS96yE
+### 25 Reverse Nodes in k-Group
+* can be done recursively and iteratively
+* didn't complete this one
+* a follow up question to reversing linked list: https://leetcode.com/problems/reverse-nodes-in-k-group/solutions/172576/python-follow-up-of-lc206
+### 19 Remove Nth Node From End of List
+* the question is how to handle edge cases
+* compare use of dummy node with not: https://leetcode.com/problems/remove-nth-node-from-end-of-list/solutions/9032/python-concise-one-pass-solution-with-dummy-head vs https://leetcode.com/problems/remove-nth-node-from-end-of-list/solutions/8802/3-short-python-solutions
+### 61 Rotate List
+* initial thoughts: can use hashmap to store every node and its index
+* could use hashmap to solve the problem, but it takes o(n) space; alternatively, traverse the list a second time to find the desired node position
+### 86 Partition List
+* initial thoughts: use two dummies, left and right to keep arrays that are less and greater than x
+* use two pointers, l and r for the arrays above; traverse the array and append nodes to one of the two array; finally connect the two arrays 
 ## Binary Search
 ### 278** First Bad Version (binary search)
 * This is a binary search problem in disguise. Investigate the suble differences in how the endpoints are defined as well as the loop condition. These would depend on the starting point
@@ -861,6 +886,16 @@ however, the arrangement of the array is still very important
         return dp[-1][1]
     ```
 ## B-Tree/Binary Search Tree
+### 226 Invert Binary Tree
+* initial thought: can be done top down or bottom up 
+* can be solved in <5 lines
+* don't need to do it case by case
+### 101** Symmetric Tree
+* initial thought: need to keep track of the beginning and end of a level
+* can work on two sides at the same time instead of treating the tree as a single entity: https://leetcode.com/problems/symmetric-tree/solutions/33325/python-short-recursive-and-iterative-solutions
+### 82 Remove Duplicates from Sorted List II
+* basic linked list manipulation, use a dummy and keep a prev node while move the head node
+* did not solve
 ### 230** Kth Smallest Element in a BST (Binary Search Tree)
 * traverse to the leaves of the tree, decrement k for on the way back until 0
 ### 102** Binary Tree Level Order Traversal (Binary Tree)
