@@ -96,7 +96,7 @@
         * produce key vectors as answers to the questions 
         * the dot products of the query and key vectors are large positive numbers
         * *attention pattern* is the dot product of key vectors and query vectors to assess the relevance of embeddings, the bigger the dot product, the more relevant they are (reference the attention is all you need paper)
-        * the size is the attention pattern is the size of the context window
+        * the size in the attention pattern is the size of the context window
         * value matrix generate a vector that moves the embedding into the desired direction
         * apply value vectors to the attention pattern to generate the movement of the embedding
         * value matrix formation contains a low rank transformation to reduce the parameter size
@@ -104,6 +104,9 @@
     * full attention are multi-headed attention: GPT has 96 attention heads
 # [The spelled-out intro to neural networks and backpropagation: building micrograd](https://youtu.be/VMj-3S1tku0?si=pJ88FgwuDpLq2OgR)
 # [Building Large Language Models (LLMs), Yann Dubois](https://www.youtube.com/watch?v=9vM4p9NN0Ts)
+# [Micrograd, Andrej Karpathy]
+* Backpropagation is the recursive application of chain rule backward thru the computational graph
+* a mathematical model of neuron, artificial neuron: $$f(\sum_i w_ix_i + b)$$ where $w_ix_i$ is weighted input and $b$ is bias, and $f$ is an activation function (sigmoid, ReLU) that normalizes the weighted output
 # Math topic
 ## Low rank transformation
 # Curious topics
