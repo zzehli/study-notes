@@ -104,7 +104,7 @@
     * full attention are multi-headed attention: GPT has 96 attention heads
 # [The spelled-out intro to neural networks and backpropagation: building micrograd](https://youtu.be/VMj-3S1tku0?si=pJ88FgwuDpLq2OgR)
 # [Building Large Language Models (LLMs), Yann Dubois](https://www.youtube.com/watch?v=9vM4p9NN0Ts)
-# [Micrograd, Andrej Karpathy]
+# Micrograd, Andrej Karpathy
 * Backpropagation is the recursive application of chain rule backward thru the computational graph
 * a mathematical model of neuron, artificial neuron: $$f(\sum_i w_ix_i + b)$$ where $w_ix_i$ is weighted input and $b$ is bias, and $f$ is an activation function (sigmoid, ReLU) that normalizes the weighted output
 # Math topic
