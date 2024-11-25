@@ -97,9 +97,10 @@ class Trie:
 
 ```
 # Leetcode
-## binary
+## binary/Bit manipulation
 ### 67** Add Binary
 * keep track of carry and sum
+###
 ## backtracking
 * leetcode question collection
     * https://leetcode.com/problems/letter-combinations-of-a-phone-number/solutions/780232/backtracking-python-problems-solutions-interview-prep 
@@ -467,7 +468,7 @@ currMax, arrayMax = 0, 0
 * design index so that the third index is not needed
 * Q: explore KMT solution
 ### 55** Jump Game (DP, Kadane)
-* Initial throughts: this is a dynamic programming question: options at each step are fixed and can be memoized
+* Initial thoughts: this is a dynamic programming question: options at each step are fixed and can be memoized
 ```
 def canJump(self, nums: List[int]) -> bool:
 
@@ -923,9 +924,9 @@ however, the arrangement of the array is still very important
             res.append(currLv)
         return res
 ```
-### 236 Lowest Common Ancestor of a Binary Tree (Binary Tree)
-* similar to 235, which is for binary search tree, but harder, since b-tree is not ordered
-* unlike 235, need to traverse first then see if a node has both p and q as its children
+### 236** Lowest Common Ancestor of a Binary Tree (Binary Tree)
+* did not solve
+* recursive solution using 
 ### 297** Serialize and Deserialize Binary Tree (Binary Tree)
 ### 543** Diameter of Binary Tree (Binary Tree)
 * common b-tree problem
@@ -936,9 +937,30 @@ however, the arrangement of the array is still very important
 ### 104 Maximum Depth of Binary Tree (Binary Tree)
 * try to come up with the recursive solution
 * can be solved by keep track the levels as in 102
-### 105** Construct Binary Tree from Preorder and Inorder Traversal
-* initial thoughts: no clue how to approach this
+### 105** Construct Binary Tree from Preorder and Inorder Traversal (Binary Tree)
+* initial thoughts: no clue how to approach this; how to construct all possible solutions based one method of traversal?
+* pop first item from preorder array, which serves as the root
 * the recursive solution split the inorder array in half, left children take the first half and the right children take the second half
+* did not solve
+### 106 Construct BTree from Inorder and Postorder (Binary Tree)
+* same as 105, slightly change the pop and recursive calls
+* not the most optimized performance: https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/solutions/221681/a-better-python-solution
+### 117 Populating Next Right Pointers In Each Node (Binary Tree)
+* solution I came up use several vars to keep track levels and a deque for level traversal
+* can be solved in O(1) space: https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/solutions/961868/python-o-n-solution-explained and https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/solutions/37813/java-solution-with-constant-space
+### 114 Flatten Binary Tree to Linked List (Binary Tree)
+* recursive solution is not space optimized, like 117
+* Q: explore space optimized solution
+### 129 Sum Root to Leaf Numbers (Binary Tree)
+* construct dfs while build the number accumutively (preorder, not most optimized)
+* Q: explore Morris Traversal, the faster solution
+* did not solve
+### 124** Binary Tree Maximum Path Sum (Binary Tree)
+* initial thoughts: in-order dfs, similar to max subarray kadane's algorithm
+* did not solve
+### 173 Binary Search Tree Iterator (BST)
+* did not solve
+* can use stack to keep track of iterator location 
 ## Heap
 ### 973 K Closest Point to Origin (heap)
 * classic heap question: https://leetcode.com/problems/k-closest-points-to-origin/solutions/294389/easy-to-read-python-min-heap-solution-beat-99-python-solutions/

@@ -75,7 +75,7 @@ Cube selects the best available pre-aggregation based on the incoming queries it
 * security context: you can generate two types of tokens: https://cube.dev/docs/product/auth
 	* Without security context, which will mean that all users will have the same data access permissions.
 	* With security context, which will allow you to implement role-based security models where users will have different levels of access to data.
-## GraphQL
+## GraphQL (see non-web notes for updated version)
 * Think of it as a structured way of making REST calls: these queries are specific to your application, not to the database that holds your data.
 * In an application query language, you ask for things like "Person in age group teens" and not "SELECT * FROM people WHERE age > 12 AND age < 20". The former is how clients ask for data from the server, and the latter is how the server might fetch that data - and clients don't need to know about that. (https://medium.com/apollo-stack/how-do-i-graphql-2fcabfc94a01)
 * mutation and query: https://graphql.org/learn/queries/#operation-name https://www.apollographql.com/docs/apollo-server/schema/schema#the-query-type

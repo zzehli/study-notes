@@ -6,9 +6,10 @@
 * Simplicity is Complicated
 # Tools
 ## GraphQL
+* GraphQL is a query language for your API, and a server-side runtime for executing queries using a type system you define for your data (https://graphql.org/learn/)
 * Think of it as a structured way of making REST calls: these queries are specific to your application, not to the database.
+* GraphQL server defines db connections, schema, resolving operation with resolvers (apollo example): https://www.apollographql.com/docs/apollo-server/getting-started
 * In an application query language, you ask for things like "Person in age group teens" and not "SELECT * FROM people WHERE age > 12 AND age < 20". The former is how clients ask for data from the server, and the latter is how the server might fetch that data - and clients don't need to know about that. (https://medium.com/apollo-stack/how-do-i-graphql-2fcabfc94a01)
-* 
 * mutation and query: https://graphql.org/learn/queries/#operation-name https://www.apollographql.com/docs/apollo-server/schema/schema#the-query-type
 
 ## Postgres
