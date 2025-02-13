@@ -158,7 +158,7 @@ class Trie:
 ### 47** Permutation II (backtracking)
 * permutation but remove duplicate values
 ## graph
-### 207** Course Schedule (Graph)
+### 207*** Course Schedule (Graph)
 * Pointers: 1. construct an adjacency list to store prereq; 2. use dfs to search for cycle:
 ```
         adjList = defaultdict(list)
@@ -179,7 +179,7 @@ class Trie:
         
         return True
 ```
-* optimization: use a set to keep a record of the vertecies already visited.
+* optimization: use a set to keep a record of the vertecies already visited, see `uniqueCourse` below 
 ```
 class Solution(object):
     def canFinish(self, numCourses, prerequisites):
@@ -213,8 +213,15 @@ class Solution(object):
         return True
 ```
 * https://youtu.be/yPldqMtg-So?si=vi4WbPuqmeupZDWQ
+* https://leetcode.com/problems/course-schedule/solutions/58586/python-20-lines-dfs-solution-sharing-with-explanation
 * about recursion, variable changed at the bottom will affact the same variable that is cached in the recursion above it. eg(test case: [[0,1],[0,2],[1,3]] and print visitList)
 * pay attention to how the visited list is updated
+### 210 Course Schedule II (Graph, Topological Sort)
+* can be done similar to 207. Course schedule 
+* make the `unique` list the return value, in the cycle detection function, return directly when element is already in unique, since it's already established that it can be reached
+* concise: https://leetcode.com/problems/course-schedule-ii/solutions/59455/fast-python-dfs-solution-with-inline-explanation
+* similar to mine: https://leetcode.com/problems/course-schedule-ii/solutions/762346/python-bfs-beats-98-with-detailed-explanation-and-comments 
+* Q: topological sort: https://leetcode.com/problems/course-schedule-ii/solutions/190393/topological-sort-template-general-approach
 ### 994 Rotting Orange (Graph)
 * initial thought:
     * breath first search
@@ -270,8 +277,12 @@ class Solution(object):
 ### 133** Clone Graph (Graph, DFS/BFS)
 * basic problem type, can be implemented in many ways
 * needs a dictionary to hold all the nodes
+* did not solve
+* dfs thru the old graph, put the new graph in to the dictionary
+* one pass, first create node, then fill in the neighbors
 ### 200 Number of Islands
 * initial thought: dfs on islands of 1s, traverse and turn 1 to 2
+* one pass
 ### 721** Accounts merge (Graph, DFS/BFS)
 * construct the graph with email as key and a list of accounts as values
 * because email identifies a person, use emails to connect accounts and merge them: eg. if A has email E1 and E1 is associated with [A, B], then A and B are the same person and A should have all emails for A and B.
@@ -713,7 +724,7 @@ def canJump(self, nums: List[int]) -> bool:
 * similar to 438: https://leetcode.com/problems/permutation-in-string/solutions/559278/java-python-sliding-window-clear-explanation-clean-concise
 * notice how the hashtable is incremented/decremented as the window moves: https://leetcode.com/problems/permutation-in-string/solutions/1761953/python3-sliding-window-optimized-explained
 ### 30 Substring with Concatenation of All Words (sliding window)
-* solution is complex, didn't solve it
+* solution is complex, did not solve it
 * https://leetcode.com/problems/substring-with-concatenation-of-all-words/solutions/13673/accepted-java-solution-12ms-with-explanation/?envType=study-plan-v2&envId=top-interview-150
 ### 2273 Find Resultant Array After removing anagrams (hashtable)
 * use an array to count letters in an anagram and compare the array or use tuple for hashtable
@@ -774,7 +785,7 @@ def canJump(self, nums: List[int]) -> bool:
 * alternatively use the convertional reverse linked list method: https://www.youtube.com/watch?v=zEfA0QS96yE
 ### 25 Reverse Nodes in k-Group
 * can be done recursively and iteratively
-* didn't complete this one
+* did not solve this one
 * a follow up question to reversing linked list: https://leetcode.com/problems/reverse-nodes-in-k-group/solutions/172576/python-follow-up-of-lc206
 ### 19 Remove Nth Node From End of List
 * the question is how to handle edge cases
@@ -898,7 +909,10 @@ however, the arrangement of the array is still very important
 * basic linked list manipulation, use a dummy and keep a prev node while move the head node
 * did not solve
 ### 230** Kth Smallest Element in a BST (Binary Search Tree)
-* traverse to the leaves of the tree, decrement k for on the way back until 0
+* did not solve
+* traverse to the leaves of the tree, decrement k on the way back until 0
+* pay attention to where to store k and return value
+* Q: when to use external value to store vars in BST questions Q530
 ### 102** Binary Tree Level Order Traversal (Binary Tree)
 * use a queue to keep track of the number of nodes in a level; for each level, append each node's children to the queue, as well as put node's value to a temporary array, then append the array to the output at the end of the level iteration
 ```
@@ -924,6 +938,8 @@ however, the arrangement of the array is still very important
             res.append(currLv)
         return res
 ```
+### 103 Binary Tree Zigzag Level Order Traversal (Binary Tree)
+* did not solve
 ### 236** Lowest Common Ancestor of a Binary Tree (Binary Tree)
 * did not solve
 * recursive solution using 
@@ -934,6 +950,29 @@ however, the arrangement of the array is still very important
 ### 199 Binary Tree Right Side View (Binary Tree)
 * similar to the level order traversal, keep track of levels. Traverse the whole tree but only insert the right most element
 * similar to 102, 104
+* solution:
+    ```
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        ret = []
+        if not root: return ret
+        q = deque([root])
+        lv_size = 0
+
+        while q:
+            for i in range(lv_size):
+                node = q.popleft()
+                if node.right:
+                    q.append(node.right)
+                if node.left:
+                    q.append(node.left)
+                if i == 0:
+                    ret.append(node.val)
+            lv_size = len(q)
+
+        return ret
+    ```
+### 637 Average of Levels in Binary Tree
+* level order traversal
 ### 104 Maximum Depth of Binary Tree (Binary Tree)
 * try to come up with the recursive solution
 * can be solved by keep track the levels as in 102
@@ -961,6 +1000,14 @@ however, the arrangement of the array is still very important
 ### 173 Binary Search Tree Iterator (BST)
 * did not solve
 * can use stack to keep track of iterator location 
+### 530** Minimum Absolute Difference in BST (BST)
+* did not solve
+* use a global value to keep track of the previous value in in-order traversal to compare non-adjacent values
+* Q: when to use external value to store vars in BST questions Q230
+### 98 Valid Binary Search Tree
+* did not solve
+* any element is restricted by two numbers, lower and upper bound
+* when traverse to left branch, update the upper bound; right branch would update lower bound
 ## Heap
 ### 973 K Closest Point to Origin (heap)
 * classic heap question: https://leetcode.com/problems/k-closest-points-to-origin/solutions/294389/easy-to-read-python-min-heap-solution-beat-99-python-solutions/
@@ -1182,8 +1229,15 @@ however, the arrangement of the array is still very important
 ### 48 Rotate Image
 * to rotate clockwise: reverse the matrix array (make the first row last, last row first) with `reverse()`, then transpose the matrix
 * to rotate counter-clockwise: reverse each row in the matrix, then transpose
-### 73 Set Set Matrix Zeros
+### 73 Set Matrix Zeros
 * two passes: first, find out all 0s; second, modify the matrix in place
+### 130 Surrounded Regions
+* did not solve
+* the rationale is to set aside boundary regions first so that we don't mix them with the surrounded regions
+* two pass, first mark boundary regions; second, go thru the whole board turn the rest of Os to Xs and marked regions to Os
+### 399 Evaluate Division
+* did not solve
+* construct a weighted DAG in the form of a 2d array to perform queries
 ## Others
 ### 911 Online Election
 * Initial thought:

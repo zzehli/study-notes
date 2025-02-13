@@ -17,6 +17,8 @@ https://www3.ntu.edu.sg/home/ehchua/programming/java/J3a_OOPBasics.html
 stanford cs108
 * Data binding: how to look for correct implementation when a method is called; depending on when binding takes place (compile time or run time), there can be static binding and dynamic binding
 https://www.cs.cornell.edu/courses/cs211/2004fa/
+#### Composition over Inheritance
+* https://www.reddit.com/r/AskProgramming/comments/lv7m7a/i_still_dont_understand_the_prefer_composition/
 ### Class
 * `Static` methods are methods that do not operate on objects, eg `Math.pow()`
 * `Static` variables have only one per class. Access by calling it directly, eg `System.out` (Hortstmann)
