@@ -1,3 +1,20 @@
+# full-stack
+## cookie and sessions
+* User authentication system: https://gist.github.com/siscia/5ed3277551370df3eb8b1063923621d4
+* where to store tokens? https://web.archive.org/web/20200710185631/https://stormpath.com/blog/where-to-store-your-jwts-cookies-vs-html5-web-storage
+* Why are we using token-based authentication over cookies? https://www.reddit.com/r/webdev/comments/15fgwq5/why_are_we_using_tokenbased_authentication_over/
+```
+ Cookies are 100% the way to go if you have a simple 1 to 1 client server relationship. It's straight forward and easier to make secure but... This server client direct relationship isn't always the case In bigger more complex enterprise architecture.
+
+JWT authentication can be more flexible and is good in situations where you have multiple APIs, multiple different pages or mobile apps using the same APIs.
+
+For example. A large company might have 8 different APIs maintained by different teams written in different languages. A company like this will roll one authentication server that deals with all the Auth and dishes out all the tokens. That means once you have a token you have a common interface to communicate with all the APIs securely.
+
+There are patterns that involve an API gateway that acts as the front door to all of your APIs. Cookie based is very limiting in what you can achieve. JWT means that pretty much anything can call your APIs securely not just browsers.
+
+Cookies don't work in Native apps too. The process you are used to with the apps on your phone keeping you logged in is a JWT refresh Oauth flow. It would mean maintaining an Auth server on top of a cookie based Auth flow for your webpage. Which doesn't make sense so you just use JWT and either Oauth/OpenID etc for everything. 
+```
+
 # API Design
 * API Design best practices from Microsoft https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design
 # Networking
@@ -46,7 +63,6 @@
     * https://pythonspeed.com/articles/root-capabilities-docker-security/
 	* docker logs --follow <container ID>
 ## Spring Boot
-### REST API with jpa and hibernate
 ### REST API with jpa and hibernate
 * Code structure, from https://www.twilio.com/blog/create-rest-apis-java-spring-boot
 * testing and mocking in Spring boot https://reflectoring.io/unit-testing-spring-boot

@@ -129,6 +129,29 @@ where `createOptions` is:
 ```
 since `createOption` is inside useEffect, if `useEffect` runs, `createOption` is created, which triggers *another* `useEffect` rendering.
 
+To fix this, wrape `createOption` with `useCallback`:
+```
+  const [message, setMessage] = useState('');
+
+  const createOptions = useCallback(() => {
+    return {
+      serverUrl: 'https://localhost:1234',
+      roomId: roomId
+    };
+  }, [roomId]); // ✅ Only changes when roomId changes
+
+  useEffect(() => {
+    const options = createOptions();
+    const connection = createConnection(options);
+    connection.connect();
+    return () => connection.disconnect();
+  }, [createOptions]);
+```
+
+### useReducer
+* consolidate all the state update logic outside your component in a single function
+* `const [state, dispatch] = useReducer(reducer, initialArg, init?)` where the `dispatch` function lets you update your state (`initialArg` is the initial val)
+
 ### resources
 * see https://github.com/kentcdodds/react-hooks
 * exercise https://epic-react-exercises.vercel.app/react/hooks/1
