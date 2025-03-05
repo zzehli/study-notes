@@ -1,3 +1,4 @@
+# Rails
 ## MVC (from Agile Web Development with Ruby 7-Sam Ruby)
 ### Definition
 * model: maintain the state of the application (representation of data in the database)
@@ -37,21 +38,119 @@
     *  It uses the words “describe” and “it” so we can express concepts like a conversation (https://rspec.info/features/3-13/rspec-core/example-groups/basic-structure/)
     * describe/it: The `describe` method creates an example group. Within the block passed to `describe` you can declare nested groups using the `describe` or `context` methods, or you can declare examples using the `it` or `specify` methods.
 
-## Ruby
+# Ruby
 * Object-oriented language: allow objects to define data, functionalities and how to access these functionalities
 * see `java.md` for OOP concepts
-### naming
+## naming
 * instance variables begin with `@`
 * local var, method names and params use underscore to seperate words instead of camel case
 * class names, module names and constants start with an uppercase letter
 * use single colon `:` to denote *symbols*: according to Programming Ruby 3.3, "Symbols aren’t exactly optimized strings, but for most purposes, you can think of them as special strings that are immutable, are only created once, and are fast to look up. Symbols are meant to be used as keys and identifiers, while strings are meant to be used for data"
-### data type
+## data type
 * differences between single (does very little) and double quotes (look for things to process like `\n` and var `{na.capitalize}`)
+## data structure
+* hashmap, use symbols as keys
+```
+japanese_cars = {
+  honda: "Accord",
+  toyota: "Corolla",
+  nissan: "Altima"
+}
+japanese_cars[:honda] 
+```
+## basic syntax and methods:
+* float point division: `9 /5.to_f`
+* class
+```
+class Greeter
+  def initialize(name = "World")
+    @name = name
+  end
+  def say_hi
+    puts "Hi #{@name}"
+  end
+end
+```
+* `each` method, see reference on [bloc](https://www.rubyguides.com/2016/02/ruby-procs-and-lambdas/)
+```
+[1,2,3].each {|n| puts n }
+# or
+[1,2,3].each do |n|
+    puts n
+end
+# combine with step()
+arr[0...arr.length].step(2) { |val| puts val }
+```
+* range function with `(1..20)` or `(1...20)`, see [here](https://www.rubyguides.com/2016/06/ruby-ranges-how-do-they-work/)
+### examples
+* numbers greater than 5
+```
+def more_than_five(list)
+  for i in list
+    if i > 5
+      puts i
+    end
+  end
+end
+```
+* check prime number
+```
+def check_prime(n)
+  return false if n < 2
+  return true if n == 2
 
-## Readings
-* Getting started: https://guides.rubyonrails.org/getting_started.html
+  (2..Math.sqrt(n)).each do |i|
+    return false if n % i == 0
+  end
+
+  true
+end
+```
+* sume prime numbers in an array
+```
+# simple
+arr.select { |num| prime?(num) }.sum
+# elaborate
+def sum_prime(list)
+    sum = 0
+    for i in list
+        if check_prime(i)
+            sum += i
+        end
+    end
+    return sum
+end
+```
+* factorial numbers
+```
+def factorial(n)
+  prod = 1
+  (1..n).each {|n| prod *= n}
+  return prod
+end
+```
+* Fibonacci 
+```
+def fibonacci(n)
+  return n if n <= 1  # Base cases: fib(0) = 0, fib(1) = 1
+  fibonacci(n - 1) + fibonacci(n - 2)
+end
+# use loop
+def fibonacci(n)
+  return n if n <= 1  # Base cases: Fibonacci(0) = 0, Fibonacci(1) = 1
+
+  a, b = 0, 1  # Start with first two Fibonacci numbers
+  (2..n).each do
+    a, b = b, a + b  # Update values
+  end
+  b  # Return the nth Fibonacci number
+end
+```
+# Readings
 * Securing Rails App: https://guides.rubyonrails.org/security.html
 * Testing Rails App: https://guides.rubyonrails.org/testing.html
 * TDD and Rspec: https://www.theodinproject.com/lessons/ruby-test-driven-development
 * Tuning Performance: https://guides.rubyonrails.org/tuning_performance_for_deployment.html
 * https://builders.fullscript.com/tagged/engineering
+* Ruby interview questions: https://coderpad.io/interview-questions/ruby-interview-questions/
+* Ruby OOP: https://eriktrautman.com/posts/ruby-explained-classes
