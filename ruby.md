@@ -58,9 +58,8 @@ japanese_cars = {
 }
 japanese_cars[:honda] 
 ```
-## basic syntax and methods:
-* float point division: `9 /5.to_f`
-* class
+## class
+* class definition
 ```
 class Greeter
   def initialize(name = "World")
@@ -71,6 +70,15 @@ class Greeter
   end
 end
 ```
+* use `attr_accessor` for set up getters and setters: `attr_accessor :name`
+* class variable with `@@` eg `@@default_name = "Aki"` 
+* class method with `[Classname].method_name` eg `Greeter.list_behavior`OR with `self` eg `self.list_behavior`
+### inherentance
+* inherentance with `<` eg `class Viking < Person`
+* `super()` to evoke parent class methods
+
+## basic syntax and methods:
+* float point division: `9 /5.to_f`
 * `each` method, see reference on [bloc](https://www.rubyguides.com/2016/02/ruby-procs-and-lambdas/)
 ```
 [1,2,3].each {|n| puts n }
@@ -82,6 +90,30 @@ end
 arr[0...arr.length].step(2) { |val| puts val }
 ```
 * range function with `(1..20)` or `(1...20)`, see [here](https://www.rubyguides.com/2016/06/ruby-ranges-how-do-they-work/)
+* bloc and `yield`
+```
+def do_something
+  puts "Start of method"
+  yield
+  puts "End of method"
+end
+
+do_something do
+  puts "Inside the block"
+end
+```
+* module
+```
+module Helper
+  def square(num)
+    num * num
+  end
+end
+
+class Calculator
+  include Helper
+end
+```
 ### examples
 * numbers greater than 5
 ```

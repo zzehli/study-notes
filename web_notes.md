@@ -4,7 +4,7 @@
 * where to store tokens? https://web.archive.org/web/20200710185631/https://stormpath.com/blog/where-to-store-your-jwts-cookies-vs-html5-web-storage
 * Why are we using token-based authentication over cookies? https://www.reddit.com/r/webdev/comments/15fgwq5/why_are_we_using_tokenbased_authentication_over/
 ```
- Cookies are 100% the way to go if you have a simple 1 to 1 client server relationship. It's straight forward and easier to make secure but... This server client direct relationship isn't always the case In bigger more complex enterprise architecture.
+Cookies are 100% the way to go if you have a simple 1 to 1 client server relationship. It's straight forward and easier to make secure but... This server client direct relationship isn't always the case In bigger more complex enterprise architecture.
 
 JWT authentication can be more flexible and is good in situations where you have multiple APIs, multiple different pages or mobile apps using the same APIs.
 
@@ -14,9 +14,18 @@ There are patterns that involve an API gateway that acts as the front door to al
 
 Cookies don't work in Native apps too. The process you are used to with the apps on your phone keeping you logged in is a JWT refresh Oauth flow. It would mean maintaining an Auth server on top of a cookie based Auth flow for your webpage. Which doesn't make sense so you just use JWT and either Oauth/OpenID etc for everything. 
 ```
+### cookies for data storage
+* From [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies):
+> In the early days of the web when there was no other option, cookies were used for general client-side data storage purposes. Modern storage APIs are now recommended, for example the Web Storage API (localStorage and sessionStorage) and IndexedDB. They are designed with storage in mind, never send data to the server
+that is because: 1, cookie # and sizes are limited, while Storage API has bigger capacity; 2, cookies are sent with every request, so they slow down performance
+* read this [article](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Client-side_APIs/Client-side_storage) for more on client side sotrage
+
 
 # API Design
 * API Design best practices from Microsoft https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design
+## Webhook
+* Webhook is a request (usually POST and GET) from a service provider (eg. Stripe) to your application. It is a way to feed information back to application from the provider (eg. transaction complete).
+* Alternative solutions are short and long pooling. Long pooling is when the provider opens a port and wait for the process to finish before sending the request to the application, but this method consumes more server resources of the provider than webhooks since the it needs to hold the port open.
 # Networking
 # Programming language
 ## Go
