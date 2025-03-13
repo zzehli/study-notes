@@ -19,8 +19,8 @@ Cookies don't work in Native apps too. The process you are used to with the apps
 > In the early days of the web when there was no other option, cookies were used for general client-side data storage purposes. Modern storage APIs are now recommended, for example the Web Storage API (localStorage and sessionStorage) and IndexedDB. They are designed with storage in mind, never send data to the server
 that is because: 1, cookie # and sizes are limited, while Storage API has bigger capacity; 2, cookies are sent with every request, so they slow down performance
 * read this [article](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Client-side_APIs/Client-side_storage) for more on client side sotrage
-
-
+## webp image
+* https://www.reddit.com/r/webdev/comments/1dz55ww/anyone_switched_over_to_primarily_using_webp/
 # API Design
 * API Design best practices from Microsoft https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design
 ## Webhook

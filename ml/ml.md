@@ -63,7 +63,7 @@
 * use gradient descent to adjust weights and bias; use backpropagation to calculate gradient
 * each neuron is connected to every neuron in the next layer, each of these neurons require different adjustments to this neuron, summing them get us the desired change, propagate this process backwards becomes the intuition of backpropagation
 * because backpropagation on each neuron is costly, we batch training set and perform the backpropagation on a batch; this is faster; this is called *stochastic gradient descent*
-## [Chapter 4. Backpropagation calculus](https://youtu.be/tIeHLnjs5U8?si=828RZzkAjBPHsiMO)
+### [Chapter 4. Backpropagation calculus](https://youtu.be/tIeHLnjs5U8?si=828RZzkAjBPHsiMO)
 * use chain rule to backpropagate (cost as a function of previous layers' weights * activate - bias) how each weights and bias affect the cost function to achieve gradient descent
 ### [Chapter 5. How LLM work](https://youtu.be/wjZofJX0v4M?si=-tTdjMPGNNMZ5ckH)
 * GPT: generative pretrained transformers
@@ -111,6 +111,15 @@
 ## [The spelled-out intro to neural networks and backpropagation: building micrograd](https://youtu.be/VMj-3S1tku0?si=pJ88FgwuDpLq2OgR)
 * Backpropagation is the recursive application of chain rule backward thru the computational graph
 * a mathematical model of neuron, artificial neuron: $$f(\sum_i w_ix_i + b)$$ where $w_ix_i$ is weighted input and $b$ is bias, and $f$ is an activation function (sigmoid, ReLU) that normalizes the weighted output
+## [Understand Reasoning LLMs](https://magazine.sebastianraschka.com/p/understanding-reasoning-llms and https://news.ycombinator.com/item?id=42966720)
+* good at complex tasks such as solving puzzles, math, and coding tasks
+* not necessary for summarization, translation, or knowledge-based question answering
+* mechanisms
+    * inference-time scaling: use more resources for inference to get better answers, such as prompt engineering techniques
+    * RL: for DeepSeek Zero, reinforcement learning with human feedback, where models are rewarded by accuracy (leetcode compiler) and format
+    * Supervised fine-tuning and RL: perform SFT before RL
+## [Understanding and Using Supervised Fine-Tuning (SFT) for Language Models](https://cameronrwolfe.substack.com/p/understanding-and-using-supervised)
+
 # Prompt Engineering
 ## [Prompt Engineering Overview](https://youtu.be/dOxUroR57xs?si=YDSjolN3mo3FzvHG)
 * Prompts involve instructions and context passed to a language model to achieve a desired task
@@ -151,8 +160,71 @@
 
 ## [Prompt Engineer Guide](https://www.promptingguide.ai/)
 
-
+# Applications
+## AI Engineering, Chip Huyen
+### Chapter 1, Intro
+#### Language Models
+* ML models vs foundation models
+* token (words or part of a word) -> vocabulary (100, 000 for GPT-4)
+* there are fewer unique tokens than words
+* two types of language models: masked language model (predict based on before and after the targeted token) and *autoregressive language model* (based on before the toke, more popular now)
+* language models are capable of *self-supervision*
+* supervision refers to the use of labeled data, while self-supervision models can infer labels from input data
+#### Foundation Models
+* *Foundation model* refers to the fact that models can handle different data modalities, in addition to text
+* They are capable of a wide range of tasks, such as sentiment analysis or translation
+* 3 common techniques to adapt a model to specific tasks: prompt engineering, RAG and finetuning
+p28
+#### ML Engineer vs AI Engineer
+* ML engineers develop ml models, which are often smaller and less resource-intensive whereas AI engineers use existing models that are more expensive to develop in-house
+* ML engineers focus more on modeling and training and AI engineers focus more on adaptation
+* model adaptation techniques have two categories: prompt engineering and finetuning; the latter requires updating the model weights but see significant improvement on model performance
+#### Model development 
+* three parts modeling and training, dataset engineering and inference optimization
+* training
+    * pre-training involves training a model for text-completion, this is often the most resource-intensive step in training
+    * finetuning and post-training are used interchangeably, they might be done by model developers or application developers
+* dataset engineering
+    * for ML engineers, this means curate, generate and annotate the data needed for training AI models
+    * foundation models have open-ended outputs and take in unstructured data, which requires higher quality datasets
+    * for AI engineers, this means deduplication, tokenization, context retrieval, and quality control
+#### Application development
+* evaluation
+    * the open-ended nature make eval important, since there is no standardized outcome
+* prompt engineering
+* AI interface
+    * ai applications can be standalone products instead of becoming part of a product (recommender systems, fraud detection)
+        * Streamlit, Gradio, Plotly Dispatch
+* ML engineers start with training a model while ai engineers build products first before thinking about models (Shawn Wang, [The Rise of AI Engineer](https://www.latent.space/p/ai-engineer))
+### Chapter 2, Foundation Models
+## [Flow Engineering](https://www.youtube.com/watch?v=YpoK2L1EeJc)
+* instead of calling LLMs once, applications usually need to call them multiple times
+* design environment, eg. at Ford, the craftsmanship is in the workbench itself
+* unlike knowledge work, decomposing knowledge work requires context sharing (pass information between people), which can be expensive and time-consuming
+* limitations
+    * LLMs are stateless; they don't remember chat history (reasoning models are improving on this aspect)
+    * LLMs don't complain about errors -> engineers need to make judgement about quality of output
+    * LLMs don't make good judgement off the shelf
+* Flow engineering is the designing and optimizing cognitive factories
+    * decompose tasks
+    * design ergonomic prompts
+    * design communication between LLMs
+    * embed judgements into workflow
+    * oversight and iteration
+    * empower LLMs with tools and resource
+    * tweak specifications of final output
+* What tasks are not suited for flow engineering
+    * require high degrees of flexibility (end to end RL models are better)
+    * require a deep synthesis of information, eg. scientific research token workf
 # Math topic
 ## Low rank transformation
 # Curious topics
 ## A Mathematical Framework for Transformer Circuits (reverse engineer attention models)
+## Will we run out of data? Limits of LLM scaling based on human-generated data
+# Bookmarks
+## OpenAI tokenizer: https://platform.openai.com/tokenizer
+## Will we run out of data? Limits of LLM scaling based on human-generated data
+## AI Search Has A Citation Problem
+# Project ideas
+## agent that generate similarity queries that help with search
+* Shah and Bender-Envisioning Information Access Systems

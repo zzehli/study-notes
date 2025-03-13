@@ -79,8 +79,9 @@ understanding-javascript-function-prototype-bind/
 * essentially, controlled components lets you rewrite HTML forms and input tags in React
 * Lifting State Up: if several components reflect the same changing data, we can lift the state up to their cloest common ancestor (component that needs it: calculator needs input)
 * Because of the top-down data flow of react, lifting the state to higher up in the ladder means the what was originally a state now is a props from a higher level component. Thus, changes in `props` (state before lift) need to be handled by callbacks from the higher level component, where the `props` is a state. Thus, the higher level function needs to pass the event handler as part of the props to the lower level func
-
-## React Hooks (https://reactjs.org/docs/hooks-intro.html)
+## React Hooks
+* https://overreacted.io/why-isnt-x-a-hook/
+### React Hooks (https://reactjs.org/docs/hooks-intro.html)
 * Hooks lets you use state and other React features without writing a class 
 (hooks are used in funcion components, not in class)
 * `useEffect` adds the ability to perform side effects from a function component.

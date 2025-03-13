@@ -212,6 +212,31 @@ class Solution(object):
         
         return True
 ```
+* Best solution, less variables and no need to remove visited by creating visited at each recursion
+```
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        # make an adj list to retrieve courses, while keep track of the orders
+        adj_list = defaultdict(list)
+        nodes = []
+        for i, j in prerequisites:
+            adj_list[j].append(i)
+        # retrive the adj list with dfs to find loops
+        def dfs(start, visited):
+            if start in visited:
+                return False
+            for i in adj_list[start]:
+                if i in nodes:
+                    continue
+                if dfs(i, visited + [start]) == False:
+                    return False
+            return True
+        for i in range(numCourses):
+            if dfs(i, []) == False:
+                return False
+            nodes.append(i)
+
+        return True
+```
 * https://youtu.be/yPldqMtg-So?si=vi4WbPuqmeupZDWQ
 * https://leetcode.com/problems/course-schedule/solutions/58586/python-20-lines-dfs-solution-sharing-with-explanation
 * about recursion, variable changed at the bottom will affact the same variable that is cached in the recursion above it. eg(test case: [[0,1],[0,2],[1,3]] and print visitList)
