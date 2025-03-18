@@ -197,6 +197,84 @@ p28
         * Streamlit, Gradio, Plotly Dispatch
 * ML engineers start with training a model while ai engineers build products first before thinking about models (Shawn Wang, [The Rise of AI Engineer](https://www.latent.space/p/ai-engineer))
 ### Chapter 2, Foundation Models
+#### Training Data
+* web data from Common Crawl
+* many languages are absent in training data, which lead to worse performance for the models with these languages
+* some languages requires more token to represent, thus training them are more expensive
+* domain specific tasks are harder for general purpose models to perform since data might not be available on the public internet
+#### modeling
+* transformer architecture is the most popular one
+* transformer is based on seq2seq
+* inference for transformer-based models consist of 2 steps
+    * prefill: process input tokens in parallel, creating intermediate states that has key value vectors for all input tokens
+    * decode: generate one output token at a time
+* The attention mechanism computes how much attention to give an input token by performing a dot product between the query vector and its key vector. A high score means that the model will use more of that page’s content (its value vector) when generating the book’s summary
+* Other architectures: AlexNet (2012), seq2seq (2014-18), GANs (2014-19), transformer (2017-)
+* model size: if a parameter is stored using 2 bytes, a 7B model requires 7 * 2 = 14B bytes (14GB) to run inference
+* sparse model requires less resource to run
+* models are trained on datasets that have trillions of tokens
+* model pre-training compute requirement is measured in FLOP (floating point operations)
+* Given a compute budget, the rule that helps calculate the optimal model size and
+dataset size is called the Chinchilla *scaling law*
+    * They found that for compute-optimal training, you need the number of training tokens to be approximately 20 times the model size
+* for smaller models, hyperparameter can be adjusted, but training large models are expensive therefore changing hyperparameters are not possible
+    * scaling extrapolation is a research subfield that tries to predict, for large models what hyperparameters will give the best Performance
+* scaling bottlenecks: training data and electricity
+    * internet data is running out
+    * the impact of AI-generated data on models
+    * data centers are estimated to consume 1–2% of global electricity. This number is estimated to reach between 4% and 20% by 2030
+#### Post-Training
+* why is post-training important?
+    * foundation models that pre-trained with self-supervision is optimized for text completion, not conversation
+    * address abusive language that might arise from the model
+* process: supervised finetuning (SFT) and preference finetuning
+    * SFT: use high-quality instruction data to optimize models for conversation
+    * preference finetuning: typically done with reinforcement learning to align with human preference
+* think of post-training as unlocking the capabilities that the pre-trained model already has but are hard for users to access via prompting alone
+* supervised finetuning leverages demonstration data that shows the model how to behave; it follows the format prompt + response
+* demonstration data are created by human labelers, a pair of prompt and response takes up to 30min to generate, can cost around $20
+* RLHF
+    * train a reward model that scores models' output
+    * optimize the model to generate response that maximize scores
+* to train a reward model, labelers compare two responses and choose the better one
+##### sampling
+* sample next token
+    * models create output based on probabilities of possible outcomes
+    * greedy sampling is a strategy that always picks the candidate with the highest probabilities, this works fine in classification, but it doesn't work well in generation
+    * to calculate the probability, apply softmax to a logit vector, where each logit corresponds to a token
+    * sample with a *temperature*: higher temperature makes the rare tokens more likely to appear, thus make the responses more creative 
+        * logit gets divided by temperature before applying softmax
+        * temperatures are between 0 and 2
+        * 0.7 is recommended for creative use
+    * logprobs are probabilities in the log scale: it's helpful to evaluating models
+    * Top-K: a sampling strategy to reduce computational workload by picking top-k logits to calculate softmax (instead of all logits)
+        * a smaller K means a smaller set of choices, thus making the model less creative
+    * Top-P: the model sums the probabilities of the most likely tokens in descending order and stops when the sum reaches p (.9 to .95). Only values within this range are considered
+        * work well in practice, not in theory
+    * stopping condition: let the model know when to stop generating text
+        * stop tokens: model stops when it encounter stop tokens
+* sample the whole output
+    * test time compute: generate multiple responses and select from them (allocating more compute to generate more outputs during inference)
+    * best of N: choose one that works the best
+    * beam search: expand on the most promising response at each step
+    * to pick the best response, sum up logprobs of all tokens in the text, an divided by its length, and pick the highest one
+    * can also use human and reward models to pick
+* A model is considered robust if it doesn’t dramatically change its outputs with small
+variations in the input. 
+* structured outputs
+    * easy solutions
+        * prompting
+        * post-processing: eg. write scripts to correct repeated errors from models
+    * constrained sampling: filter logits that do not meet the constraints, such as grammar rules
+        * establishing such rules are expensive
+    * finetuning
+        * *feature-based transfer* adding a classifier layer to the model to guarantee the output format
+    * the way models sample their responses make them *probabilistic*
+        * *inconsistency* refers to model generating different responses for the same or slightly different prompts
+        * *hallucination* refers to model giving a response that isn't grounded in facts, unclear why
+            * hypothesis 1: a model can’t differentiate between the data it’s given and the data it generates
+            * hypothesis 2: hallucination is caused by the mismatch between the model’s internal knowledge and the labeler’s internal knowledge. 
+### Chapter 3, Eval
 ## [Flow Engineering](https://www.youtube.com/watch?v=YpoK2L1EeJc)
 * instead of calling LLMs once, applications usually need to call them multiple times
 * design environment, eg. at Ford, the craftsmanship is in the workbench itself
@@ -221,6 +299,7 @@ p28
 # Curious topics
 ## A Mathematical Framework for Transformer Circuits (reverse engineer attention models)
 ## Will we run out of data? Limits of LLM scaling based on human-generated data
+## Chinchilla scaling law: Training Compute-Optimal Large Language Models
 # Bookmarks
 ## OpenAI tokenizer: https://platform.openai.com/tokenizer
 ## Will we run out of data? Limits of LLM scaling based on human-generated data
@@ -228,3 +307,4 @@ p28
 # Project ideas
 ## agent that generate similarity queries that help with search
 * Shah and Bender-Envisioning Information Access Systems
+## Common Crawl
