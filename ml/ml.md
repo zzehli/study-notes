@@ -334,7 +334,7 @@ variations in the input.
     * ranking algorithms will calculate ranking for each models in a group of pair-wise comparisons
     * resource intensive comparing models require many rounds of comparisons
     * transitivity in model matches might not work in model comparison (A is better than B, B is better than C, but A is not necessarily better than C)
-# Chapter 4, Evaluate AI System
+### Chapter 4, Evaluate AI System
 ## [Flow Engineering](https://www.youtube.com/watch?v=YpoK2L1EeJc)
 * instead of calling LLMs once, applications usually need to call them multiple times
 * design environment, eg. at Ford, the craftsmanship is in the workbench itself
@@ -361,10 +361,12 @@ variations in the input.
 ## Will we run out of data? Limits of LLM scaling based on human-generated data
 ## Chinchilla scaling law: Training Compute-Optimal Large Language Models
 # Bookmarks
-## OpenAI tokenizer: https://platform.openai.com/tokenizer
-## Will we run out of data? Limits of LLM scaling based on human-generated data
-## AI Search Has A Citation Problem
+* OpenAI tokenizer: https://platform.openai.com/tokenizer
+* Will we run out of data? Limits of LLM scaling based on human-generated data
+* AI Search Has A Citation Problem
+* 2025 AI Engineering reading list: https://www.latent.space/p/2025-papers#%C2%A7section-voice
 # Project ideas
 ## agent that generate similarity queries that help with search
 * Shah and Bender-Envisioning Information Access Systems
 ## Common Crawl
+

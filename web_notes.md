@@ -23,9 +23,26 @@ that is because: 1, cookie # and sizes are limited, while Storage API has bigger
 * https://www.reddit.com/r/webdev/comments/1dz55ww/anyone_switched_over_to_primarily_using_webp/
 # API Design
 * API Design best practices from Microsoft https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design
+* Learn rest api design: https://www.restapitutorial.com/
 ## Webhook
 * Webhook is a request (usually POST and GET) from a service provider (eg. Stripe) to your application. It is a way to feed information back to application from the provider (eg. transaction complete).
 * Alternative solutions are short and long pooling. Long pooling is when the provider opens a port and wait for the process to finish before sending the request to the application, but this method consumes more server resources of the provider than webhooks since the it needs to hold the port open.
+# Web Crawling
+* websites have many means of detecting bots
+* I used Scrapy to build a crawler to extract some ecommerce data, but my crawler was extremely slow. I ended up switching to `request` to extract data from their backend apis. After adding a realistic header, I was able to finally extract the desired information
+* check `robots.txt` to see if the domain can be crawled
+* scrapy is more suited for scraping specific sites, another type of crawler is "broad crawl" that targets a large number of domains
+* broad crawler
+	* does not stop when finished with a domain
+	* concurrency
+	* don't have much data processing rules (data is post-processed)
+	* sample project: https://www.reddit.com/r/rust/comments/ns8vi1/meet_crusty_fast_scalable_polite_broad_web/
+## scrapy
+* uses spider to collect data from target site
+* changing User Agent is helpful, but `scrapy-fake-useragent` package is probably broken
+* scrapy doesn't load javascript, would need selenium for that
+* use the scrapy shell for interactive sessions
+* leverage browser dev tool to verify css selector 
 # Networking
 # Programming language
 ## Go
