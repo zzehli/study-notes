@@ -1,4 +1,3 @@
-# Resource
 ## Scale
 ### horizontal
 * load balancer: distribute incoming requests across servers
@@ -19,3 +18,8 @@
     * when user accesss that URL, they are taken to the closest server (thru DNS tricks)
 * a read-only part of the web app
 * only works on content that doesn't change often
+## Network
+* build server
+* implement protocols
+* browser related
+* secure shell

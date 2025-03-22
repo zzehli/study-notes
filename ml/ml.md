@@ -111,15 +111,6 @@
 ## [The spelled-out intro to neural networks and backpropagation: building micrograd](https://youtu.be/VMj-3S1tku0?si=pJ88FgwuDpLq2OgR)
 * Backpropagation is the recursive application of chain rule backward thru the computational graph
 * a mathematical model of neuron, artificial neuron: $$f(\sum_i w_ix_i + b)$$ where $w_ix_i$ is weighted input and $b$ is bias, and $f$ is an activation function (sigmoid, ReLU) that normalizes the weighted output
-## [Understand Reasoning LLMs](https://magazine.sebastianraschka.com/p/understanding-reasoning-llms and https://news.ycombinator.com/item?id=42966720)
-* good at complex tasks such as solving puzzles, math, and coding tasks
-* not necessary for summarization, translation, or knowledge-based question answering
-* mechanisms
-    * inference-time scaling: use more resources for inference to get better answers, such as prompt engineering techniques
-    * RL: for DeepSeek Zero, reinforcement learning with human feedback, where models are rewarded by accuracy (leetcode compiler) and format
-    * Supervised fine-tuning and RL: perform SFT before RL
-## [Understanding and Using Supervised Fine-Tuning (SFT) for Language Models](https://cameronrwolfe.substack.com/p/understanding-and-using-supervised)
-
 # Prompt Engineering
 ## [Prompt Engineering Overview](https://youtu.be/dOxUroR57xs?si=YDSjolN3mo3FzvHG)
 * Prompts involve instructions and context passed to a language model to achieve a desired task
@@ -320,6 +311,7 @@ variations in the input.
         * whether this works well depend on how good the embedding algorithms are
 * embedding
     * an embedding algorithm is good if more-similar texts have closer embeddings
+#### subjective evaluation
 * AI as judge: most common eval method now
     * judge criteria (prompt to AI) isn't standardized
     * increased costs and latency due to additional inference cost
@@ -335,6 +327,47 @@ variations in the input.
     * resource intensive comparing models require many rounds of comparisons
     * transitivity in model matches might not work in model comparison (A is better than B, B is better than C, but A is not necessarily better than C)
 ### Chapter 4, Evaluate AI System
+* given a criteria (latency, domain specific, etc), how to choose eval metrics?
+* domain specific capacities are often evaluated with exact evaluation
+    * coding tasks can be evaluated by running it: functional correctness
+    * non-coding tasks are evaluated with close-ended tasks, for example, let the model to do multiple choice questions
+    * MCQs are not ideal for evaluating summarization, translation and writing
+* generation capacity: factual consistency and safety
+    * factual consistency
+        * measure hallucination
+        * use local context to store facts or use a global knowledge source
+        * the hardest part is to determine what the facts are
+        * AI as a judge can be used to evaluate factual consistency
+        * related to the study of *textual entailment* in NLP, which measures the relationship between two statements: entailment, contradiction and neutral
+            * can use specialized models for this
+        * important for RAG, since the generated response should be consistent with RAG
+    * safety
+        * inappropriate language
+        * harmful recommendations
+        * hate speech
+        * violence
+        * stereotypes
+        * bias
+* instruction-following capacity: essential for structured output
+* role-playing
+    * RoleLLM benchmark
+    * hard to automate
+* cost and latency
+* model selection workflow
+    * hard attributes: model size, privacy, etc
+    * soft attributes: accuracy, factual consistency
+    * data contamination: models is tested on the data it is trained on
+* design eval pipeline
+    1) evaluate all components in a systems: both per task and end-to-end
+        * turn-based: evaluate the qualify of each output
+        * task-based: whether the system completes a task
+    2) create an evaluation guideline
+        * define evaluation criteria eg. relevance, factual consistency, safety
+        * create score rubrics
+        * tie evaluation metrics to business metrics: eg. factual consistency of 80%: we can automate 30% of customer support requests
+    3) define evaluation methods and data
+        * When logprobs are available, use them. Logprobs can be used to measure how confident a model is about a generated token
+        * annotate eval data, which can be reused to create instruction data
 ## [Flow Engineering](https://www.youtube.com/watch?v=YpoK2L1EeJc)
 * instead of calling LLMs once, applications usually need to call them multiple times
 * design environment, eg. at Ford, the craftsmanship is in the workbench itself
@@ -365,8 +398,19 @@ variations in the input.
 * Will we run out of data? Limits of LLM scaling based on human-generated data
 * AI Search Has A Citation Problem
 * 2025 AI Engineering reading list: https://www.latent.space/p/2025-papers#%C2%A7section-voice
+* Lilian Weng's blog posts on ML topics
 # Project ideas
 ## agent that generate similarity queries that help with search
 * Shah and Bender-Envisioning Information Access Systems
 ## Common Crawl
-
+# Talks
+## [Understand Reasoning LLMs](https://magazine.sebastianraschka.com/p/understanding-reasoning-llms and https://news.ycombinator.com/item?id=42966720)
+* good at complex tasks such as solving puzzles, math, and coding tasks
+* not necessary for summarization, translation, or knowledge-based question answering
+* mechanisms
+    * inference-time scaling: use more resources for inference to get better answers, such as prompt engineering techniques
+    * RL: for DeepSeek Zero, reinforcement learning with human feedback, where models are rewarded by accuracy (leetcode compiler) and format
+    * Supervised fine-tuning and RL: perform SFT before RL
+## [Understanding and Using Supervised Fine-Tuning (SFT) for Language Models](https://cameronrwolfe.substack.com/p/understanding-and-using-supervised)
+## Agent Engineering in 2025 (+ Q&A on Reliable Agents)
+## Building effective agents: https://www.anthropic.com/engineering/building-effective-agents 

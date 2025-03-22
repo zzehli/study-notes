@@ -43,7 +43,6 @@ that is because: 1, cookie # and sizes are limited, while Storage API has bigger
 * scrapy doesn't load javascript, would need selenium for that
 * use the scrapy shell for interactive sessions
 * leverage browser dev tool to verify css selector 
-# Networking
 # Programming language
 ## Go
 * Simplicity is Complicated
@@ -254,8 +253,9 @@ https://stackoverflow.com/a/19419296
 # Performance
 * N + 1 problem (https://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem-in-orm-object-relational-mapping)
 # Talk
-* K8s design principles
+* K8s design principles: probably Tim Hockin - Container Management at Google Scale - SCALE 13x
 1. Kubernetes APIs are declarative rather than imperative. (extensible)
 2. The Kubernetes control plane is transparent. There are no hidden internal APIs. (level triggered rather than event triggered, no single point of failure, immutable)
 3. Meet the user where they are. (ease of migration)
 4. Workload portability. (decouple distributed system program development and cluster implementation, k8s as os for applications)
+*  Understand the Next Phase of Web Development - Steve Sanderson - NDC London 2024 
