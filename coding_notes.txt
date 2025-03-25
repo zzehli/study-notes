@@ -3,6 +3,12 @@ nvim ~/.profile
 //unicode symbol
 “❯” U+276F Heavy Right-Pointing Angle Quotation Mark Ornament Unicode Character.
 
+lookup by pid:
+ps -ef | grep 1803104
+lookup by port
+sudo lsof -i :3000
+kill by pid
+kill -9 pid
 ** workflow to backup config
 bakcup:
 cd ~

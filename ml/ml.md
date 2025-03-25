@@ -368,6 +368,36 @@ variations in the input.
     3) define evaluation methods and data
         * When logprobs are available, use them. Logprobs can be used to measure how confident a model is about a generated token
         * annotate eval data, which can be reused to create instruction data
+### Chapter 5, Prompt Engineering
+* in-context learning: teach a model to learn through examples in the prompt
+    * each example is called a *shot*, learning from examples are called *few-shot* learning 
+* system prompt and user prompt
+    * system prompt and user prompt are combined into the input of the model
+    * models are trained to prioritize system prompts
+* prompts and context lengths are different things (unclear)
+    * prompts are input into the model and context is the information available to the model
+    * context length is crucial 
+* best practices
+    * clear and explicit instructions
+        * ask the prompt to adopt a persona
+        * provide examples
+        * specify output format
+    * provide sufficient context through context construction (RAG, web search)
+        * sometimes it's desirable to restrict model's knowledge to its context (npc in games); but this is not guaranteed, pretraining data might leak into responses
+    * break down complex tasks to subtasks 
+        * support bot: 1. intent classification 2. generate response based on intent
+        * prompt decomposition has tradeoffs (observability, concurrency vs cost)
+    * chain of thought (CoT): ask a model to think step by step
+        * first prompt technique to works well across models
+        * self-critique asks a model to evaluate its own response
+    * iterate, version your prompts
+    * prompt engineer tools: Open Prompt, DSPy, TextGrad
+        * some use AI to generate prompts
+        * additional cost due to hidden model calls
+    * organize and version prompts
+        * put prompts in a separate file, wrap them in a class object to store metadata
+        * consider separate codebase with prompts, since prompts might not update with the code at the same pace
+* security: prompt extraction, prompt injection, information extraction
 ## [Flow Engineering](https://www.youtube.com/watch?v=YpoK2L1EeJc)
 * instead of calling LLMs once, applications usually need to call them multiple times
 * design environment, eg. at Ford, the craftsmanship is in the workbench itself
@@ -402,6 +432,8 @@ variations in the input.
 # Project ideas
 ## agent that generate similarity queries that help with search
 * Shah and Bender-Envisioning Information Access Systems
+## How GPTZero works?
+* https://scholar.google.ca/scholar?cites=6956709800612024780&as_sdt=2005&sciodt=0,5&hl=en
 ## Common Crawl
 # Talks
 ## [Understand Reasoning LLMs](https://magazine.sebastianraschka.com/p/understanding-reasoning-llms and https://news.ycombinator.com/item?id=42966720)
