@@ -87,6 +87,11 @@ that is because: 1, cookie # and sizes are limited, while Storage API has bigger
     * https://forums.docker.com/t/editing-files-created-by-a-container/125028/1
     * https://pythonspeed.com/articles/root-capabilities-docker-security/
 	* docker logs --follow <container ID>
+* docker debugging
+	* container may exit if it is not setup correctly, restart the container and debug inside
+* port forwarding
+	* server inside the container listens on port A, the docker exposes port B, then there is a mismatch
+	* docker needs to expose the same port the server is listening, A, in this case
 ## Spring Boot
 ### REST API with jpa and hibernate
 * Code structure, from https://www.twilio.com/blog/create-rest-apis-java-spring-boot
