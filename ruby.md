@@ -37,7 +37,11 @@
 * In RSpec, application behavior is described first in (almost) plain English, then again in test code
     *  It uses the words “describe” and “it” so we can express concepts like a conversation (https://rspec.info/features/3-13/rspec-core/example-groups/basic-structure/)
     * describe/it: The `describe` method creates an example group. Within the block passed to `describe` you can declare nested groups using the `describe` or `context` methods, or you can declare examples using the `it` or `specify` methods.
-
+# Kamal
+* Kamal is an orchestration two, in addition to handle deployment, it adds a proxy server to you application, which makes SSL easy
+* check `kamal app logs -f` for your application's status and `kamal proxy logs -f" for the proxy server's status
+* kamal secrets are managed in two places, the `secrete` file, which exposes env vars to kamal, and kamal config file, which actually uses those env
+* port config leverage defaults
 # Ruby
 * Object-oriented language: allow objects to define data, functionalities and how to access these functionalities
 * see `java.md` for OOP concepts

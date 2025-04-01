@@ -92,6 +92,9 @@ that is because: 1, cookie # and sizes are limited, while Storage API has bigger
 * port forwarding
 	* server inside the container listens on port A, the docker exposes port B, then there is a mismatch
 	* docker needs to expose the same port the server is listening, A, in this case
+## SSL
+* certifications need network access
+## DNS
 ## Spring Boot
 ### REST API with jpa and hibernate
 * Code structure, from https://www.twilio.com/blog/create-rest-apis-java-spring-boot
