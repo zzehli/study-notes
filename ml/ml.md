@@ -111,6 +111,39 @@
 ## [The spelled-out intro to neural networks and backpropagation: building micrograd](https://youtu.be/VMj-3S1tku0?si=pJ88FgwuDpLq2OgR)
 * Backpropagation is the recursive application of chain rule backward thru the computational graph
 * a mathematical model of neuron, artificial neuron: $$f(\sum_i w_ix_i + b)$$ where $w_ix_i$ is weighted input and $b$ is bias, and $f$ is an activation function (sigmoid, ReLU) that normalizes the weighted output
+## Hugging Face LLM Course
+### Transformer models
+* typical llm tasks: zero-shot classification, text generation, mask filling, named entity recognition (NER), question answering, summarization, translation
+* history of transformers: transformers (2017) -> GPT (June, 2018) -> BERT (Oct, 2018) -> GPT-2 (Feb, 2019) -> BART/T5 (Oct, 2019) -> GPT-3 (May 2020)
+* categories
+    * GPT: autoregressive transformers
+    * BERT: auto-encoding transformers
+    * BART/T-5 sequence-to-sequence transformers
+* pre-trained go thru transfer learning, which is supervised finetuning
+* architecture of transformers:
+    * encoder: build features from input
+    * decoder: use features to generate output
+    * they can be used independently; encoder-only models for sentence classification and NER; decoder-only models for text generation;
+* attention layer: this layer will tell the model to pay specific attention to certain words in the sentence you passed it (and more or less ignore the others) when dealing with the representation of each word
+    * originally designed for translation
+    * the encoder uses the whole sentence while the decoder works sequentially
+* checkpoints are weights
+* encoder models: bi-directional attention, auto-encoding models
+    * BERT models
+    * output features/vectors representations of each word in the sentence, the value of the word is contextualized
+    * self-attention mechanism -> contextual understanding
+* decoder models: autoregressive models, next-word prediction
+    * used in text-generation (causal language model, natural language generation)
+    * **GPTs are decoder-only**
+    * uni-direction: only have access to text that comes before (the words after it are masked)
+    * masked self-attention
+    * decoder also outputs feature vector/tensor
+* sequence-to-sequence models: use both parts of the transformer models
+    * BART and T5
+    * best for summarization, translation and question-answering
+    * encoder produces feature vectors, which is used as input for the decoder
+    * the feature vectors is only used to produce the first word in the sequence (the rest is autoregressive)
+    * can use a BERT and GPT together to construct a new model
 # Prompt Engineering
 ## [Prompt Engineering Overview](https://youtu.be/dOxUroR57xs?si=YDSjolN3mo3FzvHG)
 * Prompts involve instructions and context passed to a language model to achieve a desired task
@@ -609,5 +642,20 @@ variations in the input.
 ## [Understanding and Using Supervised Fine-Tuning (SFT) for Language Models](https://cameronrwolfe.substack.com/p/understanding-and-using-supervised)
 ## Agent Engineering in 2025 (+ Q&A on Reliable Agents)
 ## Building effective agents: https://www.anthropic.com/engineering/building-effective-agents 
-## Q:
+## Visual Autoregressive (VAR) Modeling NeurIPS 2024 paper club
+* VAE is replaced by VQ-VAE
+* quantization (rounding in multi-dimension) is needed for transformer models
+* predicting multiple tokens at once
+```
+my subjective recap of 4o image gen innovations
+
+super omnimodality (voice image text) encoder, enabling
+autoregressive token generation with domain-specific diffusion decoder 
+(no reference yet) much better text generation in images
+in context learning/conversational image gen
+training on ghibli (japan allows this)/web screenshots, including top memes
+```
+## Tracing the thoughts of LLMs paper club
+* https://www.anthropic.com/research/tracing-thoughts-language-model
+# Q:
 * what is the typical size of an embedding unit (text that are converted to embeddings)?

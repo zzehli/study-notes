@@ -94,7 +94,15 @@ that is because: 1, cookie # and sizes are limited, while Storage API has bigger
 	* docker needs to expose the same port the server is listening, A, in this case
 ## SSL
 * certifications need network access
+* TLS encrypts DNS queries to keep them secure and private
+* It's worth noting that DNS lookup can be sent over TLS/SSL or HTTPS, the former uses port 853, and the latter 443 (https://www.cloudflare.com/en-ca/learning/dns/dns-over-tls/)
+
 ## DNS
+* domain name can have unlimited number of subdomains subdomains.domain.xxx
+* record types:
+	* A record: holds IP address (eg. associate a server's IP address with subdomain of your website)
+	* AAAA record: IPv6 address
+	* CNAM: forwards one domain or subdomain to another, no IP involved
 ## Spring Boot
 ### REST API with jpa and hibernate
 * Code structure, from https://www.twilio.com/blog/create-rest-apis-java-spring-boot
