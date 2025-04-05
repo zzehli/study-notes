@@ -144,6 +144,52 @@
     * encoder produces feature vectors, which is used as input for the decoder
     * the feature vectors is only used to produce the first word in the sequence (the rest is autoregressive)
     * can use a BERT and GPT together to construct a new model
+### inference process
+*  How inference work with the `pipeline()` function : tokenizer -> model -> post processing
+    1. get the original tokenizer from the model's checkpoints
+        * transformer models take tensors as inputs, which can be thought of as arrays
+        * tokenizer return tensors 
+            * first tokenizer turns texts into input IDs, then torch turns those into tensors
+            * Q: do model take tensors or input IDs as input? input IDs are not tensor. A. Not the same, model takes tensors
+            ```
+            <!-- https://huggingface.co/learn/llm-course/chapter2/5 -->
+            sequence = "I've been waiting for a HuggingFace course my whole life."
+
+            tokens = tokenizer.tokenize(sequence)
+            # ids and input ids are not the same
+            ids = tokenizer.convert_tokens_to_ids(tokens)
+
+            input_ids = torch.tensor([ids])
+
+            output = model(input_ids)
+            ```
+    2. get the model from checkpoints
+        * the model outputs *hidden states* or *features*, which are vectors represent the model's understanding of the input
+        * these features are input into other parts of the model, known as heads, which accomplish the specified task (classification, sentence completion, etc)
+    3. the output of the model are logits, which is then turned into probabilities with activation function (softmax)
+    4. use tokenizer one more time to convert the result back to text, if needed
+```
+
+checkpoint = "distilbert-base-uncased-finetuned-sst-2-english"
+tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+model = AutoModelForSequenceClassification.from_pretrained(checkpoint)
+sequences = ["I've been waiting for a HuggingFace course my whole life.", "So have I!"]
+
+tokens = tokenizer(sequences, padding=True, truncation=True, return_tensors="pt")
+output = model(**tokens)
+```
+* model can be reconstructed with two files, a config file a a *state dictionary*, which contains weights 
+* tokenizer 
+    * tokenization uses subwords, which keeps the vocabulary small, and little unknown words
+    * each model is governed by a unique tokenization rules, so it is model specific
+    * two steps
+        * split into tokens
+        * turn tokens into input IDs
+* batching
+    * models expect batched inputs: more than one, can send one sequence (sentence) with `[ids, ids]`
+    * tensors are rectangular, so to handle two sequences with different length, use *padding* fill in the blanks
+    * when going thru an attention layer, the padding tokens also gets analyzed, use *attention masks* to avoid that 
+* truncate sequences to the max length of the model with `sequence = sequence[:max_sequence_length]`
 # Prompt Engineering
 ## [Prompt Engineering Overview](https://youtu.be/dOxUroR57xs?si=YDSjolN3mo3FzvHG)
 * Prompts involve instructions and context passed to a language model to achieve a desired task

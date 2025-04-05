@@ -1,5 +1,6 @@
 # React
-
+* principles
+  * Most important thing: when you want to update an object/array, you need to create a new one: https://react.dev/learn/updating-objects-in-state and https://react.dev/learn/updating-arrays-in-state
 ## React, [Tic-Tac-Toe Game Tutorial](https://reactjs.org/tutorial/tutorial.html)
 * use `slice()` to create a shallow copy of an array
 * create an empty array of length 9: `Array(9).fill(null)`
@@ -81,6 +82,8 @@ understanding-javascript-function-prototype-bind/
 * Because of the top-down data flow of react, lifting the state to higher up in the ladder means the what was originally a state now is a props from a higher level component. Thus, changes in `props` (state before lift) need to be handled by callbacks from the higher level component, where the `props` is a state. Thus, the higher level function needs to pass the event handler as part of the props to the lower level func
 ## React Hooks
 * https://overreacted.io/why-isnt-x-a-hook/
+* why "cache" a function or an object? https://giacomocerquone.com/blog/whats-an-object-identity-in-javascript/
+* "React is a dumpster fire, most of the issues they're addressing are self made and not really applicable outside React" https://www.reddit.com/r/sveltejs/comments/1cdqzbf/honest_question_how_does_svelte_address_the/
 ### React Hooks (https://reactjs.org/docs/hooks-intro.html)
 * Hooks lets you use state and other React features without writing a class 
 (hooks are used in funcion components, not in class)
@@ -98,6 +101,8 @@ setMyArray(oldArray => [...oldArray, newElement]);
 ### useMemo
 * it lets you cache the result of a calculation between re-renders, so that the calculation does not run again when re-renders
 * for example, when toggle theme, the content of the page does not change, in this case, we can use `useMemo` to cache the content
+* `useMemo` caches the result of a calculation, while `useCallback` caches the function itself. Think about the a filter list and a fetch call.
+* `memo` can cache a component, but only if the *props* in the function are unchanged, therefore use `useMemo` and `useCallback` to cache those props
 
 ### useRef
 * it lets you use a value that does not triggers re-render
@@ -130,7 +135,7 @@ where `createOptions` is:
 ```
 since `createOption` is inside useEffect, if `useEffect` runs, `createOption` is created, which triggers *another* `useEffect` rendering.
 
-To fix this, wrape `createOption` with `useCallback`:
+To fix this, wrap `createOption` with `useCallback`:
 ```
   const [message, setMessage] = useState('');
 
@@ -148,7 +153,25 @@ To fix this, wrape `createOption` with `useCallback`:
     return () => connection.disconnect();
   }, [createOptions]);
 ```
+* truism: If you’re writing a custom Hook, it’s recommended to wrap any functions that it returns into useCallback:
+```
+function useRouter() {
+  const { dispatch } = useContext(RouterStateContext);
 
+  const navigate = useCallback((url) => {
+    dispatch({ type: 'navigate', url });
+  }, [dispatch]);
+
+  const goBack = useCallback(() => {
+    dispatch({ type: 'back' });
+  }, [dispatch]);
+
+  return {
+    navigate,
+    goBack,
+  };
+}
+```
 ### useReducer
 * consolidate all the state update logic outside your component in a single function
 * `const [state, dispatch] = useReducer(reducer, initialArg, init?)` where the `dispatch` function lets you update your state (`initialArg` is the initial val)
