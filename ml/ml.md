@@ -190,6 +190,63 @@ output = model(**tokens)
     * tensors are rectangular, so to handle two sequences with different length, use *padding* fill in the blanks
     * when going thru an attention layer, the padding tokens also gets analyzed, use *attention masks* to avoid that 
 * truncate sequences to the max length of the model with `sequence = sequence[:max_sequence_length]`
+### Finetuning
+* process dataset (handle padding, etc)
+    * output of tokenizer: input_id, attention_mask
+    * batching with a *collate* function
+* specify model, dataset, hyperparameters, and tokenizers for training
+* define eval process (accuracy, f1)
+1. train
+```
+from transformers import AdamW, AutoModelForSequenceClassification, get_scheduler
+
+model = AutoModelForSequenceClassification.from_pretrained(checkpoint, num_labels=2)
+optimizer = AdamW(model.parameters(), lr=3e-5)
+
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+model.to(device)
+
+num_epochs = 3
+num_training_steps = num_epochs * len(train_dataloader)
+lr_scheduler = get_scheduler(
+    "linear",
+    optimizer=optimizer,
+    num_warmup_steps=0,
+    num_training_steps=num_training_steps,
+)
+
+progress_bar = tqdm(range(num_training_steps))
+
+model.train()
+for epoch in range(num_epochs):
+    for batch in train_dataloader:
+        batch = {k: v.to(device) for k, v in batch.items()}
+        outputs = model(**batch)
+        loss = outputs.loss
+        loss.backward()
+
+        optimizer.step()
+        lr_scheduler.step()
+        optimizer.zero_grad()
+        progress_bar.update(1)
+```
+2. eval: 
+```
+import evaluate
+
+metric = evaluate.load("glue", "mrpc")
+model.eval()
+for batch in eval_dataloader:
+    batch = {k: v.to(device) for k, v in batch.items()}
+    with torch.no_grad():
+        outputs = model(**batch)
+
+    logits = outputs.logits
+    predictions = torch.argmax(logits, dim=-1)
+    metric.add_batch(predictions=predictions, references=batch["labels"])
+
+metric.compute()
+```
 # Prompt Engineering
 ## [Prompt Engineering Overview](https://youtu.be/dOxUroR57xs?si=YDSjolN3mo3FzvHG)
 * Prompts involve instructions and context passed to a language model to achieve a desired task
