@@ -19,6 +19,13 @@ Cookies don't work in Native apps too. The process you are used to with the apps
 > In the early days of the web when there was no other option, cookies were used for general client-side data storage purposes. Modern storage APIs are now recommended, for example the Web Storage API (localStorage and sessionStorage) and IndexedDB. They are designed with storage in mind, never send data to the server
 that is because: 1, cookie # and sizes are limited, while Storage API has bigger capacity; 2, cookies are sent with every request, so they slow down performance
 * read this [article](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Client-side_APIs/Client-side_storage) for more on client side sotrage
+## CORS
+* mdn definition: Cross-Origin Resource Sharing (CORS) is an HTTP-header based mechanism that allows a server to indicate any origins (domain, scheme, or port) other than its own from which a browser should permit loading resources. 
+* in short, CORS is a mechanism that prohibit browser to load content if server prohibits it
+* CORS does not prevent server from receiving request from urls
+* CORS is not a solution against all types of cross-site scripting (XSS): 
+> TL;DR: How does CORS prevent XSS? It does not. It is not meant to do so ... ORS is intended to allow resource hosts (any service that makes its data available via HTTP) to restrict which websites may access that data ... CORS is unrelated to XSS because any attacker who can place an evil piece of JavaScript into a website can also set up a server that sends correct CORS headers. CORS cannot prevent malicious JavaScript from sending session ids and permlogin cookies back to the attacker. 
+from https://security.stackexchange.com/questions/108835/how-does-cors-prevent-xss
 ## webp image
 * https://www.reddit.com/r/webdev/comments/1dz55ww/anyone_switched_over_to_primarily_using_webp/
 # API Design

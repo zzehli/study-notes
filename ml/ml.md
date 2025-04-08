@@ -108,9 +108,12 @@
     * In one layer, query, key and value matrices together contains the same amount of parameters as embedding/unembedding matrix. This is single headed attention, but GPT has 96 attention heads, which makes attention layer 96 times the size of a single attention head. The attention layer accounts for 1/3 of total parameters
     * full attention are multi-headed attention: GPT has 96 attention heads
     * cross-attention involve two types of data, such as audio-text or translation; one languages are self-attention
-## [The spelled-out intro to neural networks and backpropagation: building micrograd](https://youtu.be/VMj-3S1tku0?si=pJ88FgwuDpLq2OgR)
+## Neural Networks: Zero to Hero
+### [The spelled-out intro to neural networks and backpropagation: building micrograd](https://youtu.be/VMj-3S1tku0?si=pJ88FgwuDpLq2OgR)
 * Backpropagation is the recursive application of chain rule backward thru the computational graph
 * a mathematical model of neuron, artificial neuron: $$f(\sum_i w_ix_i + b)$$ where $w_ix_i$ is weighted input and $b$ is bias, and $f$ is an activation function (sigmoid, ReLU) that normalizes the weighted output
+* see notes in [micrograd](micrograd.ipynb)
+### 
 ## Hugging Face LLM Course
 ### Transformer models
 * typical llm tasks: zero-shot classification, text generation, mask filling, named entity recognition (NER), question answering, summarization, translation
