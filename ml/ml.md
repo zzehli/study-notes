@@ -250,6 +250,35 @@ for batch in eval_dataloader:
 
 metric.compute()
 ```
+## PyTorch
+## Components (quick start tutorial)
+* tensors: `x_data = torch.tensor([1, 2])
+    * shape of the tensor, the last two digit in `tensor.size()` represents the shape of the inner most matrices, more see [this post](https://wandb.ai/vincenttu/intro-to-tensors/reports/A-Gentle-Intro-To-Tensors-With-Examples--VmlldzozMTQ2MjE5)
+* dataset (preload) & dataloader (wraps an iterable around a dset)
+    * use `transform` to modify features and use `target_transform` to modify labels
+* build neural net: `torch.nn`
+    * initialize nn in `__init__`
+    * operation on input data in `forward`
+        * model layers: `Flatten`, `Linear`, `Relu`
+        * put layers together into a workflow with `Sequential`
+        * run `softmax` got get logits
+* automatic differentiation: `torch.autograd`:
+> In a forward pass, autograd does two things simultaneously:
+> 
+>     run the requested operation to compute a resulting tensor
+>     maintain the operation's gradient function in the DAG.
+> 
+> The backward pass kicks off when .backward() is called on the DAG root. autograd then:
+> 
+>     computes the gradients from each .grad_fn,
+>     accumulates them in the respective tensor's .grad attribute
+>     using the chain rule, propagates all the way to the leaf tensors.
+
+* An important thing to note is that the graph is recreated from scratch
+* optimization: optimization step adjust param to reduce model errors
+    * algorithms such as Stochastic Gradient Descent and ADAM
+* optimization loop consists of train loop and test loop, each iteration is an *epoch*
+
 # Prompt Engineering
 ## [Prompt Engineering Overview](https://youtu.be/dOxUroR57xs?si=YDSjolN3mo3FzvHG)
 * Prompts involve instructions and context passed to a language model to achieve a desired task
@@ -753,7 +782,7 @@ variations in the input.
 * quantization (rounding in multi-dimension) is needed for transformer models
 * predicting multiple tokens at once
 ```
-my subjective recap of 4o image gen innovations
+my subjective recap of 4o image gen innovations:
 
 super omnimodality (voice image text) encoder, enabling
 autoregressive token generation with domain-specific diffusion decoder 
@@ -763,5 +792,8 @@ training on ghibli (japan allows this)/web screenshots, including top memes
 ```
 ## Tracing the thoughts of LLMs paper club
 * https://www.anthropic.com/research/tracing-thoughts-language-model
+* background: https://buttondown.com/ainews/archive/ainews-anthropic-cracks-the-llm-genome-project/
+* construct a replacement model (cross-layer transcoders, CLT) to reproduce the behavior of an LLM on a specific dataset and interpret that replacement model
+* Sparse auto-encoder (SAE) for interpretation studies
 # Q:
 * what is the typical size of an embedding unit (text that are converted to embeddings)?
