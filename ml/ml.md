@@ -250,8 +250,11 @@ for batch in eval_dataloader:
 
 metric.compute()
 ```
+### Causal Language Model from scratch
+* causal language models are basically chatGPT
+* smaller context window is faster to train and require less memory
 ## PyTorch
-## Components (quick start tutorial)
+### Components (quick start tutorial)
 * tensors: `x_data = torch.tensor([1, 2])
     * shape of the tensor, the last two digit in `tensor.size()` represents the shape of the inner most matrices, more see [this post](https://wandb.ai/vincenttu/intro-to-tensors/reports/A-Gentle-Intro-To-Tensors-With-Examples--VmlldzozMTQ2MjE5)
 * dataset (preload) & dataloader (wraps an iterable around a dset)
@@ -277,7 +280,7 @@ metric.compute()
 * An important thing to note is that the graph is recreated from scratch
 * optimization: optimization step adjust param to reduce model errors
     * algorithms such as Stochastic Gradient Descent and ADAM
-* optimization loop consists of train loop and test loop, each iteration is an *epoch*
+* optimization loop consists of train loop and test loop, each iteration is an *epoch* (putting it all together: https://pytorch.org/tutorials/beginner/basics/optimization_tutorial.html#optimizing-model-parameters)
 
 # Prompt Engineering
 ## [Prompt Engineering Overview](https://youtu.be/dOxUroR57xs?si=YDSjolN3mo3FzvHG)
