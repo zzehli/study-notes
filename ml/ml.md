@@ -746,6 +746,32 @@ variations in the input.
 * What tasks are not suited for flow engineering
     * require high degrees of flexibility (end to end RL models are better)
     * require a deep synthesis of information, eg. scientific research token workf
+## structured output (openai doc)
+* for JSONs
+* can be done via response_format and function calling
+* use response_format for end user, function calling for tool use (general sql to be run by databases)
+## Agents
+### orchestrating agents (openai swarm): https://cookbook.openai.com/examples/orchestrating_agents
+* llm models can call tools based on natural language. This is the basis of agents
+* an agent can call multiple tools, the developer can use system prompt to instruct the agent in terms of which tool to use
+* as the number of tools and judgement steps increase, it becomes hard for ai to judge, which is why tasks can be divided as multiple routines (agents) to be handled separately
+* a basic agent definition:
+```
+class Agent(BaseModel):
+    name: str = "Agent"
+    model: str = "gpt-4o-mini"
+    instructions: str = "You are a helpful Agent"
+    tools: list = []
+```
+* notice agent does not have its own message array. Messages are shared among agents
+* handoff functions are function that call another agent
+### Openai agents sdk (production version of swarm)
+* The underlying mechanism is similar to swarm, where an *agent* is defined by instruction, model, and tools (including handoffs)
+* handoffs become a separate param, but under the hood, it is still given to the agent as a tool
+* agents don't have to use tools
+* agent loop: the llm runs in a loop until `final_output` is present (else it run tool calls or handoffs)
+    * final_output is when the output does not have tool calls or handoffs
+* use guardrails to moderate content; exceptions are raised that will halt agent runs
 # Math topic
 ## Low rank transformation
 # Curious topics
