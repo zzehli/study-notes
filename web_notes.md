@@ -26,8 +26,17 @@ that is because: 1, cookie # and sizes are limited, while Storage API has bigger
 * CORS is not a solution against all types of cross-site scripting (XSS): 
 > TL;DR: How does CORS prevent XSS? It does not. It is not meant to do so ... ORS is intended to allow resource hosts (any service that makes its data available via HTTP) to restrict which websites may access that data ... CORS is unrelated to XSS because any attacker who can place an evil piece of JavaScript into a website can also set up a server that sends correct CORS headers. CORS cannot prevent malicious JavaScript from sending session ids and permlogin cookies back to the attacker. 
 from https://security.stackexchange.com/questions/108835/how-does-cors-prevent-xss
-## webp image
+## Image
+### webp image
 * https://www.reddit.com/r/webdev/comments/1dz55ww/anyone_switched_over_to_primarily_using_webp/
+### image loading
+* using small image size
+* use `loading="lazy"` html tag to enable lazy loading
+* use a placeholder image (blurhash, ffmpeg)
+	* there are many ways to implement a placeholder image, nextjs uses a css background image: https://github.com/vercel/next.js/blob/canary/packages/next/src/shared/lib/get-img-props.ts#L723C30-L723C47 
+* show image when fully loaded through (detect `complete` property of `img`)
+* use src and sizes to load smaller images for smaller devices
+* source: https://blog.webdevsimplified.com/2023-05/lazy-load-images/ and https://archive.is/Yae7m (https://medium.com/programming-essentials/how-to-detect-when-all-images-are-loaded-in-a-react-component-d831d0c675b2) and https://ericportis.com/posts/2014/srcset-sizes/
 # API Design
 * API Design best practices from Microsoft https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design
 * Learn rest api design: https://www.restapitutorial.com/
