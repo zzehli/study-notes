@@ -113,7 +113,17 @@
 * Backpropagation is the recursive application of chain rule backward thru the computational graph
 * a mathematical model of neuron, artificial neuron: $$f(\sum_i w_ix_i + b)$$ where $w_ix_i$ is weighted input and $b$ is bias, and $f$ is an activation function (sigmoid, ReLU) that normalizes the weighted output
 * see notes in [micrograd](micrograd.ipynb)
-### 
+## Build a Large Language Model (From Scratch) (Sebastian Raschka)
+### Chapter 6, Finetuning for classification
+* classification and instruction fine-tuning
+#### Discussion
+* why is the dataset under-sampled to include the same amount of spam and non-spam: more representation of of non-spam
+    * if the dataset has 99% of non-spams, the model automatically get 99% accuracy regardless how good it does on spams
+* instruction dataset FLAN: Finetuned Language Models Are Zero-Shot Learners
+* sequence packing
+* roughly, parts of LLM do: 1/3: semantic representation; 2/3: knowledge acquisition; 3/3 undo something 
+* weight decay: nudge weights towards 0 by a small amount
+* bigger model learn better with small amount of data
 ## Hugging Face LLM Course
 ### Transformer models
 * typical llm tasks: zero-shot classification, text generation, mask filling, named entity recognition (NER), question answering, summarization, translation
