@@ -108,6 +108,7 @@ from https://security.stackexchange.com/questions/108835/how-does-cors-prevent-x
 * port forwarding
 	* server inside the container listens on port A, the docker exposes port B, then there is a mismatch
 	* docker needs to expose the same port the server is listening, A, in this case
+* docker prune -a
 ## SSL
 * certifications need network access
 * TLS encrypts DNS queries to keep them secure and private
