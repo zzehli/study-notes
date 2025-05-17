@@ -494,6 +494,8 @@ variations in the input.
         * transform text into a numerical representation, embedding, and compare cosine similarities of two embeddings
         * whether this works well depend on how good the embedding algorithms are
 * embedding
+    * An embedding is a numerical representation that aims to capture the meaning of the original data
+    * An embedding is a vector
     * an embedding algorithm is good if more-similar texts have closer embeddings
 #### subjective evaluation
 * AI as judge: most common eval method now
@@ -602,9 +604,11 @@ variations in the input.
     ```
 * retrieval ranks documents based on their relevance to a given query
     * term based vs. embedding based (sparse vs. dense)
+    * sparse retrieval are term based since a vector's length is the length of the vocabulary and it is 1 at the position of itself and 0 everywhere else
+    * dense retrieval uses embeddings, where most elements of a vector aren't 0 
     * term based find keywords in the documents
         * can be ranked by term frequency (TF)
-        * inverse document frequency (IDF): the importance of a term is inversely linked to its frequency
+        * inverse document frequency (IDF): the importance of a term is inversely linked to its frequency (eg. terms like the, for, are frequent but not informative)
         * BM25 algorithm
     * tokenization: breaking down phrase into tokens might lose their meaning (hot dog), instead can use n-gram
     * embedding based: embedding model + retriever
@@ -614,6 +618,8 @@ variations in the input.
         * search algo in vector database is hard, can use k-nearest neighbors, but computational intense
         * more details about vector db: https://zilliz.com/learn/vector-index
         * evaluate retrievers: context and recall
+            * context: what percentage of the documents retrieved are relevant to the query
+            * recall: out of all documents related to the query, what percentage is retrieved
         * performance and cost
             * performance compromise of embeddings: added latency by query embedding and vector search might be minimal compared to the total RAG latency
             * generate embeddings, vector storage are costly
@@ -782,6 +788,11 @@ class Agent(BaseModel):
 * agent loop: the llm runs in a loop until `final_output` is present (else it run tool calls or handoffs)
     * final_output is when the output does not have tool calls or handoffs
 * use guardrails to moderate content; exceptions are raised that will halt agent runs
+## RAG
+* original documents need to be stored, it can be stored separately or together with the embeddings: https://www.reddit.com/r/LangChain/comments/1eibcqw/document_storage_in_rag_solutions_separate_or/
+* source document retention from langchain: https://python.langchain.com/docs/concepts/retrievers/#source-document-retention
+* it's not possible to convert embeddings to its original text because embeddings are compressed representation of data
+* Q: what's the difference between embeddings in decoder only models and here? are both one-direction only?
 # Math topic
 ## Low rank transformation
 # Curious topics
@@ -834,5 +845,3 @@ training on ghibli (japan allows this)/web screenshots, including top memes
 * background: https://buttondown.com/ainews/archive/ainews-anthropic-cracks-the-llm-genome-project/
 * construct a replacement model (cross-layer transcoders, CLT) to reproduce the behavior of an LLM on a specific dataset and interpret that replacement model
 * Sparse auto-encoder (SAE) for interpretation studies
-# Q:
-* what is the typical size of an embedding unit (text that are converted to embeddings)?
