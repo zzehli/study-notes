@@ -617,8 +617,8 @@ variations in the input.
         * *vector database*: find vectors closest to the query
         * search algo in vector database is hard, can use k-nearest neighbors, but computational intense
         * more details about vector db: https://zilliz.com/learn/vector-index
-        * evaluate retrievers: context and recall
-            * context: what percentage of the documents retrieved are relevant to the query
+        * evaluate retrievers: precision and recall
+            * precision: what percentage of the documents retrieved are relevant to the query
             * recall: out of all documents related to the query, what percentage is retrieved
         * performance and cost
             * performance compromise of embeddings: added latency by query embedding and vector search might be minimal compared to the total RAG latency
@@ -793,6 +793,14 @@ class Agent(BaseModel):
 * source document retention from langchain: https://python.langchain.com/docs/concepts/retrievers/#source-document-retention
 * it's not possible to convert embeddings to its original text because embeddings are compressed representation of data
 * Q: what's the difference between embeddings in decoder only models and here? are both one-direction only?
+### [GraphRAG paper](https://arxiv.org/abs/2404.16130)
+* Question GraphRAG targets: RAG fails in query-focused summarization (QFS) tasks, tasks that aims to summarize the whole corpus instead of retrieve specific pieces of information
+    * example: ”What are the key trends in how scientific discoveries are influenced by interdisciplinary research over the past decade?”
+* GraphRAG
+    * construct a knowledge graph with LLMs extracting entities and relationship for each information chunk
+    * Use LLM to generate community-level summaries (summaries are generated at different levels as well, leaf-level, high-level etc)
+    * when answer the query, use map reduce where each community generates a partial answers and then combined to generate a global answer
+* comment: strong paper, well-written
 # Math topic
 ## Low rank transformation
 # Curious topics

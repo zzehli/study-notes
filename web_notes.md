@@ -44,15 +44,28 @@ from https://security.stackexchange.com/questions/108835/how-does-cors-prevent-x
 * Webhook is a request (usually POST and GET) from a service provider (eg. Stripe) to your application. It is a way to feed information back to application from the provider (eg. transaction complete).
 * Alternative solutions are short and long pooling. Long pooling is when the provider opens a port and wait for the process to finish before sending the request to the application, but this method consumes more server resources of the provider than webhooks since the it needs to hold the port open.
 # Web Crawling
-* websites have many means of detecting bots
-* I used Scrapy to build a crawler to extract some ecommerce data, but my crawler was extremely slow. I ended up switching to `request` to extract data from their backend apis. After adding a realistic header, I was able to finally extract the desired information
+* websites have many means of detecting bots, bypassing bots checks require
+	* a headless browser like `playwright` or `puppeteer`
+	* setting appropriate "User Agent"
+* PWA like RECAPTCHA is a thorny issue to overcome
+* respect rate limit! otherwise your IP is going to be banned from accessing the site. Check if you scraper has back off/delay mechanism when it hits the rate limit warning
+* use site map to get a full list of urls in the website and work from there
 * check `robots.txt` to see if the domain can be crawled
+### Scrapy
+* I used Scrapy to build a crawler to extract some ecommerce data, but my crawler was extremely slow. I ended up switching to `request` to extract data from their backend apis. After adding a realistic header, I was able to finally extract the desired information
 * scrapy is more suited for scraping specific sites, another type of crawler is "broad crawl" that targets a large number of domains
 * broad crawler
 	* does not stop when finished with a domain
 	* concurrency
 	* don't have much data processing rules (data is post-processed)
 	* sample project: https://www.reddit.com/r/rust/comments/ns8vi1/meet_crusty_fast_scalable_polite_broad_web/
+### AI applications
+* despite its name, `crawl4ai` works very well for ai projects where you need clean markdown files.
+* it is really good for single page or recursive crawling for a whole domain, you can restrict the crawler to a single domain
+* use the `text_only` option to only extract text
+* include or exclude by html tags and css selectors
+* I also tried several other options: `jina`, `firecrawl`, and `tavily`. Among them, `tavily` has the worst scraping quality. `firecrawl` is only but the docs are lacking. `jina` is good, but there are less knobs to work with.
+* use streaming option to output the result when crawling a large site to avoid memory overflow
 ## scrapy
 * uses spider to collect data from target site
 * changing User Agent is helpful, but `scrapy-fake-useragent` package is probably broken
