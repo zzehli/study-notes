@@ -124,6 +124,24 @@
 * roughly, parts of LLM do: 1/3: semantic representation; 2/3: knowledge acquisition; 3/3 undo something 
 * weight decay: nudge weights towards 0 by a small amount
 * bigger model learn better with small amount of data
+## Post-training
+### Training language models to follow instructions with human feedback (openai, 2022)
+* this paper populated RLHF (Training language models to follow instructions
+with human feedback). It shows a fine tuned model 1B model, InstructGPT, exhibit better instruction-following ability than 175B GPT-3
+* *alignment*: the ability for models to follow instructions
+    * helpful: follow instruction
+    * honest: truthfulness (measure hallucination)
+    * harmless
+* method
+    1. collection demonstration data, and train a supervised policy
+    2. collection comparison data (between model outputs), and train a reward model
+    3. optimize a policy against the reward model with PPO
+* Other resources:
+    * openAI blog post: https://openai.com/index/learning-to-summarize-with-human-feedback/
+    * Chip Huyen: https://huyenchip.com/2023/05/02/rlhf.html
+    * Nathan Lambert: https://huggingface.co/blog/rlhf
+    * weights and biases: https://wandb.ai/ayush-thakur/RLHF/reports/Understanding-Reinforcement-Learning-from-Human-Feedback-RLHF-Part-1--VmlldzoyODk5MTIx
+    * Yannic Kilcher: https://www.youtube.com/watch?v=vLTmnaMpQCs
 ## Hugging Face LLM Course
 ### Transformer models
 * typical llm tasks: zero-shot classification, text generation, mask filling, named entity recognition (NER), question answering, summarization, translation
@@ -790,6 +808,7 @@ class Agent(BaseModel):
 * use guardrails to moderate content; exceptions are raised that will halt agent runs
 ## RAG
 * original documents need to be stored, it can be stored separately or together with the embeddings: https://www.reddit.com/r/LangChain/comments/1eibcqw/document_storage_in_rag_solutions_separate_or/
+* most vector db can store text chunks, see the comparison table: https://docs.llamaindex.ai/en/stable/module_guides/storing/vector_stores/
 * source document retention from langchain: https://python.langchain.com/docs/concepts/retrievers/#source-document-retention
 * it's not possible to convert embeddings to its original text because embeddings are compressed representation of data
 * Q: what's the difference between embeddings in decoder only models and here? are both one-direction only?
@@ -801,6 +820,29 @@ class Agent(BaseModel):
     * Use LLM to generate community-level summaries (summaries are generated at different levels as well, leaf-level, high-level etc)
     * when answer the query, use map reduce where each community generates a partial answers and then combined to generate a global answer
 * comment: strong paper, well-written
+## eval
+### RAG evals
+* RAG triad introduced by Snowflake's TruEra: https://truera.com/ai-quality-education/generative-ai-rags/what-is-the-rag-triad/
+    * Answer relevance: is the answer relevant to the query?
+    * Context relevance: is the retrieved context relevant to the query?
+    * Groundedness: is the response supported by the context
+* a helpful resource building a rag eval pipeline from ground up: https://huggingface.co/learn/cookbook/en/rag_evaluation
+## langchain
+### Architecture
+* based on graph architecture of Google's Pregel
+* state
+    * state has a schema, but intermediate schemas are also permitted
+    * update state through reducers, which is defined in schema, field by field
+* nodes 
+    * perform state transformation by taking the state as parameter and return state updates (field by field, by default new field values will override the old, unless reducers specify otherwise)
+    * cache expensive nodes
+    * `START` and `END` nodes
+    * use `Command` when performing state update and conditional edge at the same time (useful for agent multi-agent handoffs when you need to decide which agent to hand to as well as pass information)
+* edge
+    * use conditional edges as a control flow for edges.
+    * implement a conditional edge with a routing function that returns the outcome nodes and a `add_condition_edge` function, eg: `graph.add_conditional_edges(START, routing_function)`
+    * conditional entry point
+    * use `SEND` when graph structure isn't clear at run time, such as map reduce patterns
 # Math topic
 ## Low rank transformation
 # Curious topics
