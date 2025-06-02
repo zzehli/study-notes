@@ -271,6 +271,17 @@ metric.compute()
 * toc decompose difficult problems into multiple steps
 * few-shot prompting existed before (Brown et al., 2020), but no reasoning steps are provided 
 * cot works better with models with more parameters
+### Yao et al. ReAct (2023)
+* acting and reasoning
+> ReAct prompts LLMs to generate both verbal reasoning traces and actions pertaining to a task in an
+> interleaved manner, which allows the model to perform dynamic reasoning to create, maintain, and
+> adjust high-level plans for acting (reason to act), while also interact with the external environments
+> (e.g. Wikipedia) to incorporate additional information into reasoning (act to reason).
+* this ReAct behavior is achieved thru few-shot in-context prompting, where each in-context example is a human trajectory of *actions*, *thoughts*, and *environment observations* to solve a task instance (Appendix C)
+* previous attempts:   
+    * ACT: only action, no thoughts
+    * CoT: only thoughts, no actions (leads to hallucination)
+    * Inner monologue, (Huang et al. 2022): do both, but limited to thoughts about task decomposition, no observation (what is achieved from actions)
 ## Post-training
 ### Training language models to follow instructions with human feedback (openai, 2022)
 * this paper populated RLHF (Training language models to follow instructions
@@ -357,7 +368,7 @@ with human feedback). It shows a fine tuned model 1B model, InstructGPT, exhibit
         * collect high-quality prompt datasets
 
 ## [Prompt Engineer Guide](https://www.promptingguide.ai/)
-
+## see Chain-of-Thought, ReAct papers under Reasoning
 # Applications
 ## AI Engineering, Chip Huyen
 ### Chapter 1, Intro
