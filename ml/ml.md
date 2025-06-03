@@ -282,6 +282,13 @@ metric.compute()
     * ACT: only action, no thoughts
     * CoT: only thoughts, no actions (leads to hallucination)
     * Inner monologue, (Huang et al. 2022): do both, but limited to thoughts about task decomposition, no observation (what is achieved from actions)
+### Yao et al. Tree of Thought (2023)
+* the probability of a sequence $x$ in an autoregressive model: 
+$$p_\theta(x) = \Pi^n_{i=1}(x[i] | x[1..i]) $$
+This read: the probability of a LM $\theta$ producing language sequence $x$ is given by the product of probability of each token $x[i]$.
+* to turn an input $x$ into output $y$ with LM: $$y \sim p_\theta(y | prompt_{IO}(x)) $$ we simplified as $$y \sim p_\theta^{IO}(y | x) $$
+* Chain of thought can be represented as $$y \sim p_\theta^{CoT}(y | x, z_{1...n})$$ where $z$ are a chain of intermediate thoughts
+* tree of thoughts construct a problem as a tree of state, the LM can traverse any branch connected with its parent branch. If a branch doesn't work, it backtracks to the parent branch to explore alternatives
 ## Post-training
 ### Training language models to follow instructions with human feedback (openai, 2022)
 * this paper populated RLHF (Training language models to follow instructions
