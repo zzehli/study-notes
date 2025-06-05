@@ -271,24 +271,6 @@ metric.compute()
 * toc decompose difficult problems into multiple steps
 * few-shot prompting existed before (Brown et al., 2020), but no reasoning steps are provided 
 * cot works better with models with more parameters
-### Yao et al. ReAct (2023)
-* acting and reasoning
-> ReAct prompts LLMs to generate both verbal reasoning traces and actions pertaining to a task in an
-> interleaved manner, which allows the model to perform dynamic reasoning to create, maintain, and
-> adjust high-level plans for acting (reason to act), while also interact with the external environments
-> (e.g. Wikipedia) to incorporate additional information into reasoning (act to reason).
-* this ReAct behavior is achieved thru few-shot in-context prompting, where each in-context example is a human trajectory of *actions*, *thoughts*, and *environment observations* to solve a task instance (Appendix C)
-* previous attempts:   
-    * ACT: only action, no thoughts
-    * CoT: only thoughts, no actions (leads to hallucination)
-    * Inner monologue, (Huang et al. 2022): do both, but limited to thoughts about task decomposition, no observation (what is achieved from actions)
-### Yao et al. Tree of Thought (2023)
-* the probability of a sequence $x$ in an autoregressive model: 
-$$p_\theta(x) = \Pi^n_{i=1}(x[i] | x[1..i]) $$
-This read: the probability of a LM $\theta$ producing language sequence $x$ is given by the product of probability of each token $x[i]$.
-* to turn an input $x$ into output $y$ with LM: $$y \sim p_\theta(y | prompt_{IO}(x)) $$ we simplified as $$y \sim p_\theta^{IO}(y | x) $$
-* Chain of thought can be represented as $$y \sim p_\theta^{CoT}(y | x, z_{1...n})$$ where $z$ are a chain of intermediate thoughts
-* tree of thoughts construct a problem as a tree of state, the LM can traverse any branch connected with its parent branch. If a branch doesn't work, it backtracks to the parent branch to explore alternatives
 ## Post-training
 ### Training language models to follow instructions with human feedback (openai, 2022)
 * this paper populated RLHF (Training language models to follow instructions
@@ -832,6 +814,48 @@ class Agent(BaseModel):
 * agent loop: the llm runs in a loop until `final_output` is present (else it run tool calls or handoffs)
     * final_output is when the output does not have tool calls or handoffs
 * use guardrails to moderate content; exceptions are raised that will halt agent runs
+### Barry Zhang Build Agent Anthropic talk
+* agent definition
+```
+env = Environment()
+tools = Tools(env)
+system_prompt = ""
+
+while True:
+    action = llm.run(system_prompt + env.state)
+    env.state = tools.run(action)
+```
+### Yao et al. ReAct (2023)
+* acting and reasoning
+> ReAct prompts LLMs to generate both verbal reasoning traces and actions pertaining to a task in an
+> interleaved manner, which allows the model to perform dynamic reasoning to create, maintain, and
+> adjust high-level plans for acting (reason to act), while also interact with the external environments
+> (e.g. Wikipedia) to incorporate additional information into reasoning (act to reason).
+* this ReAct behavior is achieved thru few-shot in-context prompting, where each in-context example is a human trajectory of *actions*, *thoughts*, and *environment observations* to solve a task instance (Appendix C)
+* previous attempts:   
+    * ACT: only action, no thoughts
+    * CoT: only thoughts, no actions (leads to hallucination)
+    * Inner monologue, (Huang et al. 2022): do both, but limited to thoughts about task decomposition, no observation (what is achieved from actions)
+### Yao et al. Tree of Thought (2023)
+* the probability of a sequence $x$ in an autoregressive model: 
+$$p_\theta(x) = \Pi^n_{i=1}(x[i] | x[1..i]) $$
+This read: the probability of a LM $\theta$ producing language sequence $x$ is given by the product of probability of each token $x[i]$.
+* to turn an input $x$ into output $y$ with LM: $$y \sim p_\theta(y | prompt_{IO}(x)) $$ we simplified as $$y \sim p_\theta^{IO}(y | x) $$
+* Chain of thought can be represented as $$y \sim p_\theta^{CoT}(y | x, z_{1...n})$$ where $z$ are a chain of intermediate thoughts
+* tree of thoughts construct a problem as a tree of state, the LM can traverse any branch connected with its parent branch. If a branch doesn't work, it backtracks to the parent branch to explore alternatives
+### Wang et al. CodeAct (2023)
+#### Codebase: https://github.com/xingyaoww/code-act/blob/main/mint/
+* `main` -> `interactive_loop` runs the agent
+    * take a task and an agent
+    * creates an environment `env` (`BaseEnv`)
+    * loop
+        * check if `state.finished`
+        * calls `agent.act`, which take user input and give to llm and get back an `action` entity (eg. a piece of code)
+        * runs `env.step(action)` which execute the action
+* `BaseEnv` class has 
+    * `state` attribute that saves message history
+    * `step()` takes actions and runs `handle_tool_call(action)` to perform actions
+* `Action` class
 ## RAG
 * original documents need to be stored, it can be stored separately or together with the embeddings: https://www.reddit.com/r/LangChain/comments/1eibcqw/document_storage_in_rag_solutions_separate_or/
 * most vector db can store text chunks, see the comparison table: https://docs.llamaindex.ai/en/stable/module_guides/storing/vector_stores/

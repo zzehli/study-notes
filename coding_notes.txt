@@ -9,6 +9,7 @@ lookup by port
 sudo lsof -i :3000
 kill by pid
 kill -9 pid
+sudo systemctl stop postgresql.service
 ** workflow to backup config
 bakcup:
 cd ~
