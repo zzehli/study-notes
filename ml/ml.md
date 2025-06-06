@@ -844,6 +844,13 @@ This read: the probability of a LM $\theta$ producing language sequence $x$ is g
 * Chain of thought can be represented as $$y \sim p_\theta^{CoT}(y | x, z_{1...n})$$ where $z$ are a chain of intermediate thoughts
 * tree of thoughts construct a problem as a tree of state, the LM can traverse any branch connected with its parent branch. If a branch doesn't work, it backtracks to the parent branch to explore alternatives
 ### Wang et al. CodeAct (2023)
+#### Paper
+* multi-turn interaction framework (agent, user, environment)
+* For each turn of interaction
+    * the agent receives an observation (input) from the user or the env (code execution)
+    * optionally planning for its action thru cot
+    * emits an action (python code)
+* code as action allow agents to perform multiple tool calls in one action
 #### Codebase: https://github.com/xingyaoww/code-act/blob/main/mint/
 * `main` -> `interactive_loop` runs the agent
     * take a task and an agent
@@ -856,6 +863,39 @@ This read: the probability of a LM $\theta$ producing language sequence $x$ is g
     * `state` attribute that saves message history
     * `step()` takes actions and runs `handle_tool_call(action)` to perform actions
 * `Action` class
+* prompts consist of <tool description>, <in-context example> and <task>
+* sample in-context example prompt: https://github.com/xingyaoww/code-act/blob/7cf0bb96553f2c7f447dc8bc9ab596302bc49d5e/mint/tasks/in_context_examples/alfworld/examine/with_tool_and_feedback.txt
+```
+Task:
+You are in the middle of a room. Looking quickly around you, you see a coffeetable 1, a diningtable 1, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a dresser 1, a garbagecan 1, a sidetable 2, a sidetable 1, and a sofa 1.
+Your task is to: look at statue under the desklamp.
+
+Assistant:
+<thought>
+To solve the task, I need to find and take a statue, then find and use a desklamp.
+First I need to find a statue. A statue is more likely to appear in dresser (1), coffeetable (1), sidetable (1-2), diningtable (1), sofa (1), garbagecan (1). I can check one by one.
+</thought>
+<execute>
+for loc_to_check in ["dresser 1", "coffeetable 1", "sidetable 1", "sidetable 2", "diningtable 1", "sofa 1", "garbagecan 1"]:
+    res = goto(loc_to_check)
+    print(res)
+    if "closed" in res:
+        # The receptacle is closed. I need to open it to see what's inside.
+        res = open_receptacle(loc_to_check)
+        print(res)
+
+    if "statue" in res:
+        print(f"Found a statue in {loc_to_check}.")
+        break
+</execute>
+
+Observation:
+On the dresser 1, you see a cellphone 3, a newspaper 2, a statue 1, and a television 1.
+Found a statue in dresser 1.
+
+Expert feedback:
+This is GOOD. You have made a good attempt to solve the task. Since you have found a statue, you can take it and find a desklamp.
+```
 ## RAG
 * original documents need to be stored, it can be stored separately or together with the embeddings: https://www.reddit.com/r/LangChain/comments/1eibcqw/document_storage_in_rag_solutions_separate_or/
 * most vector db can store text chunks, see the comparison table: https://docs.llamaindex.ai/en/stable/module_guides/storing/vector_stores/
