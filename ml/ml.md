@@ -264,13 +264,18 @@ metric.compute()
 #### Causal Language Model from scratch
 * causal language models are basically chatGPT
 * smaller context window is faster to train and require less memory
-## Reasoning
+## Reasoning (Test Time Compute)
 ### Wei et al. Chain-of-Thought Prompting Elicits Reasoning in Large Language Models (2022-3)
 * "chain-of-thought prompting": <input, chain of thought, output>
 * a chain of thought is a series of intermediate reasoning steps that lead to the final answer
 * toc decompose difficult problems into multiple steps
 * few-shot prompting existed before (Brown et al., 2020), but no reasoning steps are provided 
 * cot works better with models with more parameters
+## Weng Tinking (2025.5)
+* Adaptive Computation Time, introduced by Alex Graves in 2016, predated large language models but pioneered the same direction of enabling the model to dynamically decide the number of computational steps to take at the inference time, which can be viewed as enabling the model to “think more” in continuous space at test time. Adaptive thinking time in continuous space can be enabled vertically via recurrent architecture or horizontally via more sequential sampling steps.
+    * parallel sampling: best-of-N or beam search
+    * sequential revision: reflection (Shinn et al. 2023)
+* In Transformer models, the amount of computation (flops) that the model does for each generated token is roughly 2 times the number of parameters... CoT enables the model to perform far more flops of computation for each token of the answer that it is trying to compute. In fact, CoT has a nice property that it allows the model to use a variable amount of compute depending on the hardness of the problem.
 ## Post-training
 ### Training language models to follow instructions with human feedback (openai, 2022)
 * this paper populated RLHF (Training language models to follow instructions
@@ -394,6 +399,15 @@ p28
     * ai applications can be standalone products instead of becoming part of a product (recommender systems, fraud detection)
         * Streamlit, Gradio, Plotly Dispatch
 * ML engineers start with training a model while ai engineers build products first before thinking about models (Shawn Wang, [The Rise of AI Engineer](https://www.latent.space/p/ai-engineer))
+* application areas:
+    * coding
+    * image and video production
+    * writing
+    * education
+    * conversation bot
+    * information aggregation
+    * data organization
+    * workflow automation (book restaurant, request refund, plan trips, etc)
 ### Chapter 2, Foundation Models
 #### Training Data
 * web data from Common Crawl
@@ -843,6 +857,16 @@ This read: the probability of a LM $\theta$ producing language sequence $x$ is g
 * to turn an input $x$ into output $y$ with LM: $$y \sim p_\theta(y | prompt_{IO}(x)) $$ we simplified as $$y \sim p_\theta^{IO}(y | x) $$
 * Chain of thought can be represented as $$y \sim p_\theta^{CoT}(y | x, z_{1...n})$$ where $z$ are a chain of intermediate thoughts
 * tree of thoughts construct a problem as a tree of state, the LM can traverse any branch connected with its parent branch. If a branch doesn't work, it backtracks to the parent branch to explore alternatives
+### Shinn et al. Reflexion (2023)
+* llms generate several tests for its own code, then apply a reflection step to think thru its errors. If the task has no clear right answer, then make find the high confidence one
+```
+SIMPLE_COMPLETION_INSTRUCTION = "# Write the body of this function only."
+REFLEXION_COMPLETION_INSTRUCTION = "You are CodexGPT. You will be given your past function implementation, a series of unit tests, and a hint to change the implementation appropriately. Apply the changes below by writing the body of this function only.\n\n-----"
+SELF_REFLECTION_COMPLETION_INSTRUCTION = "You are CodexGPT. You will be given a function implementation and a series of unit tests. Your goal is to write a few sentences to explain why your implementation is wrong as indicated by the tests. You will need this as a hint when you try again later. Only provide the few sentence description in your answer, not the implementation.\n\n-----"
+SIMPLE_CHAT_INSTRUCTION = "You are CodexGPT. You will be given a function signature and docstring. You should fill in the following text of the missing function body. For example, the first line of the completion should have 4 spaces for the indendation so that it fits syntactically with the preceding signature."
+REFLEXION_CHAT_INSTRUCTION = "You are CodexGPT. You will be given your past function implementation, a series of unit tests, and a hint to change the implementation appropriately. Apply the changes below by writing the body of this function only. You should fill in the following text of the missing function body. For example, the first line of the completion should have 4 spaces for the indendation so that it fits syntactically with the preceding signature."
+SELF_REFLECTION_CHAT_INSTRUCTION = "You are CodexGPT. You will be given a function implementation and a series of unit tests. Your goal is to write a few sentences to explain why your implementation is wrong as indicated by the tests. You will need this as a hint when you try again later. Only provide the few sentence description in your answer, not the implementation."
+```
 ### Wang et al. CodeAct (2023)
 #### Paper
 * multi-turn interaction framework (agent, user, environment)

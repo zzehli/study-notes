@@ -369,7 +369,7 @@ currMax, arrayMax = 0, 0
 * O(n) solution makes one pass through the array, compare the start/end of the new array with array i, insert if no overlap, else update the new array based on the overlapping condition
 * not altering the original array, but construct the result from ground up, not updating the resulting array in each iteration since the current array might be part of the inserting array
 * don't seem to fit in existing categories of common solutions
-* there are two places where the new interval can be inserted, in the middle of the internval or towards the end
+* there are two places where the new interval can be inserted, in the middle of the interval or towards the end
 ### 56 Merge Interval
 * the problem is similar to the one above, but the solution looks a lot simpler
 * the main point of comparison is the 2nd element of the current array in the iteration with the last array in the resulting array. In 57, the resulting array isn't involved in the comparison
