@@ -278,7 +278,7 @@ metric.compute()
 * In Transformer models, the amount of computation (flops) that the model does for each generated token is roughly 2 times the number of parameters... CoT enables the model to perform far more flops of computation for each token of the answer that it is trying to compute. In fact, CoT has a nice property that it allows the model to use a variable amount of compute depending on the hardness of the problem.
 ## Post-training
 ### Training language models to follow instructions with human feedback (openai, 2022)
-* this paper populated RLHF (Training language models to follow instructions
+* this paper popularized RLHF (Training language models to follow instructions
 with human feedback). It shows a fine tuned model 1B model, InstructGPT, exhibit better instruction-following ability than 175B GPT-3
 * *alignment*: the ability for models to follow instructions
     * helpful: follow instruction
@@ -920,6 +920,8 @@ Found a statue in dresser 1.
 Expert feedback:
 This is GOOD. You have made a good attempt to solve the task. Since you have found a statue, you can take it and find a desklamp.
 ```
+* python execution with repl: https://github.com/xingyaoww/code-act/blob/main/mint/tools/python_tool.py
+use case: https://github.com/xingyaoww/code-act/blob/d607f56c9cfe9e8632ebaf65dcaf2b4b7fe1c6f8/mint/envs/general_env.py#L138
 ## RAG
 * original documents need to be stored, it can be stored separately or together with the embeddings: https://www.reddit.com/r/LangChain/comments/1eibcqw/document_storage_in_rag_solutions_separate_or/
 * most vector db can store text chunks, see the comparison table: https://docs.llamaindex.ai/en/stable/module_guides/storing/vector_stores/

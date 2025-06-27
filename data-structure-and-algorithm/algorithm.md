@@ -52,6 +52,40 @@ def search(self, nums, target):
     return -1
 ```
 ## Sort
+### Merge Sort (nlogn)
+* time complexity: merge two string take time $n$, and there are $logn$ levels in the recursion tree. 
+* 912 sort an array
+```
+class Solution:
+    def sortArray(self, nums: List[int]) -> List[int]:
+        
+        def merge(h, t):
+            ih = it = 0
+            res = []
+            while ih < len(h) and it < len(t):
+                if h[ih] < t[it]:
+                    res.append(h[ih])
+                    ih += 1
+                else:
+                    res.append(t[it])
+                    it += 1
+            
+            if ih == len(h):
+                res.extend(t[it:])
+            elif it == len(t):
+                res.extend(h[ih:])
+            return res
+            
+        if len(nums) <= 1:
+            return nums
+        
+        mid = len(nums) // 2
+
+        head = self.sortArray(nums[:mid])
+        tail = self.sortArray(nums[mid:])
+
+        return merge(head, tail)
+```
 # Data Structure
 ## String
 ### Trie
@@ -470,7 +504,7 @@ currMax, arrayMax = 0, 0
         # swap it with the index of its own color
         white, red, blue = 0, 0, len(nums) - 1
         while white <= blue:
-            # if current （white) index is red swap current and red, since it is a mismatch
+            # if current (white) index is red swap current and red, since it is a mismatch
             if nums[white] == 0:
                 nums[white], nums[red] = nums[red], nums[white]
                 white += 1
