@@ -264,6 +264,65 @@ metric.compute()
 #### Causal Language Model from scratch
 * causal language models are basically chatGPT
 * smaller context window is faster to train and require less memory
+#### Build Reasoning Models
+* OpenR1 make LLMs to reason on complex problems, which means, it makes the model to generate thoughts as well as outputs
+##### RL
+* Pieces of RL: agent, environment, action, reward, policy
+    * agent takes an action based on the current policy
+    * environment gives a reward (or penalty)
+    * agent updates its policy based on reward
+* pre-training enable next-word predictions
+* fine-tuning is excellent at structured outputs
+* RL make models helpful (provide relevant and useful information), harmless (avoid toxic content), and align with human preference
+* Reinforcement Learning from Human Feedback (RLHF): human feedback as a proxy for "reward"
+* work it ↑ works:
+    * get human preference (generate labels)
+    * train a reward model: this model learns to predict human response
+    * fin-tune the LLM with RL: use the reward model as the environment for LLMs; we train the LLM to produce text that the reward model thinks is good
+* GRPO is a technique for RLHF, and a better training paradigm compared to Proximal Policy Optimization (PPO) and Direct Preference Optimization (DPO) 
+* PPO uses policy gradient to update the policy based on response of a reward model
+* DPO is a simplified version of PPO; it eliminates the need for a separate reward model, uses preference data directly; the task becomes a classification of chosen and rejection 
+* GRPO does not ue preference data, but compare groups of similar samples using a reward signal (model or function)
+##### DeepSeek R1
+* The goal of the R1 paper is to explore whether pure RL could develop reasoning capabilities without supervised fine-tuning (all popular LLMs require some SFT until this point)
+* The 'Aha' moment is when the model recognizes its own error in problem-solving and self-correct; it emerges naturally from RL training, not learned through prompting
+* Deepseek-R1 does undergo SFT after RL; DeepSeek-R1-Zero go have RL but is less Reliable
+* Training process
+    * cold start (used high quality CoT data to fine tune V3-Base)
+    * reasoning RL to increase logic, math, coding capabilities (rewards are tied to solution correctness); this is direct optimization, no reward model is involved
+    * rejection sampling: the model generate samples that are then filtered thru by llm-as-judge; the data is then used in SFT (not just related to reasoning)
+    * diverse RL phase: rule-based rewards + llm-as-judge
+* GRPO
+    * group formation: create multiple solutions
+    * preference learning: use any reward function or models to evaluate responses (vs. must be a reward model); for each solution in the group, calculate the group relative advantage estimation: `Advantage = (reward - mean(group_rewards)) / std(group_rewards)`
+    * optimization:
+        1. encourage the model to produce more like successful ones, less like failed ones
+        2. introduces KL divergence penalty to prevent the model from changing too much
+    * ```
+        Algorithm GRPO:
+        1. For each training iteration:
+        a. Set reference_policy = initial_policy (snapshot current policy)
+        b. For each prompt in batch:
+            i. Generate group_size different outputs using initial_policy
+            ii. Compute rewards for each output using reward_function
+            iii. Normalize rewards within group:
+                normalized_advantage = (reward - mean(rewards)) / std(rewards)
+            iv. Update policy by maximizing the clipped ratio:
+                min(prob_ratio * normalized_advantage, 
+                    clip(prob_ratio, 1-epsilon, 1+epsilon) * normalized_advantage)
+                - kl_weight * KL(initial_policy || reference_policy)
+                
+                where prob_ratio is current_prob / reference_prob
+
+        Output: Optimized policy model
+     ```
+    * the last line means:
+    ```
+    maximize:
+    clipped_surrogate_objective - kl_weight * KL(current_policy || reference_policy)
+    ```
+    "We maximize the clipped ratio objective to encourage improvement when the policy is learning the right thing, but prevent the policy from changing too fast when it might overreact to noisy or extreme rewards." (ChatGPT) and the regularization term (after `- kl_weight`) "punishes large changes between the updated policy and the reference policy"
+
 ## Reasoning (Test Time Compute)
 ### Wei et al. Chain-of-Thought Prompting Elicits Reasoning in Large Language Models (2022-3)
 * "chain-of-thought prompting": <input, chain of thought, output>
