@@ -330,7 +330,7 @@ metric.compute()
 * toc decompose difficult problems into multiple steps
 * few-shot prompting existed before (Brown et al., 2020), but no reasoning steps are provided 
 * cot works better with models with more parameters
-## Weng Tinking (2025.5)
+### Weng Tinking (2025.5)
 * Adaptive Computation Time, introduced by Alex Graves in 2016, predated large language models but pioneered the same direction of enabling the model to dynamically decide the number of computational steps to take at the inference time, which can be viewed as enabling the model to “think more” in continuous space at test time. Adaptive thinking time in continuous space can be enabled vertically via recurrent architecture or horizontally via more sequential sampling steps.
     * parallel sampling: best-of-N or beam search
     * sequential revision: reflection (Shinn et al. 2023)
@@ -1074,3 +1074,5 @@ training on ghibli (japan allows this)/web screenshots, including top memes
 * background: https://buttondown.com/ainews/archive/ainews-anthropic-cracks-the-llm-genome-project/
 * construct a replacement model (cross-layer transcoders, CLT) to reproduce the behavior of an LLM on a specific dataset and interpret that replacement model
 * Sparse auto-encoder (SAE) for interpretation studies
+# Paper
+## Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters
