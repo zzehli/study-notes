@@ -219,6 +219,7 @@ https://stackoverflow.com/a/19419296
 	* statefulSet's sticky identiy is maintained through DNS names of service and pods
 	* in general stateful applications are not suitable for containerized environments, but stateless applications are
 	
+## Auth
 ### OAuth
 * definition: OAuth 2.0, which stands for “Open Authorization”, is a standard designed to allow a website or application to access resources hosted by other web apps on behalf of a user.
 * components: client, API (Resource Server), Authorization Server, User (Resource Owner)
@@ -252,6 +253,25 @@ https://stackoverflow.com/a/19419296
      +--------+                               +---------------+
 * validate jwt token example from Cube https://github.com/cube-js/cube/blob/401e9e1b9c07e115804a1f84fade2bb82b55ca29/packages/cubejs-api-gateway/src/gateway.ts#L2047C43-L2047C46
 * Client Credentials Flow，this is the workflow where authorization server issues access token based on client identity (ID, secret). The client is registered in authorization server in this case. https://auth0.com/docs/get-started/authentication-and-authorization-flow/client-credentials-flow
+### sessions
+* A session represents an instance in which a user has signed in and is authenticated. Normally, when a user signs in successfully, a session is created and typically stored in a database, along with the user's ID, a status (active, revoked, expired, etc) and an expiration time, at miniumum. The session must be active and not expired in order for the user to be seen as authenticated. One user can, and typically does, have multiple sessions. Each time the user signs in, whether on the same or a different device, creates a new session (from Clerk docs: https://clerk.com/docs/how-clerk-works/overview)
+* one misconception about session is token-based auth does not deal with sessions. This is wrong. Token-based auth just not saving the session information in the db anymore. Sessions still need to be managed. Sessions is a more generic concept than any implementation models. It refers to episodes of interaction where the user is validated. For instance, managing sessions in token-based auth refers to keep track of when user signs out and when the token expires to prevent active session even after the user signs out
+#### session-based (stateful)
+* The session is stored in a cookie and is sent to the server on every request. The server then verifies the session and returns the user data if the session is valid
+* once validation succeeds, server sends back a cookie with session ID in it
+* cookies are automatically managed by the browser
+* sessions are saved in db, verified on every request
+* the drawback of this is database access can be slow
+#### token-based (stateless)
+* once validation succeeds, server sends back a jwt token with user data like user ID, which contain a signature
+* the token is a self-contained proof of authentication, server only verifies the signature
+* the server no longer maintains sessions information
+* this is after since the server do no perform db lookup at every request
+* session management is more difficult since token is the only source of truth for sessions (wait for token to expire or invalidate all active sessions by use new signing keys for tokens)
+#### Clerk
+* token and session lifetime is decoupled: session is alive for days or weeks, but token are only valid for 1min to keep it short-lived (so when its compromised, it is likely already expired)
+* after validation, clerk creates session db, but also a session token
+* afterwards, the server only verifies the session token
 ## Kafka
 * Definition: Kafka is a distributed system consisting of servers and clients that communicate via a high-performance TCP network protocol.
 * Components:
