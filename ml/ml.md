@@ -353,6 +353,22 @@ with human feedback). It shows a fine tuned model 1B model, InstructGPT, exhibit
     * Nathan Lambert: https://huggingface.co/blog/rlhf
     * weights and biases: https://wandb.ai/ayush-thakur/RLHF/reports/Understanding-Reinforcement-Learning-from-Human-Feedback-RLHF-Part-1--VmlldzoyODk5MTIx
     * Yannic Kilcher: https://www.youtube.com/watch?v=vLTmnaMpQCs
+### DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning (2025)
+* main contribution: 
+    * reasoning capabilities of LLMs can be incentivized purely through RL, without the need for SFT
+    * reasoning patterns of larger models can be distilled into smaller models, resulting in better performance compared to the reasoning patterns discovered through RL on small models
+* RL:
+    * GRPO
+    * reward model: accuracy rewards (right/wrong) and format rewards (use of <think> tags)
+* self evolution and aha moment of Deepseek-R1-Zero:
+    * The thinking time of Deepseek-R1-Zero shows consistent improvement throughout the training process (the emergence of sophisticated behaviors as the test-time-computation increases)
+    * aha moment: the model learns to allocate more thinking time to a problem by reevaluating its initial approach
+* cold start
+    * Deepseek-R1-Zero has strong reasoning, but poor readability
+    * generate CoT dataset to fine-tune DeepSeek-V3-Base as the starting point for RL
+* R1 training: cold start -> RL -> SFT -> second round of RL for diverse data
+    * SFT data consists of reasoning data made from rejection sampling and non-reasoning data
+* Q: reasoning refers to task categories as well as types of inference process
 ## PyTorch
 ### Components (quick start tutorial)
 * tensors: `x_data = torch.tensor([1, 2])
