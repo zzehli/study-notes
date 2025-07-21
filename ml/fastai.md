@@ -99,8 +99,9 @@ def simple_net(xb):
     res = res@w2 + b2 # linear layer
     return res
 ```
-* Q: Activations:: Numbers that are calculated (both by linear and nonlinear layers); how is this related to activation functions?
-    * activations are the numbers you get after passing inputs through a layer in a neural network
+* Q: Activations: Numbers that are calculated (both by linear and nonlinear layers); how is this related to activation functions?
+    * Activation functions introduce non-linearities, allowing neural networks to learn highly complex mappings between inputs and outputs. Without activation functions, neural networks would be restricted to modeling only linear relationships between inputs and outputs. 
+    * activations vs. parameters: parameters are randomly initialized then optimized
 ## Lecture
 * estimate a quadratic function
     * create the target function
@@ -124,5 +125,40 @@ def simple_net(xb):
 * relu is a function that you can add up together to approximate any functions
 * The intuition behind relu is "a series of any number of linear layers in a row can be replaced with a single linear layer with a different set of parameters." (ch. 4)
 * use excel for SGD
+# Lesson 4
+## Book Chapter 10
+* self-supervised learning use unlabeled data
+* to train a classification model, it is useful to fine-tune the language model on unlabeled dataset (movie review in this case) with self-supervised learning, then fine-tune it on the classification data (Universal Language Model Fine-tuning)
+* text processing is similar to categorical data (generate a list of vocab, convert to index, combine them into an embedding matrix, the embedding matrix is the first layer of a NN) (see prev chapters)
+* *sequence* a list of words in model training
+* in training, the independent variables are the sequence of words starting with the first word and ending with the second to last. The dependent variables starts from the 2nd to the last word.
+* fine-tune a text generation model: tokenization -> numericalization -> create data loader -> create language model (rnn)
+* tokenization: word-based, subword-based and character-based
+    * word-based tokenization assumes that spaces is the best unit to separate meaningful components in a sentence, but this might not be the case in many languages, as in Chinese 
+    * Size of vocab for subword tokenization: smaller vocab means each token will represent fewer characters (t1 represent `st` as opposed to `street`)
+        * smaller vocab size: more tokens to represent a sentence, but faster training (less memory, less things to learn)
+        * bigger vocab size: closer to word-level tokenization, less token to represent a sentence, but slower training (more things to learn)
+* numericalization process: 1. make vocab list; 2. assign each word with its index
+* data loader:
+    * at every epoch shuffle the collection of documents and concatenate them into a stream of tokens
+    * cut that stream into a batch of fixed-size consecutive mini-streams (create batch)
+    * each of the sequence has the same length, with beginning of a sequence denoted by a special token
+    * model will then read the mini-streams in order, and thanks to an inner state, it will produce the same activation whatever sequence length we picked
+* fine-tuning text generation (movie reviews) 
+    * convert word indices into embeddings
+    * use RNN to fine-tune text generation movie review
+    ```
+    learn = language_model_learner(
+        dls_lm, AWD_LSTM, drop_mult=0.3, 
+        metrics=[accuracy, Perplexity()]).to_fp16()
+
+    ```
+    * save the resulting encoder
+        * encoder: all but the last layer of the model
+    * This RNN perform next-token prediction by default, we need to convert it to a classification model
+* fine-tuning classification 
+    * sequences also need to have the same length; achieved through padding
+    * load the encoder from the previous step
+    * fine tuning the model by freeze by the last few layers
 # Resources
 ## 
