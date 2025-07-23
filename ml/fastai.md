@@ -37,7 +37,7 @@
     * text (NLP)
     * tabular data
     * recommendation system 
-# Lesson 3
+# Lesson 3 SGD
 ## Book Chapter 4
 * Tensor
     * shape is the length of each axis
@@ -92,13 +92,21 @@ for x,y in dl:
     * *optimization step* update weights based on the gradients; instead of calculating the loss over all dataset, we calculate loss in batch called *mini-batch*
     * Methods in PyTorch whose names end in an underscore modify their objects in place. For instance, bias.zero_() sets all elements of the tensor bias to 0.
 * single nonlinearity with two linear layers is enough to approximate any function, but more layers but smaller layers improve more results
-```
-def simple_net(xb): 
-    res = xb@w1 + b1 # linear layer
-    res = res.max(tensor(0.0)) # activation function
-    res = res@w2 + b2 # linear layer
-    return res
-```
+    ```
+    def simple_net(xb): 
+        res = xb@w1 + b1 # linear layer
+        res = res.max(tensor(0.0)) # activation function
+        res = res@w2 + b2 # linear layer
+        return res
+    ```
+    where
+    ```
+    w1 = init_params((28*28,30))
+    b1 = init_params(30)
+    w2 = init_params((30,1))
+    b2 = init_params(1)
+    ```
+    here, 30 is the size of the hidden layer, can be any number
 * Q: Activations: Numbers that are calculated (both by linear and nonlinear layers); how is this related to activation functions?
     * Activation functions introduce non-linearities, allowing neural networks to learn highly complex mappings between inputs and outputs. Without activation functions, neural networks would be restricted to modeling only linear relationships between inputs and outputs. 
     * activations vs. parameters: parameters are randomly initialized then optimized
@@ -125,7 +133,8 @@ def simple_net(xb):
 * relu is a function that you can add up together to approximate any functions
 * The intuition behind relu is "a series of any number of linear layers in a row can be replaced with a single linear layer with a different set of parameters." (ch. 4)
 * use excel for SGD
-# Lesson 4
+    * Q:  w2 are 1s? (because pred = relu1 + relu2, but pred = prelu1 * w2_1 + prelu2 * w2_2)
+# Lesson 4 NLP
 ## Book Chapter 10
 * self-supervised learning use unlabeled data
 * to train a classification model, it is useful to fine-tune the language model on unlabeled dataset (movie review in this case) with self-supervised learning, then fine-tune it on the classification data (Universal Language Model Fine-tuning)
@@ -160,5 +169,61 @@ def simple_net(xb):
     * sequences also need to have the same length; achieved through padding
     * load the encoder from the previous step
     * fine tuning the model by freeze by the last few layers
+## Lecture
+* one advantage of the transformer architecture is to leverage GPU/TPU compute
+* lecture based on this [notebook](https://www.kaggle.com/code/jhoward/getting-started-with-nlp-for-absolute-beginners), which compare asks two phrases/words from a patent dataset have the same meaning 
+* turn a similarity problem into a classification one ("Does the two phrases the same meaning")
+* underfit and overfit
+* overfitting is hard to recognize, because it is close to the training data, unlike underfitting
+* validation set: hold out from training, a separate dataset to see if the model fits (produce metrics) (huggingface calls this the test set)
+* test set: not used for metrics at all, only used in the final assessment of a model
+* cross-validation: rarely applicable in real world situations; it only works in the same cases where you can randomly shuffle your data to choose a validation set, but random is often not what you want (think time series)
+* Goodhart's Law: when a measure becomes a target, it ceases to be a good measure
+* the concept of the outlier only exists in a statistical sense, not in the real world -> don't delete outlier in the real world applications
+# Lesson 5 Tabular Data
+## Lecture
+* build a tabular model from scratch with the titanic dataset, based on this [notebook](https://www.kaggle.com/code/jhoward/linear-model-and-neural-net-from-scratch); we are making a model to predict if a passenger can survive given information about age, ticket price, etc 
+* replace missing values with mode `df.mode().iloc[0]` (choose the first mode if ties are returned)
+* EDA with numpy:
+    * `df.describe(include=(np.number))`
+    * `df.describe(include=[object])`
+    * `df['col'].hist()`
+* some models don't work well with long-tail distribution
+* turn long-tail dist with logs (use logs for things that can grow exponentially like money or population): `df['logCol'] = np.log(df['col'] + 1)`
+* turn categorical variables into dummy vars: `pd.get_dummies(df, columns=['col1', 'col2'])`
+* [broadcasting](https://numpy.org/doc/stable/user/basics.broadcasting.html) is element wise multiplication instead of matrix multiplication
+* trailing underscore in pytorch is in-place operation `coeff.requires_grad_()`
+* sigmoid function makes sure that the coefficients can be arbitrarily big without worrying about reaching 0 or 1
+    * if the dependent var is binary, use sigmoid 
+* `sympy` package can plot symbolic functions
+* linear model -> nonlinear model (neural net)
+* in numpy and pytorch, `+_*/` means element-wise operations, `@` is matrix multiplication
+* arbitrary size `n_hidden` for the hidden layer : `layer1 = (torch.rand(n_coeff, n_hidden)-0.5)/n_hidden`
+* nn model:
+    ```
+    def calc_preds(coeffs, indeps):
+    l1,l2,const = coeffs
+    res = F.relu(indeps@l1)
+    res = res@l2 + const
+    return torch.sigmoid(res)
+    ```
+* Q: excel and the nn above: l2 coefficients are not shown in excel; `n_hidden` the col number fo the parameters; relu1 + relu2 are equivalent to `res = F.relu(indeps@l1)` assuming l2 are 1s and const are 0, we will get the `res = res@l2 + const = res`
+    * https://chatgpt.com/share/6880f795-a920-8009-82eb-abad1525126a
+* turn a NN to a deep NN (deep learning), add more hidden layers (we only have 1 hidden layer in the above example)
+    ```
+    def calc_preds(coeffs, indeps):
+    layers,consts = coeffs
+    n = len(layers)
+    res = indeps
+    for i,l in enumerate(layers):
+        res = res@l + consts[i]
+        if i!=n-1: res = F.relu(res)
+    return torch.sigmoid(res)
+    ```
+    where `relu` and `sigmoid` are activation functions: sigmoid for the last layer, relu otherwise
+* for tabular data, mindlessly apply deep learning doesn't really help; feature engineering is needed
+* *ensemble*: combine multiple models (eg: create 5 models and average the results)
+* [random forest](https://www.kaggle.com/code/jhoward/how-random-forests-really-work/)
+* binary splits: 
 # Resources
-## 
+## need to read collaborative filtering chapter, nlp deep dive
