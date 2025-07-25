@@ -224,6 +224,45 @@ def simple_net(xb):
 * for tabular data, mindlessly apply deep learning doesn't really help; feature engineering is needed
 * *ensemble*: combine multiple models (eg: create 5 models and average the results)
 * [random forest](https://www.kaggle.com/code/jhoward/how-random-forests-really-work/)
-* binary splits: 
+# Lesson 6 Random Forest
+* continuation of random forest and tabular data chapter on the book
+* oneR classifier use binary splits to arrive at an optimal prediction model based on the best binary splits
+* expand oneR to a decision tree by splitting the classifier further decision points based on other parameters
+* use `sklearn` to create a decision tree
+* *gini*: draw a sample, how likely is it to draw two of the same thing consecutively
+* use decision tree for tabular data as a baseline
+* decision trees don't care the order of the data or the distribution of the data
+* improve the results: *bagging* generate a bunch of unbiased and uncorrelated models and take the avg of their descriptions
+* to perform bagging on decision trees, create decision trees on subsets of the dataset, this give us *random forest* 
+* *feature importance plot* is a plot in random forest that tells how important an independent var is  (by adding up the improvement on gini in RF)
+    * a general tip to get a sense of which var is more important
+* the more trees in the RF, the lower the error (decreasing in returns)
+* out of bag (oob) error: another way to calculate error without a validation set by validate the model on rows not included in the training
+* Jeremy is a RF guy
+* how RF help with model prediction? 
+    * How confident are we in our predictions using a particular row of data?
+    * For predicting with a particular row of data, what were the most important factors, and how did they influence that prediction?
+    * Which columns are the strongest predictors, which can we ignore?
+    * Which columns are effectively redundant with each other, for purposes of prediction?
+    * How do predictions vary, as we vary these columns?
+* *partial dependence plot* is not restricted to RF; it is a more general concept 
+    * avoid cross correlation
+    * something is caused by x and not y
+* *gradient boosting* use smaller tree, then use the residual to create another tree, etc; the prediction is the sum of the predictions (not average)
+    * generally more accurate than RF
+    * can overfit, unlike RF
+* Paddy Rice dataset kaggle demo
+    * set random seed for reproducibility
+    * preprocess data/images
+    * quickly iterate: how to try out many many models instead of stuck in 1 model; try to train a model in 1 min
+    * PIL images are w x l instead of l x w
+    * best vision model for fine-tuning in PIL library: https://www.kaggle.com/code/jhoward/the-best-vision-models-for-fine-tuning
+    * when you use a model, it is not necessary to learn everything about how the model works
+    * create new notebooks as you iterate
+    * JH doesn't do hyperparameter search, doesn't use autoML
+    * CV -> refers to the table above; tabular: RF, then GBM (does do hyperparameter search with GBM)
+    * more competition techniques https://www.kaggle.com/code/jhoward/small-models-road-to-the-top-part-2/ 
+    * image resize methods (crop, pixel, etc), model selection, test time augmentation
+    * can only use tta when there are predefined augmentations during training (tta only makes it easy to apply during test time)
 # Resources
 ## need to read collaborative filtering chapter, nlp deep dive
