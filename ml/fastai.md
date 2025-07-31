@@ -264,5 +264,106 @@ def simple_net(xb):
     * more competition techniques https://www.kaggle.com/code/jhoward/small-models-road-to-the-top-part-2/ 
     * image resize methods (crop, pixel, etc), model selection, test time augmentation
     * can only use tta when there are predefined augmentations during training (tta only makes it easy to apply during test time)
+# Lesson 7 Collaborative Filtering
+## Book Chpater 8
+* collaborative filtering deal with recommendations
+* latent factors: there are underlying concepts about people's preference 
+* We have a table of users' rating of movies with lots of missing ratings that a user hasn't watched. The goal is to guess what these ratings would be
+* dot product-based model training process
+    * for each of the user, and movieId, we use 5 latent factors and initialize them as random parameters
+        * we show a dot product of movie x and user y as a table
+    * to calculate the predictions, take the dot product
+        * each latent factor represent something meaningful: a user likes an action movie or a movie is action-heavy, if that is the case, the dot product will be high, otherwise low
+    * to calculate the loss, we pick mean square error
+    * use SGD to train the model 
+* how to perform vector index? multiple one-hot encoding matrix with the target vector (matrix) of movie/user parameters
+* use embedding layer to accelerate the matrix multiplication above
+* if we only have weights, than we can't say things like "this movie is more popular than other movies" or "this movie is better than others", we need to introduce biases
+```
+class DotProductBias(Module):
+    def __init__(self, n_users, n_movies, n_factors, y_range=(0,5.5)):
+        self.user_factors = Embedding(n_users, n_factors)
+        self.user_bias = Embedding(n_users, 1)
+        self.movie_factors = Embedding(n_movies, n_factors)
+        self.movie_bias = Embedding(n_movies, 1)
+        self.y_range = y_range
+        
+    def forward(self, x):
+        users = self.user_factors(x[:,0])
+        movies = self.movie_factors(x[:,1])
+        res = (users * movies).sum(dim=1, keepdim=True)
+        res += self.user_bias(x[:,0]) + self.movie_bias(x[:,1])
+        return sigmoid_range(res, *self.y_range)
+```
+* weight decay, or L2 regularization, consists in adding to your loss function the sum of all the weights squared; it prevents over-fitting
+    * for a parabola: y = ax^2, weight decay is applied to loss with:
+    $$ loss_{total} = loss_{orig} + wd \cdot a^2$$
+    which gives us the gradient:
+    $$grad_{total} = grad_{orig} + 2 a \cdot wd $$
+    
+    we have `a = 5, lr = 0.1, wd = 0.01 and grad_from_data = 4`:
+    $$ grad_{wd} = 2 \cdot wd \cdot a =  2 \cdot 0.01 \cdot 5 = 0.1 $$ 
+    $$ grad_{total} = grad_{data} + grad_{wd}  = 4 + 0.1 = 4.1 $$
+    update the param $a$:
+    $$a = a - lr \cdot grad_{total} = 5 - 0.1 \cdot 4.1 = 4.59 $$
+    compared to
+    $$a = a - lr \cdot grad_{data} = 5 - 0.1 \cdot 4 = 4.6 $$
+    weight decay makes the parameter closer to 0. In this case $a$ is the weight, we want the weight to be smaller to prevent big changes.
+* in Pytorch, use `nn.Parameter` to mark params as trainable 
+* use principle component analysis to analyze embeddings
+* embedding distance: we can use distance between two items to define similarity: rank this distance gives items that are most/least similar to the given item
+* *bootstrap*: how do you train when you have a limited amount of data? One strategy is to use a tabular model based on user meta data to construct your initial embedding vector
+* a small amount of super users can bias your recommendations: anime users that watch and rate lots of anime; for latent factors, it is hard to detect the biases
+    * In a self-reinforcing system like this, we should probably expect these kinds of feedback loops to be the norm, not the exception
+* deep learning-based model: instead of calculating the dot product of embeddings, concatenate them and put them in a neural net
+```
+class CollabNN(Module):
+    def __init__(self, user_sz, item_sz, y_range=(0,5.5), n_act=100):
+        self.user_factors = Embedding(*user_sz)
+        self.item_factors = Embedding(*item_sz)
+        self.layers = nn.Sequential(
+            nn.Linear(user_sz[1]+item_sz[1], n_act),
+            nn.ReLU(),
+            nn.Linear(n_act, 1))
+        self.y_range = y_range
+        
+    def forward(self, x):
+        embs = self.user_factors(x[:,0]),self.item_factors(x[:,1])
+        x = self.layers(torch.cat(embs, dim=1))
+        return sigmoid_range(x, *self.y_range)
+```
+* `**kwargs` in a parameter list means "put any additional keyword arguments into a dict called kwargs
+## Lecture
+* kaggle competition
+    * iterate quickly
+    * train with smaller dataset to see how much memory is needed
+    * add fastai `GradientAccumulation` callback and parameter `accum` to reduce memory usage: your batch size becomes `bs=num//accum`, meanwhile update the weights every `accum` number of iterations
+* Road to Top kaggle notebook
+    * fastai's `DataBlock`
+    * in fastai, loss function is automatically selected by the learner
+    * in general, the first and the last layer in the model are very important, including the loss
+    * softmax $$\frac{e^{z_i}}{\sum_{j=1}^{K}e^{z_j}}$$
+    * cross-entropy loss: based on softmax, see https://chris-said.io/2020/12/26/two-things-that-confused-me-about-cross-entropy/ for further infomation
+* collaborative filtering: book chapter example
+    * initialize random weights
+    * use SGD and a RMSE to improve the weights
+    * the core of collaborative filtering is matrix completion: complete the missing values in the matrix
+    * embedding
+    * how to characterize user's personal preferences: some tend to give high scores to all movies while others don't give high scores? Through biases (1 col for user bias and movie bias respectively)
+* weight decay (L2 regularization): add to the loss function the sum of all weights squared
+    * intuition: the sum of all weights squared is a small number that is less than 1. This way, we make the loss function go down (less steep). The bigger the weight decay, the less the weights go down
+## Concepts
+* latent factors
+* weight decay, L2 regularization
+* embeddings
+* cross-entropy loss
 # Resources
-## need to read collaborative filtering chapter, nlp deep dive
+* need to read nlp deep dive chapter
+* foundation chapter (17)
+* computational linear algebra short course
+# Course Review
+Part I of the course focuses on four core aspects of deep learning: vision, NLP, tabular data and collaborative filtering (recommendation). The course starts with a gentle introduction to modern DL with the `fastai` library. It then dives into the building blocks of neural network in Lesson 3 with Stochastic Gradient Descent and basic neural network. This is a highlight of the course, especially the book, which starts from non-NN example of SGD and then proceed to introduce SGD with NN. This approach illustrates the fact that many parts of NN/DL algorithm are swappable. For example, the forward function can be an NN, but it can also be an average, a parabola or a dot product. Throughout the four core areas, the same group of basic concepts are applied repeatedly, which gives a deeper understanding of these concepts.
+
+The concepts are taught though concrete examples, often a particular dataset. These examples are largely informed by JH's experience with Kaggle competition, which though out the course, he gives many tips on how to approach these competitions. Overall, this is an excellent first introductory course to anything ML.One drawback of this course is its reliance on the fastai library, which dramatically simplifies the ML operations but also introduces abstractions of its own. To my knowledge, the fastai libraries are not very popular nowadays beyond the fastai community.
+
+JH has a philosophy about how to best teach ML to beginners that do no rely on math. This is much appreciated and rare in this field. The fastai community is a strong and supportive community to get involved in ML/AI. Many alumni of the course has gone on to become prominent practitioners in the field.

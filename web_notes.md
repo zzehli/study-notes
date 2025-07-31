@@ -43,6 +43,10 @@ from https://security.stackexchange.com/questions/108835/how-does-cors-prevent-x
 ## Webhook
 * Webhook is a request (usually POST and GET) from a service provider (eg. Stripe) to your application. It is a way to feed information back to application from the provider (eg. transaction complete).
 * Alternative solutions are short and long pooling. Long pooling is when the provider opens a port and wait for the process to finish before sending the request to the application, but this method consumes more server resources of the provider than webhooks since the it needs to hold the port open.
+* cors
+	* CORS only affects browser requests, not server-to-server webhook calls
+	* Webhook providers (Clerk, Stripe) bypass CORS entirely since they're server-side calls
+	* webhook security depends on signature verification
 # Web Crawling
 * websites have many means of detecting bots, bypassing bots checks require
 	* a headless browser like `playwright` or `puppeteer`
