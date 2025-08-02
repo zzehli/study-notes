@@ -1,6 +1,6 @@
 # Series
 ## [Foundations of Deep RL](https://www.youtube.com/playlist?list=PLwRJQ4m4UJjNymuBM9RdmB3Z9N5-0IlY0)
-### Markov Decision Process (MDP), Exact Solution Methods, Max-ent RL
+### L1, Markov Decision Process (MDP), Exact Solution Methods, Max-ent RL
 * map to an MDP means something can be trained with RL
 * MDP
     * states S
@@ -48,8 +48,9 @@ We have the following state:
     * exercise: given a gridworld, different combinations of discount and noise will result in different actions
 #### Q-values
 * Q*(s,a) expected utility of starting in state s and action a and (therefore) acting optimally
-$$Q^*(s, a) = \sum_{s'}P(s'|s,a)(R(s, a, s')+\gamma \max_{a'}Q^*(s', a'))$$
-This is very similar to V*, but the last term starting with $\gamma$ change to Q*. The definition reads: Q* is the expected rewards of taking action a to arrive at state s', plus the best possible rewards for future actions
+    $$Q^*(s, a) = \sum_{s'}P(s'|s,a)(R(s, a, s')+\gamma \max_{a'}Q^*(s', a'))$$
+    This is very similar to V*, but the last term starting with $\gamma$ change to Q*. The definition reads: Q* is the expected rewards of taking action a to arrive at state s', plus the best possible rewards for future actions
+* this is a recursive definition
 * (comment) unlike V*, which only depends on state, Q* also depends on action
 * Q-value iteration
 * now the Q-values are different depending on the next step, so for each state, we have 4 values in the gridworld (4 directions to move next); therefore we can compare the Q values and choose the action that gives the highest value
@@ -72,7 +73,63 @@ $$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s
 * formulation: instead of $\max_{\pi}E[\sum^H_{t=0}r_t]$ we have $$\max_{\pi}E[\sum^H_{t=0}r_t + \beta H(\pi(\cdot|s_t))]$$ the extra term is the maximum entropy of the policy over each state
 * the entropy term introduces a trade off: if we have big $\beta$, we will collect less entropy. Instead we collect better learning data.
 * how to solve MDP with maximum entropy formulation
-* constrained optimization:
+* constrained optimization
+* to solve MDP with maximum entropy formulation, we turn that into a constrained optimization problem and solve the lagrangian for that problem instead
+    * one-step solution: $$ \pi(a) = \frac{1}{Z}exp(\frac{1}{\beta}r(a)) $$
+    where $$ Z = \sum_aexp(\frac{1}{\beta}r(a)) $$
+    * the resulting policy gives higher probability to high rewards and low probability to low rewards
+    * at the same time, the bigger the $\beta$, the less important is the reward
+### L2, Deep Q Learning
+* iteration based solution to finding the optimal policy has 2 limitations:
+    * requires access to dynamics model (transition model, given the current state and action, get the probability of the next state)
+    * requires iteration over all states and actions
+* for problem 1 above, we need sampling-based approximations where an agent collects its own experience
+* for p 2, Q/V function fitting (use neural network to calculate the next state)
+#### Q-learning
+* Q-values and bellman equation to find the Q-value
+* rewrite Q-value iteration to remove the need for a transition function; replace expectation by samples
+* Tabular Q-learning: $$ Q_{k+1} \leftarrow \mathbb{E}_{s'\sim P(s'|s,a)} [R(s,a,s')+ \gamma \max_{a'}Q_k(s', a')]$$
+    * instead of transition function, we get expected next state from the distribution
+    * algorithm: 
+        * if next state isn't terminal, we set the $target = R(s, a, s') + \gamma \max_aQ_k(s',a')$
+        * use the above target to update Q value
+* how to sample actions?
+    * choose action that maximizes $Q_k(s,a)$, but this leaves no room for exploration
+    * better: $\epsilon$-Greedy: choose random action with prob. $\epsilon$, otherwise choose action greedily
+* Q-learning properties:
+    * converges to optimal policy even if you are acting suboptimally! (*off-policy learning*)
+    * caveats:
+        * need to explore enough for above to be true
+        * learning rates should be small enough
+        * not decrease it too quickly
+    * requirements:
+        * all states and actions are visited infinitely often: in the limit, it doesn't matter how you select actions
+        * learning rate sums to infinity, but its square is bounded, less than infinity
+* crawler example
+* tabular methods can't scale
+    * crawler uses crude discretization, has 100 states
+    * tetris has 10^60 state
+* approximating Q-learning: use a parametrized Q function, $Q_\theta(s,a)$ (instead of a table)
+    * it can be a linear function of features and feature weights
+    * neural net, decision tree, etc
+#### Neural net
+* deel learning improved CV results dramatically
+* Multi-layer perceptron:
+    * linear function $f(x) = Wx$
+    * MLP stack linear function and non-linearity (activation function)
+    * 2-layer: $f(x) = W_2 \max(0, W_0x)$, here the max function introduces nonlinearity (relu)
+* optimization for NN is non-convex
+    * but gradient-based methods are surprisingly effective
+    * gradient calculation done by auto differentiation
+    * most common: SGD + momentum + preconditioning (RMSProp, Adam, Adamx)
+* Q: unclear how is parametrized Q and tabular differ in terms of math expressions
+#### Deep Q networks (DQNs)
+* use dl in Q-learning
+* used by deepmind
+* new instead of Q_k, we have $Q_\theta(s,a)$, 
+* in training, we need to update $\theta$, the parameters of the NN
+* DQN algorithm
+* Q: don't understand learning target and DQN algorithm
 ## [HF Deep RL Course](https://huggingface.co/learn/deep-rl-course/en/unit1/rl-framework)
 ### Unit 1
 * RL process is called a Markov Decision Process (MDP)
@@ -80,6 +137,9 @@ $$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s
 * state is a complete description of the world (fully observed environment)
 * observation is a partial description of the state (eg. game map is not fully disclosed to the player)
 * discount: present rewards weighs more than distant rewards
+* types of tasks: episodic and continuing
+    * episodic task has a terminal state
+    * continuing task has no terminal state
 * exploration and exploitation trade off
     * exploitation: exploiting known information to maximize the reward
     * exploration: exploring the environment by trying random actions in order to find more information about the environment
@@ -88,6 +148,8 @@ $$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s
     * policy-based: train a policy function "what action do I take for the given state", can be deterministic or not
     * value-based: train a value function that answers "what value do i get for the given state"
 * deep Reinforcement Learning introduces deep neural networks to solve Reinforcement Learning problems
+### Unit 3
+* 
 # Articles
 ## [A Reinforcement Learning Guide](https://naklecha.notion.site/a-reinforcement-learning-guide)
 * Terms: state, reward, action
