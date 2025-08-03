@@ -361,9 +361,87 @@ class CollabNN(Module):
 * need to read nlp deep dive chapter
 * foundation chapter (17)
 * computational linear algebra short course
+# Lesson 8 Convolutional Neural networks
+## Book Chapter 13
+* a continuation of chapter 4 of mnist dataset
+* feature engineering: create new transformation of the input data to make it easier to model; for images, a feature is a visually distinctive attribute
+* instead of working with each pixels, we try to tract features in images of digits like edges and strokes
+* *convolution* applies a *kernel* to the image matrix through element-wise multiplication (broadcasting) and sum the results
+* use kernel to detect image features: given an kernel like [[-1,-1,-1][0,0,0][1,1,1]], a matrix that multiples this kernel will get a big number if its bottom row is greater than the absolute values of its top row. For images, this means an edge where the color of the pixel goes from white to black
+* kernels are also called filters
+* kernel arithmetic: A guide to convolution arithmetic for deep learning
+* use convolution in Pytorch
+    * a black-and-white photo has 1 channel, a colored photo has 3 channels (red, gree and blue)
+    * `F.conv2d` expect the an input tensor and a filter tensor
+    ```
+    edge_kernels = torch.stack([left_edge, top_edge, diag1_edge, diag2_edge]) # a list of edge_kernels
+    edge_kernels.shape # torch.Size([4, 3, 3])
+    edge_kernels.unsqueeze(1).shape # torch.Size([4, 1, 3, 3])
+    edge_kernels = edge_kernels.unsqueeze(1)
+    xb.shape # torch.Size([64, 1, 28, 28]), 64 images, each of 1 channel, size 28 x 28 pixels
+    
+    batch_features = F.conv2d(xb, edge_kernels)
+    batch_features.shape # torch.Size([64, 4, 26, 26]), images in the batch, 4 kernels, 26 x 26 edge maps
+    ```
+    * 64x1x28x28 = [batch,channel,height,width]
+    * an image is represented as [channels, rows, columns]
+
+* we can add padding to ensure that the activation map is the same size as the image
+    * If we add a kernel of size ks by ks (with ks an odd number), the necessary padding on each side to keep the same shape is ks//2
+    * ks is often odd number
+    * for 3 x 3 kernel, we need to add 3 //2 = 1 padding on each side
+* *stride*: when apply filters, we move 2 pixels at a time, called stride-2 convolution
+    * size of the activation map with padding and stride: $(n + 2*pad - ks)//stride + 1$ eg. for 5 x 5 images, with kernel size 3, 1 padding and stride 2, we have activation map $(5 + 2 - 3)//2 + 1 = 2 + 1 = 3$， so the resulting activation maps is 3 x 3.
+    * Q: what does it mean: As you'll see, stride-2 convolutions are useful for decreasing the size of our outputs, and stride-1 convolutions are useful for adding layers without changing the output size.
+* IMPORTANT: a convolution can be represented as matrix multiplication, where the weight matrix is an expanded version of the kernel with 0s and repetitions. The repeated values from the kernel are called *shared weights*
+* The number of channels (a.k.a. filters or feature maps) at each layer has nothing to do with the output spatial size
+### CNN
+* use convolutions instead of linear layers for NN. Instead of
+    ```
+    simple_net = nn.Sequential(
+        nn.Linear(28*28,30),
+        nn.ReLU(),
+        nn.Linear(30,1)
+    )
+    ```
+    we have
+    ```
+    broken_cnn = sequential(
+        nn.Conv2d(1,30, kernel_size=3, padding=1),
+        nn.ReLU(),
+        nn.Conv2d(30,1, kernel_size=3, padding=1)
+    )
+    ```
+    because the size of the input images are 28 x 28, the output shape is `(n + 2*pad - ks)//stride + 1 = (28 + 2 - 3)//1 + 1 = 27 + 1 = 28`, which gives us 28 x 28 activations. However for binary classification, we only need a single digit, 1-d output. To do so, we add layers with stride 2, which basically reduces the activate by half at each layer. There for we add **stride** with size 2. In fact, each layer with stride 2 decrease the weights by a factor of 4. To compensate the loss of weights, we also add more activations by adding more layers.
+    With 28 x 28 input, stride size 2 gives us: `(n + 2*pad - ks)//stride + 1 = (28 + 2 - 3)//2 + 1 = 13 + 1 = 14`, which means the output has size 14 x 14, which is 4 times less weights than 28 x 28. We also add more layers to compensate the loss of activations. This gives us:
+    ```
+    simple_cnn = sequential(
+    conv(1 ,4),            #14x14
+    conv(4 ,8),            #7x7
+    conv(8 ,16),           #4x4
+    conv(16,32),           #2x2
+    conv(32,2, act=False), #1x1
+    Flatten(),
+    )
+    ```
+    * The number of weights/parameters for layer 2 are `channel_in x channel_out x kernel_h x kernel_w + channel_out (bias) = 4 x 8 x 3 x 3 + 8 = 296`. 
+* When we use stride, w compensate reduction in output size with more features/channels. For layer 2, (ignore bias) we perform `(296 - 8) x 14 x 14 = 56_448` multiplications, while for layer 3 we perform `(1168 - 16) x 7 x 7 = 56_448`. The intuition is that as the # of layer increases, the model develop more complex features, but the output size are getting smaller, so we need to increase the channel size to compensate for it. It doesn't make sense to calculate as features become more complex
+* another way to see why more computation is needed even tho the activations # are down, is *receptive fields*, it shows how many activations in previous layers are involved to calculate in later layers
+### improve training stability
+* recognize 10 digits in stead of only 2
+* activations close to 0 are bad, because 0 times anything is 0; they don't carry any information
+* to make training more stable:
+    * increase batch size
+    * use a better learning rate scheduler
+    * batch normalization
+* a model that generalizes well is one whose loss would not change very much if you changed the input by a small amount; If a model trains at a large learning rate for quite a while, and can find a good loss when doing so, it must have found an area that also generalizes well, because it is jumping around a lot from batch to batch
+* "Making normalization a part of the model architecture and performing the normalization for each training mini-batch. Batch Normalization allows us to use much higher learning rates and be less careful about initialization"
+* batch norm uses mean and standard deviation to normalize the activations as well as two learnable params, `gamma` and `beta`, to accommodate extreme activation values
 # Course Review
 Part I of the course focuses on four core aspects of deep learning: vision, NLP, tabular data and collaborative filtering (recommendation). The course starts with a gentle introduction to modern DL with the `fastai` library. It then dives into the building blocks of neural network in Lesson 3 with Stochastic Gradient Descent and basic neural network. This is a highlight of the course, especially the book, which starts from non-NN example of SGD and then proceed to introduce SGD with NN. This approach illustrates the fact that many parts of NN/DL algorithm are swappable. For example, the forward function can be an NN, but it can also be an average, a parabola or a dot product. Throughout the four core areas, the same group of basic concepts are applied repeatedly, which gives a deeper understanding of these concepts.
 
 The concepts are taught though concrete examples, often a particular dataset. These examples are largely informed by JH's experience with Kaggle competition, which though out the course, he gives many tips on how to approach these competitions. Overall, this is an excellent first introductory course to anything ML.One drawback of this course is its reliance on the fastai library, which dramatically simplifies the ML operations but also introduces abstractions of its own. To my knowledge, the fastai libraries are not very popular nowadays beyond the fastai community.
+
+The lectures (2022) are derived from a book on DL JH wrote in 2020. I find the book helpful in general. However, the latter chapters of the book are unclear. Chapter 13 is a good example of this. The paragraphs don't follow each other very well. Some paragraph will mention concepts that are not introduced properly. Important steps in calculation are omitted.
 
 JH has a philosophy about how to best teach ML to beginners that do no rely on math. This is much appreciated and rare in this field. The fastai community is a strong and supportive community to get involved in ML/AI. Many alumni of the course has gone on to become prominent practitioners in the field.
