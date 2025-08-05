@@ -310,7 +310,7 @@ class DotProductBias(Module):
     $$a = a - lr \cdot grad_{data} = 5 - 0.1 \cdot 4 = 4.6 $$
     weight decay makes the parameter closer to 0. In this case $a$ is the weight, we want the weight to be smaller to prevent big changes.
 * in Pytorch, use `nn.Parameter` to mark params as trainable 
-* use principle component analysis to analyze embeddings
+* use principle component analysis to analyze embeddings (see, [computational linear algebra for coders](https://github.com/fastai/numerical-linear-algebra))
 * embedding distance: we can use distance between two items to define similarity: rank this distance gives items that are most/least similar to the given item
 * *bootstrap*: how do you train when you have a limited amount of data? One strategy is to use a tabular model based on user meta data to construct your initial embedding vector
 * a small amount of super users can bias your recommendations: anime users that watch and rate lots of anime; for latent factors, it is hard to detect the biases
@@ -357,10 +357,6 @@ class CollabNN(Module):
 * weight decay, L2 regularization
 * embeddings
 * cross-entropy loss
-# Resources
-* need to read nlp deep dive chapter
-* foundation chapter (17)
-* computational linear algebra short course
 # Lesson 8 Convolutional Neural networks
 ## Book Chapter 13
 * a continuation of chapter 4 of mnist dataset
@@ -437,10 +433,50 @@ class CollabNN(Module):
 * a model that generalizes well is one whose loss would not change very much if you changed the input by a small amount; If a model trains at a large learning rate for quite a while, and can find a good loss when doing so, it must have found an area that also generalizes well, because it is jumping around a lot from batch to batch
 * "Making normalization a part of the model architecture and performing the normalization for each training mini-batch. Batch Normalization allows us to use much higher learning rates and be less careful about initialization"
 * batch norm uses mean and standard deviation to normalize the activations as well as two learnable params, `gamma` and `beta`, to accommodate extreme activation values
+## Lecture
+* might need a refresher from Lesson 5
+* initialize params with `nn.Parameter`
+* create a `Embedding` class
+    * use `create_params`, which calls `nn.Parameter`, to initialize params for embeddings
+    * in pytorch underscore methods change object in place `normal_()`
+* interpret embeddings and bias:
+    * bad movies get low bias
+    * given the same features ppl like, these movies are still not liked
+    * vice versa for high bias
+    * what's `n_factors`? use principle component analysis (compress high dimensional data onto lower dimensions)
+* use `fast.collab` to create collaborative filtering models 
+* calculate embedding distance with cosine similarity
+* use deep learning for collaborative filtering with `nn.Sequential`
+* NN does not necessarily produce better results than dot product; NN method is helpful for data with metadata;
+* small number of users overwhelm the dataset
+* embedding and NLP: 
+    * word list and latent factors
+    * convert text to index, put together an embedding matrix based on the latent factors
+* convolutional neural net
+* CNN excel:
+    * conv1 detect horizontal edge and vertical edge
+    * convolution are sliding windows (kernel or filter) on top of an image, performing dot products
+    * conv2 has 2 channels (2 input matrix, horizontal and vertical edge), which means 2 filters are applied and then summed together
+    * use sgd to optimize the filter matrix values
+    * maxpooling: after conv1 and conv2, instead of performing dot product, take the max of n x n grids; this way we reduce the number of activations, since our goal is to reduce it to a 1 number (for classification); then perform a dot product of the max pooling matrix with a matrix of dense weights of the same size, which give us 1 number called dense activation
+    * nowadays, instead of maxpooling, we skip the sliding window, called stride; so each time we reduce the size by 2, until we have a small matrix (7 x 7), then we do a average pool
+    * the difference of max pool and average pool is to ask "is this part of the image that resembles a bear?", for average, we take the average score of every part, for max, we take the max score.
+* convolution as matrix multiplication (multiply a special weight matrix by the image)
+* dropout excel:
+    * conv1 and conv2 are the same
+    * create a random number matrix of between 0 and 1, of the same size as conv2
+    * given a dropout factor between 0 and 1, we turn the matrix into 0 and 1s based on comparing the element with the dropout factor, we get a matrix of 0 and 1s, called dropout mask
+    * we multiply the dropout mask by the conv2, we get a corrupted image; the smaller the dropout, the more complete the image
+* we use drop out image to let models learn incomplete images; it's a technic of data augmentation on the activation, it help prevent overfitting
+# Resources
+* need to read nlp deep dive chapter
+* foundation chapter (17)
+* computational linear algebra short course
+* meta learning by Radek Osmulski
 # Course Review
 Part I of the course focuses on four core aspects of deep learning: vision, NLP, tabular data and collaborative filtering (recommendation). The course starts with a gentle introduction to modern DL with the `fastai` library. It then dives into the building blocks of neural network in Lesson 3 with Stochastic Gradient Descent and basic neural network. This is a highlight of the course, especially the book, which starts from non-NN example of SGD and then proceed to introduce SGD with NN. This approach illustrates the fact that many parts of NN/DL algorithm are swappable. For example, the forward function can be an NN, but it can also be an average, a parabola or a dot product. Throughout the four core areas, the same group of basic concepts are applied repeatedly, which gives a deeper understanding of these concepts.
 
-The concepts are taught though concrete examples, often a particular dataset. These examples are largely informed by JH's experience with Kaggle competition, which though out the course, he gives many tips on how to approach these competitions. Overall, this is an excellent first introductory course to anything ML.One drawback of this course is its reliance on the fastai library, which dramatically simplifies the ML operations but also introduces abstractions of its own. To my knowledge, the fastai libraries are not very popular nowadays beyond the fastai community.
+The concepts are taught with concrete examples, often on a particular dataset. These examples are largely informed by JH's experience with Kaggle competition, which though out the course, he gives many tips on how to approach these competitions. Overall, this is an excellent first introductory course to anything ML.One drawback of this course is its reliance on the fastai library, which dramatically simplifies the ML operations but also introduces abstractions of its own. To my knowledge, the fastai libraries are not very popular nowadays beyond the fastai community.
 
 The lectures (2022) are derived from a book on DL JH wrote in 2020. I find the book helpful in general. However, the latter chapters of the book are unclear. Chapter 13 is a good example of this. The paragraphs don't follow each other very well. Some paragraph will mention concepts that are not introduced properly. Important steps in calculation are omitted.
 
