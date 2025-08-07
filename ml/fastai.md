@@ -470,6 +470,7 @@ class CollabNN(Module):
 * we use drop out image to let models learn incomplete images; it's a technic of data augmentation on the activation, it help prevent overfitting
 # Resources
 * need to read nlp deep dive chapter
+* read more about broadcasting
 * foundation chapter (17)
 * computational linear algebra short course
 * meta learning by Radek Osmulski

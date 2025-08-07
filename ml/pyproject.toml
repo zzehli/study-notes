@@ -12,6 +12,9 @@ dependencies = [
     "matplotlib>=3.10.1",
     "nbconvert>=7.16.6",
     "numpy>=2.2.4",
+    "pandas>=2.2.3",
+    "pillow>=11.1.0",
     "torch>=2.6.0",
+    "torchvision>=0.21.0",
     "transformers[sentencepiece]>=4.51.3",
 ]
