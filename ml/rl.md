@@ -148,8 +148,68 @@ $$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s
     * policy-based: train a policy function "what action do I take for the given state", can be deterministic or not
     * value-based: train a value function that answers "what value do i get for the given state"
 * deep Reinforcement Learning introduces deep neural networks to solve Reinforcement Learning problems
+### Unit 2
+* for value-based approach, since the policy is not trained, we specify its behavior to take the greedy approach, it will choose actions with the biggest reward: $arg \max_a Q_{\pi} (s,a)$; another option is epsilon-greedy method
+* finding an optimial value function leads to having an optimal policy: $\pi^{*}(s) = arg \max_a Q^{*} (s,a)$, where $Q^{*}$ and $\pi^{*}$ are optimal value and policy, respectively
+* two types of value-based methods: state-value (V) and action-value function (Q)
+    * state-value function: given the state $s$, if agent follows policy $\pi$, the expected outcome is $V_\pi(s)$
+    * action-value function: for each state, action pair, the expected return is $Q_\pi(s, a)$ if it follows policy $\pi$
+* problem with the above approach is that we need to sum all state or state-action pair for each $V$ or $Q$, which is computationally expensive
+* Bellman Equation
+    * $$V_\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma \times V_\pi(S_{t+1}) | S_t = s]$$
+    which is basically: `Rt+1 + gamma * V(St+1)`, immediate reward + the discounted value of the state that follows
+    * use recursion to save computation
+    * this is dynamic programming: a recursive function that is the sum of the current state and recursion of the next state
+* Monte Carlo vs Temporal Difference:
+    * monte carlo ues an entire episode of experience
+    * temporal difference uses one step
+* Monte Carlo
+    * require the return of the entire episode before update: 
+    $$V(S_t) \leftarrow V(S_t) + \alpha [G_t - V(S_t)]$$
+* Temporal Difference (TD)
+    * only waits for one step before update
+    * since we don't know the total reward, we estimate it with reward and discounted value of the next state $R_{t + 1} + \gamma V(S_{t+1}) $ to formula
+    $$V(S_t) \leftarrow V(S_t) + \alpha [R_{t + 1} + \gamma V(S_{t+1}) - V(S_t)]$$
+* Q-Learning
+    * Q-learning is an off-policy value-based method that uses a TD approach to train its action-value function
+    * an algorithm to train Q-function
+    * Q stands for value of action-state
+        * which differs from reward, which is the feedback from the env
+        * *value* is the expected cumulative reward our agent gets if it starts at this state and act accordingly to a policy
+        * Q value is stored in Q-table, which all values are 0 when initialized; Q-function search for corresponding value in the table
+        * When the training is done, we have an optimal Q-function, which means we have optimal Q-table. We will also have an optimal policy, since we know the best action to take at each state.
+    * algorithm (sarsamax, Q-learning):
+    ```
+    step 1: initialize Q-table to all 0
+    step 2: choose action with epsilon-greedy strategy
+    step 3: perform action A_t, and observe R_{t+1}, S_{t+1}
+    step 4: update Q(S_t, A_t)
+    ```
+    * spelled out ![algo](./assets/Q-learning-algo.png) 
+    * *epsilon-greedy policy*
+        * with probability $1 - \epsilon$, exploitation, otherwise exploration
+        * $\epsilon$ starts with 1 at the beginning of the training, which means we only do exploration, then the $\epsilon$ value gets smaller, we will switch to exploitation
+    * To derive discounted value of the next state $\gamma V(S_{t+1})$, we *bootstrap* by finding the action that max the Q value at next state $\gamma max_aQ(S_{t+1}, a)$
+        * note that we use a greedy method to choose action, not greedy epsilon
+        * *off-policy*: a different policy for acting (inference) and updating 
+        * use greedy to update, use epsilon-greedy to act
+        * *On-policy*: using the same policy for acting and updating.
+        * update function ![Q-value-update](./assets/Q-value-update.png)  
 ### Unit 3
-* 
+* Q-learning is a tabular method, it is not scalable
+* we approximate the Q-value with parametrized Q-function $Q_\theta(s,a)$
+* Deep Q-learning:
+    * As input, we take a stack of 4 frames passed through the network as a state and output a vector of Q-values for each possible action at that state
+    * stacked frame can capture the motion
+    * the frames go thru convolutional layers, then fully-connected layers before produce Q values
+    * in Deep Q-Learning, instead of updating Q values, we create a loss function that compares our Q-value prediction and the Q-target and uses gradient descent to update the weights of our Deep Q-Network to approximate our Q-values better
+    * algorithm:
+        * Sampling: we perform actions and store the observed experience tuples in a replay memory.
+        * Training: Select a small batch of tuples randomly and learn from this batch using a gradient descent update step
+* stabilize deep Q-learning:
+    * experience replay thru a relay buffer: save experience that will be reused; prevents the network from only learning from the immediate before
+    * fixed Q-target: for bellman equation, both Q-value and TD-target changes, this is a moving target problem; instead, we fix param $\theta^-$, only update every C steps
+    * double deep Q-learning
 # Articles
 ## [A Reinforcement Learning Guide](https://naklecha.notion.site/a-reinforcement-learning-guide)
 * Terms: state, reward, action
