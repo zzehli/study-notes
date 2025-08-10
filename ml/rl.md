@@ -150,7 +150,7 @@ $$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s
 * deep Reinforcement Learning introduces deep neural networks to solve Reinforcement Learning problems
 ### Unit 2
 * for value-based approach, since the policy is not trained, we specify its behavior to take the greedy approach, it will choose actions with the biggest reward: $arg \max_a Q_{\pi} (s,a)$; another option is epsilon-greedy method
-* finding an optimial value function leads to having an optimal policy: $\pi^{*}(s) = arg \max_a Q^{*} (s,a)$, where $Q^{*}$ and $\pi^{*}$ are optimal value and policy, respectively
+* finding an optimal value function leads to having an optimal policy: $\pi^{*}(s) = arg \max_a Q^{*} (s,a)$, where $Q^{*}$ and $\pi^{*}$ are optimal value and policy, respectively
 * two types of value-based methods: state-value (V) and action-value function (Q)
     * state-value function: given the state $s$, if agent follows policy $\pi$, the expected outcome is $V_\pi(s)$
     * action-value function: for each state, action pair, the expected return is $Q_\pi(s, a)$ if it follows policy $\pi$
