@@ -370,7 +370,7 @@ with human feedback). It shows a fine tuned model 1B model, InstructGPT, exhibit
     * SFT data consists of reasoning data made from rejection sampling and non-reasoning data
 * Q: reasoning refers to task categories as well as types of inference process
 ## PyTorch
-### Components (quick start tutorial)
+### Components (quick start tutorial: https://docs.pytorch.org/tutorials/beginner/basics/intro.html)
 * tensors: `x_data = torch.tensor([1, 2])
     * shape of the tensor, the last two digit in `tensor.size()` represents the shape of the inner most matrices, more see [this post](https://wandb.ai/vincenttu/intro-to-tensors/reports/A-Gentle-Intro-To-Tensors-With-Examples--VmlldzozMTQ2MjE5)
 * dataset (preload) & dataloader (wraps an iterable around a dset)

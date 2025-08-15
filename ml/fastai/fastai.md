@@ -474,6 +474,7 @@ class CollabNN(Module):
 * foundation chapter (17)
 * computational linear algebra short course
 * meta learning by Radek Osmulski
+* what is `torch.nn`: https://docs.pytorch.org/tutorials/beginner/nn_tutorial.html
 # Course Review
 Part I of the course focuses on four core aspects of deep learning: vision, NLP, tabular data and collaborative filtering (recommendation). The course starts with a gentle introduction to modern DL with the `fastai` library. It then dives into the building blocks of neural network in Lesson 3 with Stochastic Gradient Descent and basic neural network. This is a highlight of the course, especially the book, which starts from non-NN example of SGD and then proceed to introduce SGD with NN. This approach illustrates the fact that many parts of NN/DL algorithm are swappable. For example, the forward function can be an NN, but it can also be an average, a parabola or a dot product. Throughout the four core areas, the same group of basic concepts are applied repeatedly, which gives a deeper understanding of these concepts.
 
