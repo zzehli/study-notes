@@ -1,0 +1,1 @@
+`jupyter nbconvert ml/fastai/cnn.ipynb --to markdown`

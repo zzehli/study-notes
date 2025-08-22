@@ -471,10 +471,18 @@ class CollabNN(Module):
 # Resources
 * need to read nlp deep dive chapter
 * read more about broadcasting
-* foundation chapter (17)
+* nlp from scratch (12), training acceleration (16) and foundation chapter (17)
 * computational linear algebra short course
 * meta learning by Radek Osmulski
 * what is `torch.nn`: https://docs.pytorch.org/tutorials/beginner/nn_tutorial.html
+
+# Resnet
+* techniques for combatting overfitting are often called regularization methods (d2L ch. 3.6)
+* larger/bigger nn doesn't always lead to better results; the larger nn might drift away from the previous, smaller nn
+* we need a way to make the larger function container the smaller, previous function
+* only if larger function classes contain the smaller ones are we guaranteed that increasing them strictly increases the expressive power of the network. For deep neural networks, if we can train the newly-added layer into an identity function , the new model will be as effective as the original model. As the new model may get a better solution to fit the training dataset, the added layer might make it easier to reduce training errors. (d2l)
+* this is done using an identity function in resnet
+* The goal is to learn $f(x)$, instead of learning it directly, we transform it into $f(x) = g(x) + x$, now the goal becomes learning the **residual mapping** $g(x) = f(x)- x$. Furthermore, if we make $f(x)$ an identity function, we got $g(x) = f(x) - x = 0$, which is easy to learn
 # Course Review
 Part I of the course focuses on four core aspects of deep learning: vision, NLP, tabular data and collaborative filtering (recommendation). The course starts with a gentle introduction to modern DL with the `fastai` library. It then dives into the building blocks of neural network in Lesson 3 with Stochastic Gradient Descent and basic neural network. This is a highlight of the course, especially the book, which starts from non-NN example of SGD and then proceed to introduce SGD with NN. This approach illustrates the fact that many parts of NN/DL algorithm are swappable. For example, the forward function can be an NN, but it can also be an average, a parabola or a dot product. Throughout the four core areas, the same group of basic concepts are applied repeatedly, which gives a deeper understanding of these concepts.
 
