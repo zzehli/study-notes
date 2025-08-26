@@ -302,7 +302,7 @@ class DotProductBias(Module):
     $$grad_{total} = grad_{orig} + 2 a \cdot wd $$
     
     we have `a = 5, lr = 0.1, wd = 0.01 and grad_from_data = 4`:
-    $$ grad_{wd} = 2 \cdot wd \cdot a =  2 \cdot 0.01 \cdot 5 = 0.1 $$ 
+    $$ grad_{wd} = 2 \cdot wd \cdot a =  2 \cdot 0.01 \cdot 5 = 0.1 $$
     $$ grad_{total} = grad_{data} + grad_{wd}  = 4 + 0.1 = 4.1 $$
     update the param $a$:
     $$a = a - lr \cdot grad_{total} = 5 - 0.1 \cdot 4.1 = 4.59 $$
@@ -468,21 +468,38 @@ class CollabNN(Module):
     * given a dropout factor between 0 and 1, we turn the matrix into 0 and 1s based on comparing the element with the dropout factor, we get a matrix of 0 and 1s, called dropout mask
     * we multiply the dropout mask by the conv2, we get a corrupted image; the smaller the dropout, the more complete the image
 * we use drop out image to let models learn incomplete images; it's a technic of data augmentation on the activation, it help prevent overfitting
-# Resources
-* need to read nlp deep dive chapter
-* read more about broadcasting
-* nlp from scratch (12), training acceleration (16) and foundation chapter (17)
-* computational linear algebra short course
-* meta learning by Radek Osmulski
-* what is `torch.nn`: https://docs.pytorch.org/tutorials/beginner/nn_tutorial.html
-
-# Resnet
+# Resnet: Chapter 14
 * techniques for combatting overfitting are often called regularization methods (d2L ch. 3.6)
 * larger/bigger nn doesn't always lead to better results; the larger nn might drift away from the previous, smaller nn
 * we need a way to make the larger function container the smaller, previous function
 * only if larger function classes contain the smaller ones are we guaranteed that increasing them strictly increases the expressive power of the network. For deep neural networks, if we can train the newly-added layer into an identity function , the new model will be as effective as the original model. As the new model may get a better solution to fit the training dataset, the added layer might make it easier to reduce training errors. (d2l)
 * this is done using an identity function in resnet
 * The goal is to learn $f(x)$, instead of learning it directly, we transform it into $f(x) = g(x) + x$, now the goal becomes learning the **residual mapping** $g(x) = f(x)- x$. Furthermore, if we make $f(x)$ an identity function, we got $g(x) = f(x) - x = 0$, which is easy to learn
+# RNN: Chapter 12
+* future words are based on everything that comes before
+* all layers share the same weight matrix
+    * the weight matrix is called hidden state: the activations that are updated at each step of the RNN
+    * the hidden layer stays the same while the hidden state is updated continuously based previous states in a loop
+* suppose the hidden layer is $W$, $e$ are embeddings, and $h_o$ is the output layer:
+    1. the first hidden state/activation is $$h_0 = \text{ReLU}\big(W\,e_0 + b\big)$$
+    2. the second hidden state is $$h_1 = \text{ReLU}\big(W\,(h_0 + e_1) + b\big)$$
+    3. the third hidden state: $$h_2 = \text{ReLU}\big(W\,(h_1 + e_2) + b\big)$$
+    4. the output predictions: $$\text{logits} = h_o(h_2)$$
+* use `detach` to drop gradients and save only the most recent 3 layers to save memory spaces
+* We keep track of sequence length of activations, say $n$; the forward activations carries thru the entire sequence, but the gradients only are calculated until the past $n$ token length. This is dcalled **backpropagation through time** (BPTT)
+* multilayer RNNs pass activations from one RNN to another
+* **vanishing gradient** or **exploding gradient**: when dl network has many layers, the gradients calculated tend to be very large or very small, which make these float points harder to train
+    * float point numbers become less and less accurate the further away the numbers get from zero
+    * to avoid these problems, we use two types of layers **gated recurrrent units** (GRU) and **long short-term memory** (LSTM)
+* 
+# Resources
+* need to read nlp deep dive chapter
+* read more about broadcasting
+* nlp from scratch (12), training acceleration: momentum, callbacks, adam, etc (16), foundation chapter (17), CAM and pytorch hook (18), Learner from scratch (19)
+* computational linear algebra short course
+* meta learning by Radek Osmulski
+* what is `torch.nn`: https://docs.pytorch.org/tutorials/beginner/nn_tutorial.html
+* What you never wanted to know about floating point but will be forced to find out
 # Course Review
 Part I of the course focuses on four core aspects of deep learning: vision, NLP, tabular data and collaborative filtering (recommendation). The course starts with a gentle introduction to modern DL with the `fastai` library. It then dives into the building blocks of neural network in Lesson 3 with Stochastic Gradient Descent and basic neural network. This is a highlight of the course, especially the book, which starts from non-NN example of SGD and then proceed to introduce SGD with NN. This approach illustrates the fact that many parts of NN/DL algorithm are swappable. For example, the forward function can be an NN, but it can also be an average, a parabola or a dot product. Throughout the four core areas, the same group of basic concepts are applied repeatedly, which gives a deeper understanding of these concepts.
 
