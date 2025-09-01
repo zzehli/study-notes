@@ -365,7 +365,7 @@ class CollabNN(Module):
 * *convolution* applies a *kernel* to the image matrix through element-wise multiplication (broadcasting) and sum the results
 * use kernel to detect image features: given an kernel like [[-1,-1,-1][0,0,0][1,1,1]], a matrix that multiples this kernel will get a big number if its bottom row is greater than the absolute values of its top row. For images, this means an edge where the color of the pixel goes from white to black
 * kernels are also called filters
-* kernel arithmetic: A guide to convolution arithmetic for deep learning
+* kernel arithmetic: A guide to convolution arithmetic for deep learning (https://arxiv.org/abs/1603.07285)
 * use convolution in Pytorch
     * a black-and-white photo has 1 channel, a colored photo has 3 channels (red, gree and blue)
     * `F.conv2d` expect the an input tensor and a filter tensor
@@ -491,7 +491,16 @@ class CollabNN(Module):
 * **vanishing gradient** or **exploding gradient**: when dl network has many layers, the gradients calculated tend to be very large or very small, which make these float points harder to train
     * float point numbers become less and less accurate the further away the numbers get from zero
     * to avoid these problems, we use two types of layers **gated recurrrent units** (GRU) and **long short-term memory** (LSTM)
-* 
+# The training porcess: Chapt 16 (Adam, Callbacks)
+* use python `partial` in a pipeline to make functions with different numbers of params compatible with each other https://stackoverflow.com/questions/15331726/how-does-functools-partial-do-what-it-does
+* momentum: by tracking the pass gradient and use that as part of the current gradient, momentum avoid overfitting small changes in the loss function
+* RMSProp is a variant of SGD, it uses different learning rate for different weights
+* adam is a combination fo momentum and RMSProp
+* when changing the training loop, the default in pytorch is to rewrite the whole loop and make necessary changes on the loop directly. A better way to insert your own modifications to a training loop is through a callback
+* A callback is a piece of code that you write, and inject into another piece of code at some predefined point
+* In order to be just as flexible as manually copying and pasting a training loop and directly inserting code into it, a callback must be able to read every possible piece of information available in the training loop, modify all of it as needed, and fully control when a batch, epoch, or even the whole training loop should be terminated
+* fastai's optimizer class: https://github.com/fastai/fastai/blob/main/nbs/12_optimizer.ipynb
+* the optimizer callback and the `Callback` introduced in the last part of the chapter are different. The optimizer callbacks are callbacks added to the `Optimizer`'s `step` method (step in fastai optimizer just loops thru optimizer callbacks); `Callback` class has access to the traning loop, not the inside of the Optimizer  
 # Resources
 * need to read nlp deep dive chapter
 * read more about broadcasting
@@ -500,6 +509,9 @@ class CollabNN(Module):
 * meta learning by Radek Osmulski
 * what is `torch.nn`: https://docs.pytorch.org/tutorials/beginner/nn_tutorial.html
 * What you never wanted to know about floating point but will be forced to find out
+* Parameters are numbers that are learned. Activations are numbers that are calculated (by affine functions & element-wise non-linearities). When you learn about any new concept in deep learning, ask yourself: is this a parameter or an activation?
+* step one is to get to the point where you can overfit, then the question is to how to reduce that overfit: more data -> data augmentation -> generalizable  architecture -> regularization -> reduce architecture complexity (chapt. 15)
+    * use a smaller model should be the last step, not first step you take to address overfitting
 # Course Review
 Part I of the course focuses on four core aspects of deep learning: vision, NLP, tabular data and collaborative filtering (recommendation). The course starts with a gentle introduction to modern DL with the `fastai` library. It then dives into the building blocks of neural network in Lesson 3 with Stochastic Gradient Descent and basic neural network. This is a highlight of the course, especially the book, which starts from non-NN example of SGD and then proceed to introduce SGD with NN. This approach illustrates the fact that many parts of NN/DL algorithm are swappable. For example, the forward function can be an NN, but it can also be an average, a parabola or a dot product. Throughout the four core areas, the same group of basic concepts are applied repeatedly, which gives a deeper understanding of these concepts.
 
