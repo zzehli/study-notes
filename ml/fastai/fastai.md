@@ -501,6 +501,20 @@ class CollabNN(Module):
 * In order to be just as flexible as manually copying and pasting a training loop and directly inserting code into it, a callback must be able to read every possible piece of information available in the training loop, modify all of it as needed, and fully control when a batch, epoch, or even the whole training loop should be terminated
 * fastai's optimizer class: https://github.com/fastai/fastai/blob/main/nbs/12_optimizer.ipynb
 * the optimizer callback and the `Callback` introduced in the last part of the chapter are different. The optimizer callbacks are callbacks added to the `Optimizer`'s `step` method (step in fastai optimizer just loops thru optimizer callbacks); `Callback` class has access to the traning loop, not the inside of the Optimizer  
+# NN from scratch: Chapter 17
+* a neuron is a linear function followed by an (nonlinear) activation function
+* a deep learning model is built by stacking many neurons
+    * a layer with certain # of neurons is called a fully connected/dense/linear layer; the # is called hidden size
+    * to compute the output, we need to implement dot product and matrix multiplication
+* matrix multiplication
+    * we can implement matrix mul with 3 loops, but it's inefficient; pyTorch perform the same thing with C++ under the hood (not to mention GPU acceleration)
+    * pyTorch leverages elementwise arithmetic and broadcasting to make matmul happen
+* basic operation with two tensors are applied elementwise in pyTorch; this is made possible thru broadcasting
+* broadcasting rules
+* einstein summation is another way to perform matrix sum and multiplication, often a good way to create custom pytorch operations that are performant
+* forward pass is when we compute the output of a model on a given input
+* backward pass is when we compute the gradients of a loss function wrt (with respect to) its parameters
+* To define a nn, we put two linear layer together, with a nonlinear function, the activation function, in the middle (since the composition of two linear function is just one linear function, which doesn't amounts to 2 layers)
 # Resources
 * need to read nlp deep dive chapter
 * read more about broadcasting
