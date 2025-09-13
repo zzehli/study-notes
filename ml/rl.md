@@ -245,7 +245,9 @@ Training loop:
 * How do we know if the policy is good? **The objective function** $J$ gives the expected cumulative reward (performance) of an agent over a trajectory (state action sequence, $\tau$): $J(\theta) = E_{\tau \sim \pi }[R(\tau)]$, where $R$ term is the cumulative reward over a trajectory $\tau$
     * $R(\tau) = r_{t+1} + \gamma r_{t+2} + ... $
 * Policy-gradient is an optimization problem: we want to find the values of $\theta$ that maximize our objective function $J(\theta)$, so we need to use gradient ascent. It’s the inverse of gradient-descent since it gives the direction of the steepest increase of $J$
-* However, $J$ is not easily differentiable, so we use Policy Gradient Theorem that to help us reformulate the objective function into a differentiable function
+* However, $J$ is not easily differentiable, so we use Policy Gradient Theorem that to help us reformulate the objective function into a differentiable function; it turns out we can turn the gradient of $J$ into: $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\sum_{t=0} \nabla_\theta \log \pi_\theta(a_t|s_t) R(\tau)\right]$$ We can interprete this as the gradient of the (log) probability of action ($\text{log}\pi$) times cumulative return ($R$, the scoring function) 
+* **Reinforce** a policy-gradient algorithm that uses an estimated return from an entire episode to update the policy parameter, it builds on top of policy gradient theorem $$\nabla_\theta J(\theta) \approx \hat{g} = \sum_{t=0} \nabla_\theta \log \pi_\theta(a_t|s_t) R(\tau)$$ ![reinforce](./assets/policy_gradient_one.png) 
+
 ### Unit 6 Actor Critic 
 * policy gradient suffers from high variance, because small difference in action choices can lead to big differences in rewards
 * Q: variance and bias tradeoff
@@ -254,7 +256,11 @@ Training loop:
     * the actor updates policy parameters using the Q-value
     * the actor takes another action and arrives at a new state, which allows us to calculate weight updates of value functions based on the differences
 ### Unit 8 Proximal Policy Optimization (PPO)
-* 
+* The goal of PPO is to update policy conservatively. We use a clip ratio for policy update
+* we use a new objective function called clipped surrogate objective function that constrains the policy change thru a clip
+* With the Clipped Surrogate Objective function, we have two probability ratios, one non-clipped and one clipped in a range between $[1 - \epsilon, 1+\epsilon]$, epsilon is a hyperparameter that helps us to define this clip range (in the paper ϵ=0.2ϵ=0.2.)
+$$L^{\text{CLIP}}(\theta) = \mathbb{E}_t \Bigg[\min \Big(r_t(\theta) \, \hat{A}_t, \; \text{clip}\big(r_t(\theta), 1 - \epsilon, 1 + \epsilon\big) \, \hat{A}_t\Big)\Bigg]$$ 
+* the unclipped part, $r_t(\theta) \, \hat{A}_t$, is used to replace the $\text{log}\pi$ term in policy gradient theorem. It is a ratio multiplied by advantage (see actor critic), it produces a change based on ratio of the old and new parameters
 # Articles
 ## [A Reinforcement Learning Guide](https://naklecha.notion.site/a-reinforcement-learning-guide)
 * Terms: state, reward, action
