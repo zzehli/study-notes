@@ -515,6 +515,10 @@ class CollabNN(Module):
 * forward pass is when we compute the output of a model on a given input
 * backward pass is when we compute the gradients of a loss function wrt (with respect to) its parameters
 * To define a nn, we put two linear layer together, with a nonlinear function, the activation function, in the middle (since the composition of two linear function is just one linear function, which doesn't amounts to 2 layers)
+# Chapter 18: pytorch hooks and CAM
+* Class activation map interprets the output of the convolution layer; it's a map of the scores of all features in the image (activation times weights)
+* a pytorch hook allows you to access the model during forward and backward passes
+* we use hooks to grab gradients in the backward pass (and then convert to weights as an indicator of how sensitive the final output is to changes in each activation channel) and activation in the forward pass
 # Resources
 * need to read nlp deep dive chapter
 * read more about broadcasting

@@ -150,7 +150,7 @@ $$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s
 * deep Reinforcement Learning introduces deep neural networks to solve Reinforcement Learning problems
 ### Unit 2
 * for value-based approach, since the policy is not trained, we specify its behavior to take the greedy approach, it will choose actions with the biggest reward: $arg \max_a Q_{\pi} (s,a)$; another option is epsilon-greedy method
-* finding an optimal value function leads to having an optimal policy: $\pi^{*}(s) = arg \max_a Q^{*} (s,a)$, where $Q^{*}$ and $\pi^{*}$ are optimal value and policy, respectively
+* finding an optimal value function leads to having an optimal policy: $$\pi^{*}(s) = arg \max_a Q^{*} (s,a)$$ where $Q^{*}$ and $\pi^{*}$ are optimal value and policy, respectively. Once we have a value function, we know which action to take at each state
 * two types of value-based methods: state-value (V) and action-value function (Q)
     * state-value function: given the state $s$, if agent follows policy $\pi$, the expected outcome is $V_\pi(s)$
     * action-value function: for each state, action pair, the expected return is $Q_\pi(s, a)$ if it follows policy $\pi$
@@ -210,6 +210,51 @@ $$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s
     * experience replay thru a relay buffer: save experience that will be reused; prevents the network from only learning from the immediate before
     * fixed Q-target: for bellman equation, both Q-value and TD-target changes, this is a moving target problem; instead, we fix param $\theta^-$, only update every C steps
     * double deep Q-learning
+### Unit 4 Policy Gradient
+* We want to optimize policy directly, not value function
+* underlying hypothesis of RL: all goals can be described as the maximization of the expected cumulative reward
+* in policy-based methods, we parameterize the policy
+    * can be a neural network: $\pi_\theta(s) = \mathbb{P}[A|s;\theta]$
+    * the objective is to maximize the performance of the policy with adidas men ascent (notice, not descent since we are doing maximization)
+    * we define an objective function $J(\theta)$. It is the expected cumulative reward. The goal is to find value $\theta$ that maximizes this objective function
+* policy-gradient methods are a subclass of policy-based methods
+    * in policy-based, we optimized $\theta$ indirectly by maximize the local approximation of the objective function (on-policy)
+    * in policy-gradient, we optimized $\theta$ directly by performing the gradient ascent on the performance of the objective function $J(\theta)$
+* advantage of policy-gradient method
+    * unlike value-based method, no need to store action-values
+    * policy-gradient can learn a stochastic policy while value function cannot
+        * deterministic policy can have trouble with perceptual aliasing; an optimal stochastic policy will not have this problem (robot stuck in two similar-looking bricks)
+    * policy-gradient are more effective in high-dimensional action space and continuous action space (for example, deep q learning assign a score for each action, which is impossible if action options are infinite)
+    * policy gradient have better convergence because stochastic policy change smoothly over time; in value-based training, the max operation change action drastically
+* disadvantages of policy-gradient
+    * converge to local maximum instead of a global max
+    * slower, take longer to train
+    * can have high variance
+* for policy gradient, we need a parameterized stochastic policy $\pi_\theta(s_t)$, where the input is a state and the output is the probability distribution over actions at that state, the goal is to tune the policy s.t. good actions are sampled more often
+* the idea is to let the agent interact during an episode, if the agent wins, we will sample it more in the future; we increase $P(a|s)$. The big-picture algorithm looks like:
+```
+Training loop:
+    collect an episode with the policy \pi
+    calculate the return (sum of rewards)
+
+    update the weights of \pi
+        if positive return: increase the prob. of each state, action pairs taken during the episode
+        if negative return: decrease 
+```
+* Stochastic policy: $\pi_\theta(s) = \mathbb{P}[A|s;\theta]$, this says the policy $\pi$, given a state $s$, outputs a probability distribution of actions
+* How do we know if the policy is good? **The objective function** $J$ gives the expected cumulative reward (performance) of an agent over a trajectory (state action sequence, $\tau$): $J(\theta) = E_{\tau \sim \pi }[R(\tau)]$, where $R$ term is the cumulative reward over a trajectory $\tau$
+    * $R(\tau) = r_{t+1} + \gamma r_{t+2} + ... $
+* Policy-gradient is an optimization problem: we want to find the values of $\theta$ that maximize our objective function $J(\theta)$, so we need to use gradient ascent. It’s the inverse of gradient-descent since it gives the direction of the steepest increase of $J$
+* However, $J$ is not easily differentiable, so we use Policy Gradient Theorem that to help us reformulate the objective function into a differentiable function
+### Unit 6 Actor Critic 
+* policy gradient suffers from high variance, because small difference in action choices can lead to big differences in rewards
+* Q: variance and bias tradeoff
+* we introduces two model an actor model that acts according to a policy, and a critic model that judges how good an action (a value function)
+    * at each step, the actor acts, the critic produces a Q-value
+    * the actor updates policy parameters using the Q-value
+    * the actor takes another action and arrives at a new state, which allows us to calculate weight updates of value functions based on the differences
+### Unit 8 Proximal Policy Optimization (PPO)
+* 
 # Articles
 ## [A Reinforcement Learning Guide](https://naklecha.notion.site/a-reinforcement-learning-guide)
 * Terms: state, reward, action
