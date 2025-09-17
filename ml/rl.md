@@ -130,6 +130,25 @@ $$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s
 * in training, we need to update $\theta$, the parameters of the NN
 * DQN algorithm
 * Q: don't understand learning target and DQN algorithm
+### L3, Policy Gradient
+* policy gradient derivation
+* temporal decomposition to make it more data efficient
+* baseline substraction and value function estimation reduce variation
+* stochasticity allow policies to be smoother, easy to optimize
+* why policy optimization: policy can be simpler than Q or V
+    * value function doesn't prescribe action, would need dynamics model
+    * q value function need to solve argmax, which is challenging for continuous/high dim action space
+* likelihood ratio policy gradient
+* we want to optimize the overall utility $U$ of using a policy $\pi$ over a state-action sequence, a trajectory, $\tau$, where $\tau = s_0, u_0,...,s_{H}, u_{H}$.We can express the utility as: $$U(\theta) = E[\sum^H_{t=0}R(s_t, u_t); \pi_{\theta}] $$
+Given an expectation under a distribution, we can turn it into a sum over all possible events weighted by their probabilities (which is the definition of expectation). In our case, we can rewrite this expectation in terms of a probability function, $P$, of a trajectory, $\tau$, under policy $\pi_{\theta}$ and the corresponding reward, $R$: $$U(\theta) = E[\sum^H_{t=0}R(s_t, u_t); \pi_{\theta}] = \sum^H_{t=0}P(\tau; \theta)R(\tau)$$
+The goal is to find the parameter $\theta$, and ultimately, its associated policy, that gives the maximum utility: $$\max_{\theta} U(\theta) = \max_{\theta} \sum_{\tau}P(\tau; \theta)R(\tau)$$ 
+Next, we will use gradient optimization to solve this problem. We take the gradient of $u$ with respect to $\theta$: $$\nabla_\theta U(\theta) = \nabla_\theta \sum_{\tau} P(\tau;\theta) R(\tau)$$
+Based on the linearity of gradient, the gradient of sum is the sum of gradient. Therefore, we have: $$\nabla_\theta \sum_{\tau} P(\tau;\theta) R(\tau) = \sum_{\tau} \nabla_\theta P(\tau;\theta) R(\tau)$$ 
+Here, we want to have a weighted sum of $P$ so that we can sample the trajectories in the future. To get there, we multiply and divide by $P(\tau; \theta)$: $$ \sum_{\tau} \frac{P(\tau;\theta)}{P(\tau;\theta)} \nabla_\theta P(\tau;\theta) R(\tau)$$ 
+Notice now we have a derivative of a $log$ function: $$\nabla_\theta \log f(x) 
+= \frac{1}{f(x)} \nabla_\theta f(x)$$
+Our gradient becomes $$ \sum_{\tau} \frac{P(\tau;\theta)}{P(\tau;\theta)} \nabla_\theta P(\tau;\theta) R(\tau) = \sum_{\tau} P(\tau;\theta) \nabla_\theta \text{log}P(\tau;\theta) R(\tau)$$
+Here, we can apply the definition of expectation again, now in reverse: $$ \sum_{\tau} P(\tau;\theta) \nabla_\theta \text{log}P(\tau;\theta) R(\tau) = E[\sum \nabla_\theta \text{log}P(\tau;\theta) R(\tau)]$$ which gives us the expected value of a function, $\nabla_\theta \text{log}P(\tau;\theta) R(\tau)$, under distribution $P(\tau; \theta)$. This allow us to use a sample-based estimate of $P(\tau; \theta)$ instead of enumerating all possible trajectories. Using an empirical estimate of the expectation with $m$ samples, we get $$\nabla_\theta U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i=1}^m \nabla_\theta \log P(\tau^{(i)};\theta) R(\tau^{(i)})$$
 ## [HF Deep RL Course](https://huggingface.co/learn/deep-rl-course/en/unit1/rl-framework)
 ### Unit 1
 * RL process is called a Markov Decision Process (MDP)
