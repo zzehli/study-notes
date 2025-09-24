@@ -11,8 +11,10 @@
     * discount factor $\gamma$, things in the future we care less about, discount future rewards
     * Horizon $H$, duration
 * The goal of MDP is: find a policy that maximizes reward overtime
-$$max_\pi E [\sum^H_{t=0}\gamma^tR(S_t, A_t, S_{t+1})|\pi]$$
-here, $\pi$ is the policy. It reads: maximum the expected total reward $R$, following the policy $\pi$, discounted over time $\gamma^t$, over a finite horizon $H$
+    $$
+    max_\pi E [\sum^H_{t=0}\gamma^tR(S_t, A_t, S_{t+1})|\pi]
+    $$
+    here, $\pi$ is the policy. It reads: maximum the expected total reward $R$, following the policy $\pi$, discounted over time $\gamma^t$, over a finite horizon $H$
 * some examples: server management, cleaning robot, walking robot, pole balancing, games, shortest path, models for animals
 * Map your problem onto the MDP is the key
 #### Gridworld
@@ -20,19 +22,29 @@ here, $\pi$ is the policy. It reads: maximum the expected total reward $R$, foll
 * find a policy of how to navigate the map
 * the discount factor makes the future rewards less attractive, incentivize the agent to find the shortest path
 * Here is an example: ![example](./assets/gridworld.png) 
-based on MDP $$V^*(s)=max_\pi E [\sum^H_{t=0}\gamma^tR(S_t, A_t, S_{t+1})|\pi, s_0 = s]$$
-We have the following state:
+based on MDP
+    $$
+    V^*(s)=max_\pi E [\sum^H_{t=0}\gamma^tR(S_t, A_t, S_{t+1})|\pi, s_0 = s]
+    $$
+    We have the following state:
 
-| Vars      | $V^*(4,3)$  | $V^*(3,3)$ | $V^*(2,3)$ | $V^*(1,1)$ | $V^*(4,2)$ |
-| ----------- | ----------- |----------- | ----------- |----------- | ----------- |
-| gamma = 1, H = 100      | 1       | 1   | 1        | 1   | -1        |
-| gamma = 0.9, H = 100      | 1       | 0.9   | 0.9^2       | 0.9^5   | -1        |
-| gamma = 0.9, H = 100, action success rate 0.8      | 1       | 0.9 * 0.8 + 0.9 * 0.1 * V*(3,3) + 0.9 * 0.1 * V*(3,2)   |      | |        |
+| Vars                                          | $V^*(4,3)$ | $V^*(3,3)$                                            | $V^*(2,3)$ | $V^*(1,1)$ | $V^*(4,2)$ |
+| --------------------------------------------- | ---------- | ----------------------------------------------------- | ---------- | ---------- | ---------- |
+| gamma = 1, H = 100                            | 1          | 1                                                     | 1          | 1          | -1         |
+| gamma = 0.9, H = 100                          | 1          | 0.9                                                   | 0.9^2      | 0.9^5      | -1         |
+| gamma = 0.9, H = 100, action success rate 0.8 | 1          | 0.9 * 0.8 + 0.9 * 0.1 * V*(3,3) + 0.9 * 0.1 * V*(3,2) |            |            |            |
 * when the action success rate is less than 1, the rewards depend on rewards of other squares. This is called value iteration
 * value iteration
     * when H=0, there is no time left to move, so reward V* is 0
-    * when H=1 the reward $$V_1^*(s) = max_a\sum_{s'}P(s'|s,a)(R(s, a, s')+\gamma V_0^*(s'))$$ which means the reward is the sum of probability of taking an action times the sum of the reward of the action and the discounted value of the reward of next action over all possible actions. Then we find the action that gives us the most reward.
-    * when H=k, we have $$V_k^*(s) = max_a\sum_{s'}P(s'|s,a)(R(s, a, s')+\gamma V_{k-1}^*(s'))$$
+    * when H=1 the reward
+    $$
+    V_1^*(s) = max_a\sum_{s'}P(s'|s,a)(R(s, a, s')+\gamma V_0^*(s'))
+    $$
+    which means the reward is the sum of probability of taking an action times the sum of the reward of the action and the discounted value of the reward of next action over all possible actions. Then we find the action that gives us the most reward.
+    * when H=k, we have
+    $$
+    V_k^*(s) = max_a\sum_{s'}P(s'|s,a)(R(s, a, s')+\gamma V_{k-1}^*(s'))
+    $$
     * algorithm
     ```
     start with reward at time 0 for all S
@@ -44,11 +56,15 @@ We have the following state:
     this is called Bellman update/back-up
     * convergence behavior: after n steps, the rewards no longer change, which means the horizon can be infinite while the optimal rewards are the same
     * intuition: once we arrive at convergence at step H, the additional reward collected over steps H+1, H+2, ... converges to 0:
-    $$\gamma^{H+1}R(s_{H+1})+\gamma^{H+2}R(s_{H+2})+..\leq \gamma^{H+1}R(max) + \gamma^{H+2}R(max)+...=\frac{\gamma^{H+1}}{1-\gamma}R_{\max}$$
+    $$
+    \gamma^{H+1}R(s_{H+1})+\gamma^{H+2}R(s_{H+2})+..\leq \gamma^{H+1}R(max) + \gamma^{H+2}R(max)+...=\frac{\gamma^{H+1}}{1-\gamma}R_{\max}
+    $$
     * exercise: given a gridworld, different combinations of discount and noise will result in different actions
 #### Q-values
 * Q*(s,a) expected utility of starting in state s and action a and (therefore) acting optimally
-    $$Q^*(s, a) = \sum_{s'}P(s'|s,a)(R(s, a, s')+\gamma \max_{a'}Q^*(s', a'))$$
+    $$
+    Q^*(s, a) = \sum_{s'}P(s'|s,a)(R(s, a, s')+\gamma \max_{a'}Q^*(s', a'))
+    $$
     This is very similar to V*, but the last term starting with $\gamma$ change to Q*. The definition reads: Q* is the expected rewards of taking action a to arrive at state s', plus the best possible rewards for future actions
 * this is a recursive definition
 * (comment) unlike V*, which only depends on state, Q* also depends on action
@@ -56,7 +72,9 @@ We have the following state:
 * now the Q-values are different depending on the next step, so for each state, we have 4 values in the gridworld (4 directions to move next); therefore we can compare the Q values and choose the action that gives the highest value
 #### policy iteration
 * policy evaluation: fix policy instead of taking the max of all actions:
-$$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s'))$$
+$$
+V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s'))
+$$
 * algorithm for policy iteration
     * find the best action according to one-step look-ahead
 * theorem: policy iteration is guaranteed to converge and at convergence, the current policy and its value function are optimal policy and the optimal value function
@@ -70,13 +88,23 @@ $$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s
     * in information theory, it defines the number of bits required to encode x (on average)
     * use short bit sequence to values that are likely and more for unlikely
     * calculate the entropy
-* formulation: instead of $\max_{\pi}E[\sum^H_{t=0}r_t]$ we have $$\max_{\pi}E[\sum^H_{t=0}r_t + \beta H(\pi(\cdot|s_t))]$$ the extra term is the maximum entropy of the policy over each state
+* formulation: instead of $\max_{\pi}E[\sum^H_{t=0}r_t]$ we have
+$$
+\max_{\pi}E[\sum^H_{t=0}r_t + \beta H(\pi(\cdot|s_t))]
+$$
+    the extra term is the maximum entropy of the policy over each state
 * the entropy term introduces a trade off: if we have big $\beta$, we will collect less entropy. Instead we collect better learning data.
 * how to solve MDP with maximum entropy formulation
 * constrained optimization
 * to solve MDP with maximum entropy formulation, we turn that into a constrained optimization problem and solve the lagrangian for that problem instead
-    * one-step solution: $$ \pi(a) = \frac{1}{Z}exp(\frac{1}{\beta}r(a)) $$
-    where $$ Z = \sum_aexp(\frac{1}{\beta}r(a)) $$
+    * one-step solution:
+    $$
+    \pi(a) = \frac{1}{Z}exp(\frac{1}{\beta}r(a))
+    $$
+    where
+    $$
+    Z = \sum_aexp(\frac{1}{\beta}r(a))
+    $$
     * the resulting policy gives higher probability to high rewards and low probability to low rewards
     * at the same time, the bigger the $\beta$, the less important is the reward
 ### L2, Deep Q Learning
@@ -88,7 +116,8 @@ $$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s
 #### Q-learning
 * Q-values and bellman equation to find the Q-value
 * rewrite Q-value iteration to remove the need for a transition function; replace expectation by samples
-* Tabular Q-learning: $$ Q_{k+1} \leftarrow \mathbb{E}_{s'\sim P(s'|s,a)} [R(s,a,s')+ \gamma \max_{a'}Q_k(s', a')]$$
+* Tabular Q-learning: 
+  $$ Q_{k+1} \leftarrow \mathbb{E}_{s'\sim P(s'|s,a)} [R(s,a,s')+ \gamma \max_{a'}Q_k(s', a')]$$
     * instead of transition function, we get expected next state from the distribution
     * algorithm: 
         * if next state isn't terminal, we set the $target = R(s, a, s') + \gamma \max_aQ_k(s',a')$
@@ -133,22 +162,54 @@ $$V_k^{\pi}(s) = \sum_{s'}P(s'|s,\pi(s))(R(s, \pi(s), s')+\gamma V_{k-1}^{\pi}(s
 ### L3, Policy Gradient
 * policy gradient derivation
 * temporal decomposition to make it more data efficient
-* baseline substraction and value function estimation reduce variation
+* baseline subtraction and value function estimation reduce variation
 * stochasticity allow policies to be smoother, easy to optimize
 * why policy optimization: policy can be simpler than Q or V
     * value function doesn't prescribe action, would need dynamics model
     * q value function need to solve argmax, which is challenging for continuous/high dim action space
 * likelihood ratio policy gradient
-* we want to optimize the overall utility $U$ of using a policy $\pi$ over a state-action sequence, a trajectory, $\tau$, where $\tau = s_0, u_0,...,s_{H}, u_{H}$.We can express the utility as: $$U(\theta) = E[\sum^H_{t=0}R(s_t, u_t); \pi_{\theta}] $$
-Given an expectation under a distribution, we can turn it into a sum over all possible events weighted by their probabilities (which is the definition of expectation). In our case, we can rewrite this expectation in terms of a probability function, $P$, of a trajectory, $\tau$, under policy $\pi_{\theta}$ and the corresponding reward, $R$: $$U(\theta) = E[\sum^H_{t=0}R(s_t, u_t); \pi_{\theta}] = \sum^H_{t=0}P(\tau; \theta)R(\tau)$$
-The goal is to find the parameter $\theta$, and ultimately, its associated policy, that gives the maximum utility: $$\max_{\theta} U(\theta) = \max_{\theta} \sum_{\tau}P(\tau; \theta)R(\tau)$$ 
-Next, we will use gradient optimization to solve this problem. We take the gradient of $u$ with respect to $\theta$: $$\nabla_\theta U(\theta) = \nabla_\theta \sum_{\tau} P(\tau;\theta) R(\tau)$$
-Based on the linearity of gradient, the gradient of sum is the sum of gradient. Therefore, we have: $$\nabla_\theta \sum_{\tau} P(\tau;\theta) R(\tau) = \sum_{\tau} \nabla_\theta P(\tau;\theta) R(\tau)$$ 
-Here, we want to have a weighted sum of $P$ so that we can sample the trajectories in the future. To get there, we multiply and divide by $P(\tau; \theta)$: $$ \sum_{\tau} \frac{P(\tau;\theta)}{P(\tau;\theta)} \nabla_\theta P(\tau;\theta) R(\tau)$$ 
-Notice now we have a derivative of a $log$ function: $$\nabla_\theta \log f(x) 
-= \frac{1}{f(x)} \nabla_\theta f(x)$$
-Our gradient becomes $$ \sum_{\tau} \frac{P(\tau;\theta)}{P(\tau;\theta)} \nabla_\theta P(\tau;\theta) R(\tau) = \sum_{\tau} P(\tau;\theta) \nabla_\theta \text{log}P(\tau;\theta) R(\tau)$$
-Here, we can apply the definition of expectation again, now in reverse: $$ \sum_{\tau} P(\tau;\theta) \nabla_\theta \text{log}P(\tau;\theta) R(\tau) = E[\sum \nabla_\theta \text{log}P(\tau;\theta) R(\tau)]$$ which gives us the expected value of a function, $\nabla_\theta \text{log}P(\tau;\theta) R(\tau)$, under distribution $P(\tau; \theta)$. This allow us to use a sample-based estimate of $P(\tau; \theta)$ instead of enumerating all possible trajectories. Using an empirical estimate of the expectation with $m$ samples, we get $$\nabla_\theta U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i=1}^m \nabla_\theta \log P(\tau^{(i)};\theta) R(\tau^{(i)})$$
+* we want to optimize the overall utility $U$ of using a policy $\pi$ over a state-action sequence, a trajectory, $\tau$, where $\tau = s_0, u_0,...,s_{H}, u_{H}$.We can express the utility as: 
+    $$U(\theta) = E[\sum^H_{t=0}R(s_t, u_t); \pi_{\theta}]$$ 
+    Given an expectation under a distribution, we can turn it into a sum over all possible events weighted by their probabilities (which is the definition of expectation). In our case, we can rewrite this expectation in terms of a probability function, $P$, of a trajectory, $\tau$, under policy $\pi_{\theta}$ and the corresponding reward, $R$: 
+    $$U(\theta) = E[\sum^H_{t=0}R(s_t, u_t); \pi_{\theta}] = \sum^H_{t=0}P(\tau; \theta)R(\tau)$$
+    The goal is to find the parameter $\theta$, and ultimately, its associated policy, that gives the maximum utility: 
+    $$\max_{\theta} U(\theta) = \max_{\theta} \sum_{\tau}P(\tau; \theta)R(\tau)$$ 
+    Next, we will use gradient optimization to solve this problem. We take the gradient of $u$ with respect to $\theta$: 
+    $$\nabla_\theta U(\theta) = \nabla_\theta \sum_{\tau} P(\tau;\theta) R(\tau)$$
+    Based on the linearity of gradient, the gradient of sum is the sum of gradient. Therefore, we have: 
+    $$\nabla_\theta \sum_{\tau} P(\tau;\theta) R(\tau) = \sum_{\tau} \nabla_\theta P(\tau;\theta) R(\tau)$$ 
+    Here, we want to have a weighted sum of $P$ so that we can sample the trajectories in the future. To get there, we multiply and divide by $P(\tau; \theta)$: 
+    $$ \sum_{\tau} \frac{P(\tau;\theta)}{P(\tau;\theta)} \nabla_\theta P(\tau;\theta) R(\tau)$$ 
+    Notice now we have a derivative of a $log$ function: 
+    $$\nabla_\theta \log f(x) = \frac{1}{f(x)} \nabla_\theta f(x)$$
+    Our gradient becomes 
+    $$ \sum_{\tau} \frac{P(\tau;\theta)}{P(\tau;\theta)} \nabla_\theta P(\tau;\theta) R(\tau) = \sum_{\tau} P(\tau;\theta) \nabla_\theta \text{log}P(\tau;\theta) R(\tau)$$
+    Here, we can apply the definition of expectation again, now in reverse: 
+    $$ \sum_{\tau} P(\tau;\theta) \nabla_\theta \text{log}P(\tau;\theta) R(\tau) = E[\sum \nabla_\theta \text{log}P(\tau;\theta) R(\tau)]$$ 
+    which gives us the expected value of a function, $\nabla_\theta \text{log}P(\tau;\theta) R(\tau)$, under distribution $P(\tau; \theta)$. This allow us to use a sample-based estimate of $P(\tau; \theta)$ instead of enumerating all possible trajectories. Using an empirical estimate of the expectation with $m$ samples, we get 
+    $$\nabla_\theta U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i=1}^m \nabla_\theta \log P(\tau^{(i)};\theta) R(\tau^{(i)})$$
+* in the above function, no gradient is taken for the reward function, which means the reward function can be discontinuous or unknown
+* this gradient increase probability of paths with high reward and vice vera
+* instead of the entire paths, we also want to consider more localized path by decompose path into state and actions: 
+    $$P(\tau; \theta) = \prod^H_{t=0}P(s_{t+1}|s_t, u_t)\cdot\pi_{\theta}(u_t|s_t)$$
+    it turns out the original gradient of the trajectory now becomes 
+    $$\nabla_\theta \log P(\tau^{(i)};\theta) = \sum_{i=1}^m \nabla_\theta \log \pi_\theta(u_t|s_t)$$
+    which means the dynamic model, $P$, is no longer needed. What this say is increase the probability of the trajectory will increase the probability of the actions in the trajectory, vice versa
+* so the original likelihood ratio policy gradient
+    $$\hat{g} = \frac{1}{m} \sum_{i=1}^m \nabla_\theta \log P(\tau^{(i)};\theta) R(\tau^{(i)})$$
+    where
+    $$\nabla_\theta \log P(\tau^{(i)};\theta) = \sum_{i=1}^m \nabla_\theta \log \pi_\theta(u_t|s_t)$$
+   This is where backpropagation comes in: feed the state $s_t$ into the network, compute the probability of action $u_t$, then backprop through the network to compute the gradient of $\log \pi_\theta(u_t|s_t)$ wrt all $\theta$
+* the above formula is noisy, we need to introduce more temporal structure (next lecture, trust region / natural gradient)
+* baseline subtraction, $R$ becomes $R - b$, but this still leave the likelihood unbiased!
+* the baseline makes sure that new action is better than the expected return under the current policy
+* advantage estimation: advantage is $R - b$
+* when choosing a baseline b, there are many options: constant, time-dependent, state-dependent (value function)
+* a baseline based on value function $V(s_t) = \mathbb{E}[r_t + r_{t+1} + ...]$
+* monte carlo estimation of $V^\pi$
+* bootstrap estimation of $V$
+* currently, $R$ is estimated by sample estimate $R$, we can improve this by introduce a discount factor $\gamma$ and function estimation
+* trade off between variance and bias
 ## [HF Deep RL Course](https://huggingface.co/learn/deep-rl-course/en/unit1/rl-framework)
 ### Unit 1
 * RL process is called a Markov Decision Process (MDP)
