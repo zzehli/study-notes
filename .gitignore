@@ -1,5 +1,6 @@
 temp.py
 ml/.ipynb_checkpoints
 ml/data
+ml/the-verdict.txt
 .*
 todos.md
